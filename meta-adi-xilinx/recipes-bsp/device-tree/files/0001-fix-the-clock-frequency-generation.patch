@@ -1,0 +1,56 @@
+From bfb48e4d98ada3242d56a1e9564c323d40044c66 Mon Sep 17 00:00:00 2001
+From: Nuno Sa <Nuno.Sa@analog.com>
+Date: Wed, 20 Mar 2019 13:00:51 +0100
+Subject: [PATCH] fix the clock-frequency generation
+
+On some cases, the dts clock-frequency property was getting float
+number. This pacth forces it to be an int.
+
+Signed-off-by: Nuno Sa <Nuno.Sa@analog.com>
+---
+ device_tree/data/common_proc.tcl | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/device_tree/data/common_proc.tcl b/device_tree/data/common_proc.tcl
+index f6d3f4c..3c4813e 100644
+--- a/device_tree/data/common_proc.tcl
++++ b/device_tree/data/common_proc.tcl
+@@ -1264,7 +1264,7 @@ proc zynq_gen_pl_clk_binding {drv_handle} {
+ 					set clk_refs [lappend clk_refs misc_clk_${bus_clk_cnt}]
+ 					hsi::utils::add_new_dts_param "${misc_clk_node}" "compatible" "fixed-clock" stringlist
+ 					hsi::utils::add_new_dts_param "${misc_clk_node}" "#clock-cells" 0 int
+-					hsi::utils::add_new_dts_param "${misc_clk_node}" "clock-frequency" $clk_freq int
++					hsi::utils::add_new_dts_param "${misc_clk_node}" "clock-frequency" [scan $clk_freq %d] int
+ 					if {[string match -nocase $iptype "can"] || [string match -nocase $iptype "vcu"] || [string match -nocase $iptype "canfd"]} {
+ 						set clocks [lindex $clk_refs 0]
+ 						append clocks ">, <&[lindex $clk_refs 1]"
+@@ -1394,7 +1394,7 @@ proc gen_clk_property {drv_handle} {
+ 					set updat [lappend updat misc_clk_${bus_clk_cnt}]
+ 					hsi::utils::add_new_dts_param "${misc_clk_node}" "compatible" "fixed-clock" stringlist
+ 					hsi::utils::add_new_dts_param "${misc_clk_node}" "#clock-cells" 0 int
+-					hsi::utils::add_new_dts_param "${misc_clk_node}" "clock-frequency" $clk_freq int
++					hsi::utils::add_new_dts_param "${misc_clk_node}" "clock-frequency" [scan $clk_freq %d] int
+ 				}
+ 			}
+ 			if {![string match -nocase $axi "0"]} {
+@@ -1523,7 +1523,7 @@ proc gen_clk_property {drv_handle} {
+ 				set updat [lappend updat misc_clk_${bus_clk_cnt}]
+ 				hsi::utils::add_new_dts_param "${misc_clk_node}" "compatible" "fixed-clock" stringlist
+ 				hsi::utils::add_new_dts_param "${misc_clk_node}" "#clock-cells" 0 int
+-				hsi::utils::add_new_dts_param "${misc_clk_node}" "clock-frequency" $clk_freq int
++				hsi::utils::add_new_dts_param "${misc_clk_node}" "clock-frequency" [scan $clk_freq %d] int
+ 			}
+ 		}
+ 		append clocknames " " "$clk"
+@@ -2913,7 +2913,7 @@ proc gen_mb_ccf_subnode {drv_handle name freq reg} {
+ 
+ 	hsi::utils::add_new_dts_param $clk_subnode "clock-output-names" $clk_subnode_name string
+ 	hsi::utils::add_new_dts_param $clk_subnode "reg" $reg int
+-	hsi::utils::add_new_dts_param $clk_subnode "clock-frequency" $freq int
++	hsi::utils::add_new_dts_param $clk_subnode "clock-frequency" [scan $freq %d] int
+ 
+ 	set_cur_working_dts $cur_dts
+ }
+-- 
+2.17.1
+

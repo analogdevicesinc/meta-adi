@@ -33,15 +33,15 @@ cd build
 petalinux-build
 ```
 
-To build a BOOT.bin for **zynq** and **zynqMP** platforms run `petalinux-package --boot --fsbl --fpga --u-boot`.  The output file will be placed in `path-to-petalinux-project>/images/linux`. Finally, copy  BOOT.bin and image.ub (FIT image including kernel, device tree and iniramfs) to the boot partition of a SD card.
+To build a BOOT.bin for [Zynq](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842549/Zynq-7000+SoC) and [ZynqMP](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html) platforms run `petalinux-package --boot --fsbl --fpga --u-boot`.  The output file will be placed in `path-to-petalinux-project>/images/linux`. Finally, copy  BOOT.bin and image.ub (FIT image including kernel, device tree and iniramfs) to the boot partition of a SD card.
 
-For **Microblaze** platforms the Xilinx System Debugger is used to run the linux kernel directly from memory. Run the following commands:
+For [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) platforms the Xilinx System Debugger is used to run the linux kernel directly from memory. Run the following commands:
 
 ```
 cd <path-to-petalinux-project>/images/linux
 source <path-to-vivado-sdk>/settings64.sh
 xsdb
-In the xsdb system debugger run
+# In the xsdb system debugger run
 connect
 run the command targets without any argument to see the available targets
 targets <desired target number>
@@ -58,10 +58,17 @@ con
 4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 > 
 
-For **zynq** and **zynqMP**, one might want to use a complete root filesystem instead of initramfs. To disable initramfs on petalinux:
+For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs. To disable initramfs on petalinux:
 
 ```bash
 cd <path-to-project>
 petalinux-config
 # On the config menu go to Image Packaging Configuration->Root filesystem type and select SD card
-``` 
+```
+
+With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password,`petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/recipes-cores/images/petalinux-user-image.bbappend` and comment the following lines:
+
+```
+EXTRA_USERS_PARAMS = "  \
+	usermod -P analog root;"
+```
