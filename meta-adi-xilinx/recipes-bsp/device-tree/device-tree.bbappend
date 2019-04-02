@@ -23,6 +23,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
 	file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
+	file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
 	file://pl-delete-nodes-vc707_fmcdaq2.dtsi \
 	file://pl-delete-nodes-vc707_fmcadc2.dtsi"
 
@@ -51,6 +52,7 @@ SRC_URI += " \
 #	* kc705_ad9467_fmc
 #	* kcu105_fmcdaq2
 #	* kcu105_adrv9371x
+#	* kcu105_fmcomms2-3
 #	* vc707_fmcdaq2
 #	* vc707_fmcadc2
 KERNEL_DTB = "zynq-zed-adv7511-ad9361-fmcomms2-3"
@@ -75,6 +77,7 @@ KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
 KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
 				kcu105_adrv9371x \
 				kcu105_fmcdaq2 \
+				kcu105_fmcomms2-3 \
 				kc705_ad9467_fmc \
 				vc707_fmcdaq2 \
 				vc707_fmcadc2"
