@@ -7,6 +7,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511-fmcmotcon2.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi \
+	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
 	file://pl-delete-nodes-fmcdaq2.dtsi \
@@ -23,6 +24,7 @@ SRC_URI += " \
 #	* zynq-zc706-adv7511-fmcdaq2
 #	* zynq-zed-adv7511-fmcmotcon2
 #	* zynq-zed-adv7511-ad9467-fmc-250ebz
+#	* zynq-zc706-adv7511-adrv9009
 #  - For zynqMP platforms:
 #	* zynqmp-zcu102-rev10-adrv9009
 #	* zynqmp-zcu102-rev10-fmcdaq2
@@ -38,7 +40,8 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-ad9434-fmc-500ebz \
 			zynq-zc706-adv7511-fmcdaq2 \
 			zynq-zed-adv7511-fmcmotcon2 \
-			zynq-zed-adv7511-ad9467-fmc-250ebz"
+			zynq-zed-adv7511-ad9467-fmc-250ebz \
+			zynq-zc706-adv7511-adrv9009"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
 			zynqmp-zcu102-rev10-fmcdaq2"
 KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 kcu105_fmcdaq2 \
@@ -115,6 +118,9 @@ do_configure_append() {
 		;;
 		"zynq-zed-adv7511-ad9467-fmc-250ebz")
 			set_common_vars pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi "${WORKDIR}/system-user.dtsi"
+			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
+		"zynq-zc706-adv7511-adrv9009")
+			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi "${WORKDIR}/system-user.dtsi"
 			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
 		;;
 		"zynqmp-zcu102-rev10-adrv9009")
