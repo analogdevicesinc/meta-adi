@@ -3,6 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI += " \
 	file://0001-fix-the-clock-frequency-generation.patch \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
+	file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
 	file://pl-delete-nodes-fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705-fmcdaq2.dtsi \
@@ -12,6 +13,7 @@ SRC_URI += " \
 # Supported device tree files
 #  - For zynq platforms:
 #	* zynq-zed-adv7511-ad9361-fmcomms2-3
+#	* zynq-zc706-adv7511-ad9434-fmc-500ebz
 #  - For zynqMP platforms:
 #	* zynqmp-zcu102-rev10-adrv9009
 #  - For microblaze platforms
@@ -20,7 +22,8 @@ SRC_URI += " \
 KERNEL_DTB = "zynq-zed-adv7511-ad9361-fmcomms2-3"
 
 # used for sanity check
-KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3"
+KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
+			zynq-zc706-adv7511-ad9434-fmc-500ebz"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009"
 KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 kcu105_fmcdaq2"
 
@@ -79,6 +82,10 @@ do_configure_append() {
 
 		"zynq-zed-adv7511-ad9361-fmcomms2-3")
 			set_common_vars pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi "${WORKDIR}/system-user.dtsi"
+			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
+		;;
+		"zynq-zc706-adv7511-ad9434-fmc-500ebz")
+			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi "${WORKDIR}/system-user.dtsi"
 			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
 		;;
 		"zynqmp-zcu102-rev10-adrv9009")
