@@ -112,6 +112,7 @@ do_configure_append() {
 		"zynq-zc706-adv7511-fmcdaq2")
 			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
 			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
+		;;
 		"zynq-zed-adv7511-fmcmotcon2")
 			set_common_vars pl-delete-nodes-zynq-zed-adv7511-fmcmotcon2.dtsi "${WORKDIR}/system-user.dtsi"
 			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
@@ -119,6 +120,7 @@ do_configure_append() {
 		"zynq-zed-adv7511-ad9467-fmc-250ebz")
 			set_common_vars pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi "${WORKDIR}/system-user.dtsi"
 			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
+		;;
 		"zynq-zc706-adv7511-adrv9009")
 			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi "${WORKDIR}/system-user.dtsi"
 			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
