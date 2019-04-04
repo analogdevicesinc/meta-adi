@@ -15,6 +15,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-kc705-fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
 	file://pl-delete-nodes-kcu105-fmcdaq2.dtsi \
+	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 	file://pl-delete-nodes-vc707_fmcdaq2.dtsi"
 
 # Set this variable with the desired device tree
@@ -34,6 +35,7 @@ SRC_URI += " \
 #	* kc705_fmcdaq2
 #	* kc705_ad9467_fmc
 #	* kcu105_fmcdaq2
+#	* kcu105_adrv9371x
 #	* vc707_fmcdaq2
 KERNEL_DTB = "zynq-zed-adv7511-ad9361-fmcomms2-3"
 
@@ -47,7 +49,9 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-fmcadc4"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
 			zynqmp-zcu102-rev10-fmcdaq2"
-KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 kcu105_fmcdaq2 \
+KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
+				kcu105_adrv9371x \
+				kcu105_fmcdaq2 \
 				kc705_ad9467_fmc \
 				vc707_fmcdaq2"
 
@@ -148,6 +152,9 @@ do_configure_append() {
 		;;
 		"kcu105_fmcdaq2")
 			set_common_vars pl-delete-nodes-kcu105-fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
+		;;
+		"kcu105_adrv9371x")
+			set_common_vars pl-delete-nodes-kcu105_adrv9371x.dtsi "${WORKDIR}/system-user.dtsi"
 		;;
 		"vc707_fmcdaq2")
 			set_common_vars pl-delete-nodes-vc707_fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
