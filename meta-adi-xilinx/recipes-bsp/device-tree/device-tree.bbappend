@@ -12,6 +12,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
+	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi \
 	file://pl-delete-nodes-fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705-fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
@@ -33,6 +34,7 @@ SRC_URI += " \
 #  - For zynqMP platforms:
 #	* zynqmp-zcu102-rev10-adrv9009
 #	* zynqmp-zcu102-rev10-fmcdaq2
+#	* zynqmp-zcu102-rev10-adrv9371
 #  - For microblaze platforms
 #	* kc705_fmcdaq2
 #	* kc705_ad9467_fmc
@@ -51,7 +53,8 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-fmcadc4 \
 			zynq-zc706-adv7511-adrv9371"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
-			zynqmp-zcu102-rev10-fmcdaq2"
+			zynqmp-zcu102-rev10-fmcdaq2 \
+			zynqmp-zcu102-rev10-adrv9371"
 KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
 				kcu105_adrv9371x \
 				kcu105_fmcdaq2 \
@@ -149,6 +152,10 @@ do_configure_append() {
 		;;
 		"zynqmp-zcu102-rev10-fmcdaq2")
 			set_common_vars pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
+			sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
+		;;
+		"zynqmp-zcu102-rev10-adrv9371")
+			set_common_vars pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
 			sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
 		;;
 		"kc705_fmcdaq2")
