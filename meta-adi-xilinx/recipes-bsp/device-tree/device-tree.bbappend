@@ -19,9 +19,9 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi \
 	file://pl-delete-nodes-fmcdaq2.dtsi \
-	file://pl-delete-nodes-kc705-fmcdaq2.dtsi \
+	file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
-	file://pl-delete-nodes-kcu105-fmcdaq2.dtsi \
+	file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 	file://pl-delete-nodes-vc707_fmcdaq2.dtsi \
 	file://pl-delete-nodes-vc707_fmcadc2.dtsi"
@@ -130,92 +130,25 @@ do_configure_append() {
 		bbfatal "Error: Could not find selected device tree:\"${KERNEL_DTB}.dts\" in the kernel sources:\"${DTS_INCLUDE_PATH}\"!!"
 	fi
 
-	case ${KERNEL_DTB} in
+	[ ! -e "${WORKDIR}/pl-delete-nodes-${KERNEL_DTB}.dtsi" ] && \ 
+		{ bbfatal "Error: Could not find \"pl-delete-nodes-${KERNEL_DTB}.dtsi\" in \"${WORKDIR}\""; }
 
-		"zynq-zed-adv7511-ad9361-fmcomms2-3")
-			set_common_vars pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
+	case ${MACHINE} in
+		"plnx-zynq7")
+			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${WORKDIR}/system-user.dtsi"
+			[ -e "${DTS_INCLUDE_PATH}/zynq.dtsi" ] && {  \
+				sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"; }
 		;;
-		"zynq-zc706-adv7511-ad9434-fmc-500ebz")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
+		"plnx-zynqmp")
+			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
+			[ -e "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts" ] && { \
+				sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"; }
 		;;
-		"zynq-zc706-adv7511-fmcdaq2")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zed-adv7511-fmcmotcon2")
-			set_common_vars pl-delete-nodes-zynq-zed-adv7511-fmcmotcon2.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zed-adv7511-ad9467-fmc-250ebz")
-			set_common_vars pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-adrv9009")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-fmcadc4")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-fmcadc4.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-adrv9371")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-ad6676-fmc")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-ad6676-fmc.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-ad9739a-fmc")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-ad9739a-fmc.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-ad9625-fmcadc2")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-ad9625-fmcadc2.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zc706-adv7511-ad9265-fmc-125ebz")
-			set_common_vars pl-delete-nodes-zynq-zc706-adv7511-ad9265-fmc-125ebz.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynq-zed-imageon")
-			set_common_vars pl-delete-nodes-zynq-zed-imageon.dtsi "${WORKDIR}/system-user.dtsi"
-			sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"
-		;;
-		"zynqmp-zcu102-rev10-adrv9009")
-			set_common_vars pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
-			sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
-		;;
-		"zynqmp-zcu102-rev10-fmcdaq2")
-			set_common_vars pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
-			sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
-		;;
-		"zynqmp-zcu102-rev10-adrv9371")
-			set_common_vars pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
-			sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
-		;;
-		"kc705_fmcdaq2")
-			set_common_vars pl-delete-nodes-kc705-fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
-		;;
-		"kc705_ad9467_fmc")
-			set_common_vars pl-delete-nodes-kc705_ad9467_fmc.dtsi "${WORKDIR}/system-user.dtsi"
-		;;
-		"kcu105_fmcdaq2")
-			set_common_vars pl-delete-nodes-kcu105-fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
-		;;
-		"kcu105_adrv9371x")
-			set_common_vars pl-delete-nodes-kcu105_adrv9371x.dtsi "${WORKDIR}/system-user.dtsi"
-		;;
-		"vc707_fmcdaq2")
-			set_common_vars pl-delete-nodes-vc707_fmcdaq2.dtsi "${WORKDIR}/system-user.dtsi"
-		;;
-		"vc707_fmcadc2")
-			set_common_vars pl-delete-nodes-vc707_fmcadc2.dtsi "${WORKDIR}/system-user.dtsi"
+		"plnx-microblazeel")
+			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${WORKDIR}/system-user.dtsi"
 		;;
 		*)
-			bbfatal "ERROR: Unhandled dtb file:${KERNEL_DTB}"
+			bbfatal "ERROR: Unsupported machine:${MACHINE}"
 		;;
 	esac
 
