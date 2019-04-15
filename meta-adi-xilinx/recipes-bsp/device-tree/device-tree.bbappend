@@ -18,6 +18,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi \
+	file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9361-fmcomms2-3.dtsi \
 	file://pl-delete-nodes-fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
@@ -49,6 +50,7 @@ SRC_URI += " \
 #	* zynqmp-zcu102-rev10-adrv9009
 #	* zynqmp-zcu102-rev10-fmcdaq2
 #	* zynqmp-zcu102-rev10-adrv9371
+#	* zynqmp-zcu102-rev10-ad9361-fmcomms2-3
 #  - For microblaze platforms
 #	* kc705_fmcdaq2
 #	* kc705_ad9467_fmc
@@ -77,7 +79,8 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zed-imageon"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
 			zynqmp-zcu102-rev10-fmcdaq2 \
-			zynqmp-zcu102-rev10-adrv9371"
+			zynqmp-zcu102-rev10-adrv9371 \
+			zynqmp-zcu102-rev10-ad9361-fmcomms2-3"
 KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
 				kcu105_adrv9371x \
 				kcu105_fmcdaq2 \

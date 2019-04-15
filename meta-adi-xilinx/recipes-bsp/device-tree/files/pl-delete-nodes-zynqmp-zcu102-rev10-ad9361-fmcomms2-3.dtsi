@@ -1,0 +1,11 @@
+/*Delete nodes from pl.dtsi which are redefined in ADI dts*/
+/ {
+	/delete-node/ aliases;
+};
+
+/delete-node/ &axi_ad9361;
+/delete-node/ &misc_clk_0;
+/delete-node/ &axi_ad9361_adc_dma;
+/delete-node/ &axi_ad9361_dac_dma;
+/delete-node/ &psu_ctrl_ipi;
+/delete-node/ &psu_message_buffers;
