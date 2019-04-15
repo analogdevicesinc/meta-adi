@@ -25,7 +25,8 @@ SRC_URI += " \
 	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 	file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
 	file://pl-delete-nodes-vc707_fmcdaq2.dtsi \
-	file://pl-delete-nodes-vc707_fmcadc2.dtsi"
+	file://pl-delete-nodes-vc707_fmcadc2.dtsi \
+	file://pl-delete-nodes-vc707_fmcomms2-3.dtsi"
 
 # Set this variable with the desired device tree
 # Supported device tree files
@@ -55,6 +56,7 @@ SRC_URI += " \
 #	* kcu105_fmcomms2-3
 #	* vc707_fmcdaq2
 #	* vc707_fmcadc2
+#	* vc707_fmcomms2-3
 KERNEL_DTB = "zynq-zed-adv7511-ad9361-fmcomms2-3"
 
 # used for sanity check
@@ -80,7 +82,8 @@ KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
 				kcu105_fmcomms2-3 \
 				kc705_ad9467_fmc \
 				vc707_fmcdaq2 \
-				vc707_fmcadc2"
+				vc707_fmcadc2 \
+				vc707_fmcomms2-3"
 
 DTS_INCLUDE_PATH_zynq = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 DTS_INCLUDE_PATH_zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
