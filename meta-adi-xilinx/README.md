@@ -27,11 +27,13 @@ git clone https://github.com/analogdevicesinc/meta-adi.git
 cd <path-to-project>
 # Check the Building HDL link below
 petalinux-config --get-hw-description=<path to hdf file>
-# When running the previous command, a configuration menu will come up. Go to Yocto Settings->User layers and add the <path-to-meta-adi>/meta-adi-xilinx and <path-to-meta-adi>/meta-adi-core
+# When running the previous command, a configuration menu will come up. Go to Yocto Settings->User layers and add the <path-to-meta-adi>/meta-adi-xilinx and <path-to-meta-adi>/meta-adi-core (Check the note below!!)
 # After the configuration is done, go to <path-to-meta-adi>/recipes-bsp/device-tree and open the device-tree.bbappend file. In the file set the KERNEL_DTB variable to the one that fits your FPGA carrier and FMC card.
 cd build
 petalinux-build
 ```
+
+>**IMPORTANT: Since this layer depends on meta-adi-core (because of userspace tools), it has to be included after meta-adi-core, otherwise `petalinux-config` will fail.**
 
 To build a BOOT.bin for [Zynq](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842549/Zynq-7000+SoC) and [ZynqMP](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html) platforms run `petalinux-package --boot --fsbl --fpga --u-boot`.  The output file will be placed in `path-to-petalinux-project>/images/linux`. Finally, copy  BOOT.bin and image.ub (FIT image including kernel, device tree and iniramfs) to the boot partition of a SD card.
 
