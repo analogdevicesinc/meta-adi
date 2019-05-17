@@ -30,6 +30,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
 	file://pl-delete-nodes-kc705_fmcomms2-3.dtsi \
+	file://pl-delete-nodes-kc705_fmcjesdadc1.dtsi \
 	file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 	file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
@@ -70,6 +71,7 @@ SRC_URI += " \
 #	* kc705_fmcdaq2
 #	* kc705_ad9467_fmc
 #	* kc705_fmcomms2-3
+#	* kc705_fmcjesdadc1
 #	* kcu105_fmcdaq2
 #	* kcu105_adrv9371x
 #	* kcu105_fmcomms2-3
@@ -110,6 +112,7 @@ KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
 				kcu105_fmcomms2-3 \
 				kc705_ad9467_fmc \
 				kc705_fmcomms2-3 \
+				kc705_fmcjesdadc1 \
 				vc707_fmcdaq2 \
 				vc707_fmcadc2 \
 				vc707_fmcomms2-3 \
