@@ -5,6 +5,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
+	file://pl-delete-nodes-zynq-zed-adv7511.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511-fmcmotcon2.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511.dtsi \
@@ -47,6 +48,7 @@ SRC_URI += " \
 #	* zynq-zed-adv7511-ad9361-fmcomms2-3
 #	* zynq-zc706-adv7511-ad9434-fmc-500ebz
 #	* zynq-zc706-adv7511-fmcdaq2
+#	* zynq-zed-adv7511
 #	* zynq-zed-adv7511-fmcmotcon2
 #	* zynq-zed-adv7511-ad9467-fmc-250ebz
 #	* zynq-zc706-adv7511
@@ -89,6 +91,7 @@ KERNEL_DTB = "zynq-zed-adv7511-ad9361-fmcomms2-3"
 KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-ad9434-fmc-500ebz \
 			zynq-zc706-adv7511-fmcdaq2 \
+			zynq-zed-adv7511 \
 			zynq-zed-adv7511-fmcmotcon2 \
 			zynq-zed-adv7511-ad9467-fmc-250ebz \
 			zynq-zc706-adv7511 \
