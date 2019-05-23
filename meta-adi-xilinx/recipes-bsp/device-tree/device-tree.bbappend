@@ -21,6 +21,7 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq3-revC.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcjesdadc1.dtsi \
 	file://pl-delete-nodes-zynq-zed-imageon.dtsi \
+	file://pl-delete-nodes-zynq-adrv9361-z7035-bob-cmos.dtsi \
 	file://pl-delete-nodes-zynq-zc702-adv7511-ad9361-fmcomms5.dtsi \
 	file://pl-delete-nodes-zynq-zc702-adv7511.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
@@ -67,6 +68,7 @@ SRC_URI += " \
 #	* zynq-zed-imageon
 #	* zynq-zc702-adv7511-ad9361-fmcomms5
 #	* zynq-zc702-adv7511
+#	* zynq-adrv9361-z7035-bob-cmos
 #  - For zynqMP platforms:
 #	* zynqmp-zcu102-rev10-adrv9009
 #	* zynqmp-zcu102-rev10-fmcdaq2
@@ -110,7 +112,8 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-fmcjesdadc1 \
 			zynq-zed-imageon \
 			zynq-zc702-adv7511 \
-			zynq-zc702-adv7511-ad9361-fmcomms5"
+			zynq-zc702-adv7511-ad9361-fmcomms5 \
+			zynq-adrv9361-z7035-bob-cmos"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
 			zynqmp-zcu102-rev10-fmcdaq2 \
 			zynqmp-zcu102-rev10-adrv9371 \
@@ -189,6 +192,8 @@ do_configure_append() {
 			# zynq has some corner cases that must be taken into account
 			if [ "${KERNEL_DTB}" == "zynq-zc706-adv7511-fmcdaq3-revC" ]; then
 				dtb_ver_file="${DTS_INCLUDE_PATH}/zynq-zc706-adv7511-fmcdaq3.dts"
+			elif [ "${KERNEL_DTB}" == "zynq-adrv9361-z7035-bob-cmos" ]; then
+				dtb_ver_file="${DTS_INCLUDE_PATH}/zynq-adrv9361-z7035-bob.dts"
 			else
 				dtb_ver_file="${WORKDIR}/system-user.dtsi"
 			fi
