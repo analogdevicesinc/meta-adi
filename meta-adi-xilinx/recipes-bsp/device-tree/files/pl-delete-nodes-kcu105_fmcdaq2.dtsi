@@ -2,3 +2,4 @@
 
 /delete-node/ &axi_ddr_cntrl;
 /delete-node/ &axi_ethernet_dma;
+/delete-node/ &axi_sysid_0;

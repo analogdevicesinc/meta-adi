@@ -19,3 +19,4 @@
 /delete-node/ &axi_timer;
 /delete-node/ &axi_uart;
 /delete-node/ &sys_mb_debug;
+/delete-node/ &axi_sysid_0;

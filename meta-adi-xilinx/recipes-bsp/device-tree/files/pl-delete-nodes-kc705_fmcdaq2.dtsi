@@ -2,4 +2,5 @@
 
 /delete-node/ &axi_gpio_lcd;
 /delete-node/ &axi_linear_flash;
+/delete-node/ &axi_sysid_0;
 
