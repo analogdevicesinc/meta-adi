@@ -15,3 +15,4 @@
 /delete-node/ &axi_iic_fmc;
 /delete-node/ &axi_iic_main;
 /delete-node/ &axi_spdif_tx_core;
+/delete-node/ &axi_sysid_0;

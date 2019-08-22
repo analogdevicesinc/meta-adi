@@ -16,4 +16,5 @@
 /delete-node/ &misc_clk_0;
 /delete-node/ &misc_clk_1;
 /delete-node/ &misc_clk_2;
+/delete-node/ &axi_sysid_0;
 
