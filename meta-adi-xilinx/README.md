@@ -74,3 +74,11 @@ With this layer, the default root password is forced to **analog**, overwriting 
 EXTRA_USERS_PARAMS = "  \
 	usermod -P analog root;"
 ```
+
+### Extending the devicetree
+
+To extend ADI devicetrees, the normal Petalinux method should be used. Hence, the `system-user.dtsi` file should be used. This file is located under `path-to-project/project-spec/meta-user/recipes-bsp/device-tree/files/`. There is also a `device-tree.bbappend` which automatically selects this file for the build. With this mind, one can either:
+
+ 1. Directly change this file with the new devicetree nodes;
+ 2. Create a new file and add a `#include` or `/include/`directive in `system-user.dtsi`. In these case, changes to the `device-tree.bbappend` recipe are also needed. 
+ 
