@@ -200,7 +200,7 @@ addtask do_sanity_check after do_patch before do_create_yaml
 do_configure_append() {
 
 	if [ -e "${DTS_INCLUDE_PATH}/${KERNEL_DTB}.dts" ]; then
-		cp "${DTS_INCLUDE_PATH}/${KERNEL_DTB}.dts" ${WORKDIR}/system-user.dtsi
+		cp "${DTS_INCLUDE_PATH}/${KERNEL_DTB}.dts" ${WORKDIR}/analog-devices.dtsi
 	else
 		bbfatal "Error: Could not find selected device tree:\"${KERNEL_DTB}.dts\" in the kernel sources:\"${DTS_INCLUDE_PATH}\"!!"
 	fi
@@ -218,7 +218,7 @@ do_configure_append() {
 			elif [ "${KERNEL_DTB}" == "zynq-adrv9364-z7020-bob-cmos" ]; then
 				dtb_ver_file="${DTS_INCLUDE_PATH}/zynq-adrv9364-z7020-bob.dts"
 			else
-				dtb_ver_file="${WORKDIR}/system-user.dtsi"
+				dtb_ver_file="${WORKDIR}/analog-devices.dtsi"
 			fi
 			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${dtb_ver_file}"
 			[ -e "${DTS_INCLUDE_PATH}/zynq.dtsi" ] && {  \
@@ -230,7 +230,7 @@ do_configure_append() {
 				sed -i 's,[/#]include.*\"zynqmp.dtsi\",,;s,[/#]include.*\"zynqmp-clk-ccf.dtsi\",,' "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"; }
 		;;
 		"plnx-microblazeel")
-			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${WORKDIR}/system-user.dtsi"
+			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${WORKDIR}/analog-devices.dtsi"
 		;;
 		*)
 			bbfatal "ERROR: Unsupported machine:${MACHINE}"
@@ -238,6 +238,11 @@ do_configure_append() {
 	esac
 
 	sed -i s,/dts-v1/\;,, "${KERNEL_DTB_VER_FILE}"
-	echo -e "/include/ \"${KERNEL_PL_DTB_FILE}\"" | cat - ${WORKDIR}/system-user.dtsi > temp && mv temp ${WORKDIR}/system-user.dtsi
+	# If for some reason the WORKDIR is not cleaned we don't want to have
+	# multiple include lines for our dtsi file. We also remove system-conf
+	# since it touches in nodes that our dts already touch.
+	sed -i '/analog-devices.dtsi/d;/system-conf.dtsi/d' "${WORKDIR}/system-user.dtsi"
+	echo -e "#include \"analog-devices.dtsi\"" | cat - ${WORKDIR}/system-user.dtsi > temp && mv temp ${WORKDIR}/system-user.dtsi
+	echo -e "/include/ \"${KERNEL_PL_DTB_FILE}\"" | cat - ${WORKDIR}/analog-devices.dtsi > temp && mv temp ${WORKDIR}/analog-devices.dtsi
 }
 
