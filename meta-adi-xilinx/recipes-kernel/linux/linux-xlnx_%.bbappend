@@ -2,7 +2,7 @@ DESCRIPTION = "ADI kernel"
 BRANCH = "master"
 # always use latest source revision
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${BRANCH}"
+SRC_URI += "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${BRANCH}"
 KBRANCH = "${BRANCH}"
 PV = "4.14"
 # override kernel config file
