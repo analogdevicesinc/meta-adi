@@ -1,5 +1,5 @@
 DESCRIPTION = "ADI kernel"
-BRANCH = "master"
+BRANCH = "2019_R1"
 # always use latest source revision
 SRCREV = "${AUTOREV}"
 SRC_URI += "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${BRANCH}"
