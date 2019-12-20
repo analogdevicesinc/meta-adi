@@ -4,7 +4,7 @@ SECTION = "libs"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=7c13b3376cea0ce68d2d2da0a1b3a72c"
 
-BRANCH ?= "master"
+BRANCH ?= "2018_R2"
 
 SRC_URI = "git://github.com/analogdevicesinc/libiio.git;branch=${BRANCH}"
 S = "${WORKDIR}/git"

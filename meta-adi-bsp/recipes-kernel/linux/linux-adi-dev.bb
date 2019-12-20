@@ -1,7 +1,7 @@
 LINUX_VERSION = "4.14"
 LINUX_RELEASE = "dev"
 
-KBRANCH = "master"
+KBRANCH = "2018_R2"
 
 # Compile all the device tree's for all the plafforms supported
 # by this recipe.
