@@ -1,4 +1,4 @@
-LINUX_VERSION = "4.14"
+LINUX_VERSION = "4.19"
 LINUX_RELEASE = "dev"
 
 KBRANCH = "master"
