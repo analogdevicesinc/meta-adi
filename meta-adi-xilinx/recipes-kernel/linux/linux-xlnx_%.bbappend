@@ -4,7 +4,7 @@ BRANCH = "master"
 SRCREV = "${AUTOREV}"
 SRC_URI += "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${BRANCH}"
 KBRANCH = "${BRANCH}"
-PV = "4.14"
+PV = "4.19"
 # override kernel config file
 KBUILD_DEFCONFIG_zynq = "zynq_xcomm_adv7511_defconfig"
 KBUILD_DEFCONFIG_zynqmp = "adi_zynqmp_defconfig"
