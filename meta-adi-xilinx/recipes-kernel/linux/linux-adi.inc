@@ -1,10 +1,12 @@
+require recipes-kernel/linux/linux-xlnx.inc
+
 DESCRIPTION = "ADI kernel"
-BRANCH = "2019_R1"
-# always use latest source revision
-SRCREV = "${AUTOREV}"
-SRC_URI += "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${BRANCH}"
-KBRANCH = "${BRANCH}"
-PV = "4.14"
+# Default to latest revision
+SRCREV ?= "${AUTOREV}"
+PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
+
+SRC_URI = "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${KBRANCH}"
+
 # override kernel config file
 KBUILD_DEFCONFIG_zynq = "zynq_xcomm_adv7511_defconfig"
 KBUILD_DEFCONFIG_zynqmp = "adi_zynqmp_defconfig"
@@ -16,4 +18,3 @@ KBUILD_DEFCONFIG_microblaze = "adi_mb_defconfig"
 do_configure_prepend_microblaze() {
 	sed -i 's,CONFIG_INITRAMFS_SOURCE=.*,,' ${B}/.config
 }
-
