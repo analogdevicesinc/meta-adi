@@ -1,7 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI += " \
-	file://0001-fix-the-clock-frequency-generation.patch \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
