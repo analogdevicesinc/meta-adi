@@ -1,3 +1,3 @@
-SRCREV = "4e22517c60f3c5e691320871956edede15459ae3"
+SRCREV = "c5e0ff9afc951c5469f1ff0049f39c32be7f602f"
 
 require libiio.inc
