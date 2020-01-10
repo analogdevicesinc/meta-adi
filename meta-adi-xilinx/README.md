@@ -13,14 +13,17 @@ Xilinx based platforms use Petalinx SDK in order to customize, build and deploy 
 * [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf)
 * [Petalinux Wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842250/PetaLinux)
 
-**This layer was tested against Petalinux-v2018.3**.
+**This layer supports:**
+
+* **Petalinux-v2018.3;**
+* **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
 
 ```bash
 source  <path-to-installed-PetaLinux>/settings.sh
 petalinux-create -t project --template <PLATFORM> --name <PROJECT_NAME>, where <PLATFORM> is:
-	* zynqMP (for UltraScale + MPSoC) 
+	* zynqMP (for UltraScale + MPSoC)
 	* zynq (for Zynq)
 	* microblaze (for MicroBlaze)
 git clone https://github.com/analogdevicesinc/meta-adi.git
@@ -54,11 +57,10 @@ con
 
 > Notes:
 >
-1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
-2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
-3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_3/SDK_Doc/concepts/sdk_c_xsd_over.htm)
-4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
-> 
+>1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
+>2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
+>3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_3/SDK_Doc/concepts/sdk_c_xsd_over.htm)
+>4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 
 For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs. To disable initramfs on petalinux:
 
@@ -80,5 +82,5 @@ EXTRA_USERS_PARAMS = "  \
 To extend ADI devicetrees, the normal Petalinux method should be used. Hence, the `system-user.dtsi` file should be used. This file is located under `path-to-project/project-spec/meta-user/recipes-bsp/device-tree/files/`. There is also a `device-tree.bbappend` which automatically selects this file for the build. With this mind, one can either:
 
  1. Directly change this file with the new devicetree nodes;
- 2. Create a new file and add a `#include` or `/include/`directive in `system-user.dtsi`. In these case, changes to the `device-tree.bbappend` recipe are also needed. 
- 
+ 2. Create a new file and add a `#include` or `/include/`directive in `system-user.dtsi`. In these case, changes to the `device-tree.bbappend` recipe are also needed.
+
