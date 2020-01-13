@@ -5,8 +5,8 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://license.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 BRANCH = "master"
-# just pick the last revision on master
-SRCREV = "${AUTOREV}"
+# If we are in an offline build we cannot use AUTOREV since it would require internet!
+SRCREV = "${@ "8927da366f99a987b48e9aacc377f18dd7f20a4b" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "git://github.com/analogdevicesinc/fru_tools.git;protocol=https;branch=${BRANCH}"
 PV_append = "+git${SRCPV}"
 
