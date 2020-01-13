@@ -84,3 +84,6 @@ To extend ADI devicetrees, the normal Petalinux method should be used. Hence, th
  1. Directly change this file with the new devicetree nodes;
  2. Create a new file and add a `#include` or `/include/`directive in `system-user.dtsi`. In these case, changes to the `device-tree.bbappend` recipe are also needed.
 
+### Offline Build
+
+To build petalinux without internet access, run `petalinux-config` and select `BB_NO_NETWORK`. Check [Xilinx Yocto Builds without an Internet Connection](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/60129817/Xilinx+Yocto+Builds+without+an+Internet+Connection) for more information.
