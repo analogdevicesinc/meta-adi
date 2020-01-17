@@ -50,6 +50,8 @@ SRC_URI += " \
 	file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
 	file://pl-delete-nodes-vc707_fmcadc5.dtsi"
 
+SRC_URI_append_zynq = " file://zynq-stdout-path.dtsi"
+
 # Set this variable with the desired device tree
 # Supported device tree files
 #  - For zynq platforms:
@@ -222,6 +224,8 @@ do_configure_append() {
 			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${dtb_ver_file}"
 			[ -e "${DTS_INCLUDE_PATH}/zynq.dtsi" ] && {  \
 				sed -i s,[/#]include.*\"zynq-7000.dtsi\",, "${DTS_INCLUDE_PATH}/zynq.dtsi"; }
+
+			echo "#include \"zynq-stdout-path.dtsi\"" >> ${WORKDIR}/analog-devices.dtsi
 		;;
 		"plnx-zynqmp")
 			set_common_vars pl-delete-nodes-${KERNEL_DTB}.dtsi "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
