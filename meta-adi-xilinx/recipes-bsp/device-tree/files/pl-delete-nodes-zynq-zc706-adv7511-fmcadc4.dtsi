@@ -4,15 +4,12 @@
 };
 
 /delete-node/ &axi_ad9680_core_0;
-/delete-node/ &misc_clk_0;
 /delete-node/ &axi_ad9680_core_1;
 /delete-node/ &axi_ad9680_dma;
 /delete-node/ &axi_ad9680_jesd_rx_axi;
 /delete-node/ &axi_ad9680_xcvr;
 /delete-node/ &axi_hdmi_clkgen;
 /delete-node/ &axi_hdmi_core;
-/delete-node/ &misc_clk_1;
 /delete-node/ &axi_hdmi_dma;
 /delete-node/ &axi_iic_main;
 /delete-node/ &axi_spdif_tx_core;
-/delete-node/ &misc_clk_2;

@@ -18,10 +18,4 @@
 /delete-node/ &axi_adrv9009_tx_xcvr;
 /delete-node/ &psu_ctrl_ipi;
 /delete-node/ &psu_message_buffers;
-/delete-node/ &rx_adrv9009_tpl_core_tpl_core;
-/delete-node/ &rx_os_adrv9009_tpl_core_tpl_core;
-/delete-node/ &tx_adrv9009_tpl_core_tpl_core;
-/delete-node/ &misc_clk_0;
-/delete-node/ &misc_clk_1;
-/delete-node/ &axi_sysid_0;
 

@@ -27,8 +27,5 @@
 /delete-node/ &axi_spi;
 /delete-node/ &axi_timer;
 /delete-node/ &axi_uart;
-/delete-node/ &rx_ad9371_tpl_core_tpl_core;
-/delete-node/ &rx_os_ad9371_tpl_core_tpl_core;
 /delete-node/ &sys_mb_debug;
-/delete-node/ &axi_sysid_0;
 

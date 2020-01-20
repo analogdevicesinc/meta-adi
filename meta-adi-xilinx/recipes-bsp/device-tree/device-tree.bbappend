@@ -8,7 +8,6 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zed-adv7511-fmcmotcon2.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcadc4.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-ad6676-fmc.dtsi \
@@ -60,7 +59,6 @@ SRC_URI += " \
 #	* zynq-zed-adv7511-fmcmotcon2
 #	* zynq-zed-adv7511-ad9467-fmc-250ebz
 #	* zynq-zc706-adv7511
-#	* zynq-zc706-adv7511-adrv9009
 #	* zynq-zc706-adv7511-fmcadc4
 #	* zynq-zc706-adv7511-adrv9371
 #	* zynq-zc706-adv7511-ad6676-fmc
@@ -112,7 +110,6 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zed-adv7511-fmcmotcon2 \
 			zynq-zed-adv7511-ad9467-fmc-250ebz \
 			zynq-zc706-adv7511 \
-			zynq-zc706-adv7511-adrv9009 \
 			zynq-zc706-adv7511-fmcadc4 \
 			zynq-zc706-adv7511-adrv9371 \
 			zynq-zc706-adv7511-ad6676-fmc \
@@ -204,7 +201,7 @@ do_configure_append() {
 		bbfatal "Error: Could not find selected device tree:\"${KERNEL_DTB}.dts\" in the kernel sources:\"${DTS_INCLUDE_PATH}\"!!"
 	fi
 
-	[ ! -e "${WORKDIR}/pl-delete-nodes-${KERNEL_DTB}.dtsi" ] && \ 
+	[ ! -e "${WORKDIR}/pl-delete-nodes-${KERNEL_DTB}.dtsi" ] && \
 		{ bbfatal "Error: Could not find \"pl-delete-nodes-${KERNEL_DTB}.dtsi\" in \"${WORKDIR}\""; }
 
 	case ${MACHINE} in
