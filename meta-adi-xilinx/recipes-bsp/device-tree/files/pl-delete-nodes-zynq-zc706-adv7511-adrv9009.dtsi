@@ -23,7 +23,6 @@
 /delete-node/ &axi_hdmi_dma;
 /delete-node/ &axi_iic_main;
 /delete-node/ &axi_spdif_tx_core;
-/delete-node/ &misc_clk_3;
 /delete-node/ &rx_adrv9009_tpl_core_tpl_core;
 /delete-node/ &rx_os_adrv9009_tpl_core_tpl_core;
 /delete-node/ &tx_adrv9009_tpl_core_tpl_core;
