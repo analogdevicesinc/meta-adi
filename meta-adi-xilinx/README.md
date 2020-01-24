@@ -15,7 +15,7 @@ Xilinx based platforms use Petalinx SDK in order to customize, build and deploy 
 
 **This layer supports:**
 
-* **Petalinux-v2018.3;**
+* **Petalinux-v2019.1;**
 * **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
