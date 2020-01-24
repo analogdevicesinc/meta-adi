@@ -6,7 +6,6 @@
 /delete-node/ &axi_ad9371_rx_clkgen;
 /delete-node/ &misc_clk_0;
 /delete-node/ &axi_ad9371_rx_dma;
-/delete-node/ &misc_clk_1;
 /delete-node/ &axi_ad9371_rx_jesd_rx_axi;
 /delete-node/ &axi_ad9371_rx_os_clkgen;
 /delete-node/ &axi_ad9371_rx_os_dma;
