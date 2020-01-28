@@ -6,11 +6,9 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511.dtsi \
-	file://pl-delete-nodes-zynq-zed-adv7511-fmcmotcon2.dtsi \
 	file://pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-fmcadc4.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-ad6676-fmc.dtsi \
 	file://pl-delete-nodes-zynq-zc706-adv7511-ad9739a-fmc.dtsi \
@@ -24,11 +22,9 @@ SRC_URI += " \
 	file://pl-delete-nodes-zynq-zed-imageon.dtsi \
 	file://pl-delete-nodes-zynq-adrv9361-z7035-bob-cmos.dtsi \
 	file://pl-delete-nodes-zynq-adrv9361-z7035-bob.dtsi \
-	file://pl-delete-nodes-zynq-adrv9361-z7035-box.dtsi \
 	file://pl-delete-nodes-zynq-adrv9361-z7035-fmc.dtsi \
 	file://pl-delete-nodes-zynq-adrv9364-z7020-bob-cmos.dtsi \
 	file://pl-delete-nodes-zynq-adrv9364-z7020-bob.dtsi \
-	file://pl-delete-nodes-zynq-adrv9364-z7020-box.dtsi \
 	file://pl-delete-nodes-zynq-zc702-adv7511-ad9361-fmcomms5.dtsi \
 	file://pl-delete-nodes-zynq-zc702-adv7511.dtsi \
 	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
@@ -45,7 +41,6 @@ SRC_URI += " \
 	file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
 	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 	file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
-	file://pl-delete-nodes-vc707_fmcdaq2.dtsi \
 	file://pl-delete-nodes-vc707_fmcadc2.dtsi \
 	file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
 	file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
@@ -58,11 +53,9 @@ SRC_URI += " \
 #	* zynq-zc706-adv7511-ad9434-fmc-500ebz
 #	* zynq-zc706-adv7511-fmcdaq2
 #	* zynq-zed-adv7511
-#	* zynq-zed-adv7511-fmcmotcon2
 #	* zynq-zed-adv7511-ad9467-fmc-250ebz
 #	* zynq-zc706-adv7511
 #	* zynq-zc706-adv7511-adrv9009
-#	* zynq-zc706-adv7511-fmcadc4
 #	* zynq-zc706-adv7511-adrv9371
 #	* zynq-zc706-adv7511-ad6676-fmc
 #	* zynq-zc706-adv7511-ad9739a-fmc
@@ -78,10 +71,8 @@ SRC_URI += " \
 #	* zynq-zc702-adv7511
 #	* zynq-adrv9361-z7035-bob-cmos
 #	* zynq-adrv9361-z7035-bob
-#	* zynq-adrv9361-z7035-box
 #	* zynq-adrv9364-z7020-bob-cmos
 #	* zynq-adrv9364-z7020-bob
-#	* zynq-adrv9364-z7020-box
 #	* zynq-adrv9361-z7035-fmc
 #  - For zynqMP platforms:
 #	* zynqmp-zcu102-rev10-adrv9009
@@ -98,7 +89,6 @@ SRC_URI += " \
 #	* kcu105_fmcdaq2
 #	* kcu105_adrv9371x
 #	* kcu105_fmcomms2-3
-#	* vc707_fmcdaq2
 #	* vc707_fmcadc2
 #	* vc707_fmcomms2-3
 #	* vc707_fmcjesdadc1
@@ -110,11 +100,9 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-ad9434-fmc-500ebz \
 			zynq-zc706-adv7511-fmcdaq2 \
 			zynq-zed-adv7511 \
-			zynq-zed-adv7511-fmcmotcon2 \
 			zynq-zed-adv7511-ad9467-fmc-250ebz \
 			zynq-zc706-adv7511 \
 			zynq-zc706-adv7511-adrv9009 \
-			zynq-zc706-adv7511-fmcadc4 \
 			zynq-zc706-adv7511-adrv9371 \
 			zynq-zc706-adv7511-ad6676-fmc \
 			zynq-zc706-adv7511-ad9739a-fmc \
@@ -130,10 +118,8 @@ KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc702-adv7511-ad9361-fmcomms5 \
 			zynq-adrv9361-z7035-bob-cmos \
 			zynq-adrv9361-z7035-bob \
-			zynq-adrv9361-z7035-box \
 			zynq-adrv9364-z7020-bob-cmos \
 			zynq-adrv9364-z7020-bob \
-			zynq-adrv9364-z7020-box \
 			zynq-adrv9361-z7035-fmc"
 KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
 			zynqmp-zcu102-rev10-fmcdaq2 \
@@ -148,7 +134,6 @@ KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
 				kc705_ad9467_fmc \
 				kc705_fmcomms2-3 \
 				kc705_fmcjesdadc1 \
-				vc707_fmcdaq2 \
 				vc707_fmcadc2 \
 				vc707_fmcomms2-3 \
 				vc707_fmcjesdadc1 \
@@ -205,7 +190,7 @@ do_configure_append() {
 		bbfatal "Error: Could not find selected device tree:\"${KERNEL_DTB}.dts\" in the kernel sources:\"${DTS_INCLUDE_PATH}\"!!"
 	fi
 
-	[ ! -e "${WORKDIR}/pl-delete-nodes-${KERNEL_DTB}.dtsi" ] && \ 
+	[ ! -e "${WORKDIR}/pl-delete-nodes-${KERNEL_DTB}.dtsi" ] && \
 		{ bbfatal "Error: Could not find \"pl-delete-nodes-${KERNEL_DTB}.dtsi\" in \"${WORKDIR}\""; }
 
 	case ${MACHINE} in
