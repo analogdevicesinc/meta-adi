@@ -1,52 +1,55 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRC_URI += " \
-	file://pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi \
-	file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
-	file://pl-delete-nodes-zynq-zed-adv7511.dtsi \
-	file://pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad6676-fmc.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad9739a-fmc.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad9625-fmcadc2.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad9265-fmc-125ebz.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad9361-fmcomms2-3.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-ad9361-fmcomms5.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-fmcomms11.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq3-revC.dtsi \
-	file://pl-delete-nodes-zynq-zc706-adv7511-fmcjesdadc1.dtsi \
-	file://pl-delete-nodes-zynq-zed-imageon.dtsi \
-	file://pl-delete-nodes-zynq-adrv9361-z7035-bob-cmos.dtsi \
-	file://pl-delete-nodes-zynq-adrv9361-z7035-bob.dtsi \
-	file://pl-delete-nodes-zynq-adrv9361-z7035-fmc.dtsi \
-	file://pl-delete-nodes-zynq-adrv9364-z7020-bob-cmos.dtsi \
-	file://pl-delete-nodes-zynq-adrv9364-z7020-bob.dtsi \
-	file://pl-delete-nodes-zynq-zc702-adv7511-ad9361-fmcomms5.dtsi \
-	file://pl-delete-nodes-zynq-zc702-adv7511.dtsi \
-	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
-	file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
-	file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi \
-	file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9361-fmcomms2-3.dtsi \
-	file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9361-fmcomms5.dtsi \
-	file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq3.dtsi \
-	file://pl-delete-nodes-fmcdaq2.dtsi \
-	file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
-	file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
-	file://pl-delete-nodes-kc705_fmcomms2-3.dtsi \
-	file://pl-delete-nodes-kc705_fmcjesdadc1.dtsi \
-	file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
-	file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
-	file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
-	file://pl-delete-nodes-vc707_fmcadc2.dtsi \
-	file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
-	file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
-	file://pl-delete-nodes-vc707_fmcadc5.dtsi"
+SRC_URI_append_zynq = " \
+		file://zynq-stdout-path.dtsi \
+		file://pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi \
+		file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
+		file://pl-delete-nodes-zynq-zed-adv7511.dtsi \
+		file://pl-delete-nodes-zynq-zed-adv7511-ad9467-fmc-250ebz.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad6676-fmc.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad9739a-fmc.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad9625-fmcadc2.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad9265-fmc-125ebz.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad9361-fmcomms2-3.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-ad9361-fmcomms5.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-fmcomms11.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq3-revC.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-fmcjesdadc1.dtsi \
+		file://pl-delete-nodes-zynq-zed-imageon.dtsi \
+		file://pl-delete-nodes-zynq-adrv9361-z7035-bob-cmos.dtsi \
+		file://pl-delete-nodes-zynq-adrv9361-z7035-bob.dtsi \
+		file://pl-delete-nodes-zynq-adrv9361-z7035-fmc.dtsi \
+		file://pl-delete-nodes-zynq-adrv9364-z7020-bob-cmos.dtsi \
+		file://pl-delete-nodes-zynq-adrv9364-z7020-bob.dtsi \
+		file://pl-delete-nodes-zynq-zc702-adv7511-ad9361-fmcomms5.dtsi \
+		file://pl-delete-nodes-zynq-zc702-adv7511.dtsi"
 
-SRC_URI_append_zynq = " file://zynq-stdout-path.dtsi"
+SRC_URI_append_zynqmp = " \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9361-fmcomms2-3.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9361-fmcomms5.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq3.dtsi"
+
+SRC_URI_append_microblaze = " \
+		file://pl-delete-nodes-fmcdaq2.dtsi \
+		file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
+		file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
+		file://pl-delete-nodes-kc705_fmcomms2-3.dtsi \
+		file://pl-delete-nodes-kc705_fmcjesdadc1.dtsi \
+		file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
+		file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
+		file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
+		file://pl-delete-nodes-vc707_fmcadc2.dtsi \
+		file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
+		file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
+		file://pl-delete-nodes-vc707_fmcadc5.dtsi"
 
 # Set this variable with the desired device tree
 # Supported device tree files
