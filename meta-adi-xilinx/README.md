@@ -87,3 +87,46 @@ To extend ADI devicetrees, the normal Petalinux method should be used. Hence, th
 ### Offline Build
 
 To build petalinux without internet access, run `petalinux-config` and select `BB_NO_NETWORK`. Check [Xilinx Yocto Builds without an Internet Connection](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/60129817/Xilinx+Yocto+Builds+without+an+Internet+Connection) for more information.
+
+### FPGA Manager
+
+**FPGA Manager is not officially supported by meta-adi! We just provide some guidelines and hooks in our layer to make it easier to use this feature. In the end, is up to the user to provide the devicetree overlay to be used by the build system.**
+
+When using this, the fpga bitstream is not included in the `BOOT.bin` file, so that, only a base devicetree must be compiled in order to boot the system. This devicetree should not have any node/device that is instantiated by the bitstream (this can, most likely, stuck your kernel at boot). To define the base devicetree add this to your local conf file:
+
+```
+DTS_BASE = "your-devicetree"
+```
+
+If you don't provide this, the following defaults are taken:
+
+```
+DTS_BASE_zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
+DTS_BASE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
+DTS_BASE_microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
+```
+
+> Naturally, if you are building for a zedboard, you probably don't want to use `zynq-zc706.dts`
+
+After this, it is time to provide your devicetree overlay, by defining the next variables in your local conf file:
+
+```
+DTS_OVERLAY = "your-overlay"
+DTS_OVERLAY_PATH = "path-to-your-overlay"
+```
+
+> NOTE: If you define a custom path, you need to make sure that `dtc` can reach it...
+
+By default, the devicetree recipe defines:
+
+```
+DTS_OVERLAY ?= "pl-${KERNEL_DTB}-overlay.dtsi"
+DTS_OVERLAY_PATH ?= "${WORKDIR}"
+```
+
+If you use the above defaults, you don't need to define these variables in your local conf. Just make sure to append the recipe's `SRC_URI` so that, your overlay is copied to the recipe's `WORKDIR`. (hint: you can further append this recipe...).
+
+> You can see an overlay example for [zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/files/pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi) and [zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/files/pl-fmcomms5-zcu102-overlay.dtsi).
+
+
+Additionally, you can also "**Specify hw directory path**" under the FPGA Manager configurations. We also provide an example on how this can be used with meta-adi. Please refer to [fpga-manager-util_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/fpga-manager-util_%.bbappend).
