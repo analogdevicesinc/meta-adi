@@ -1,8 +1,4 @@
 /*Delete nodes from pl.dtsi which are redefined in ADI dts*/
-/ {
-	/delete-node/ aliases;
-};
-
 /delete-node/ &sys_mb;
 /delete-node/ &clk_cpu;
 /delete-node/ &clk_bus_0;

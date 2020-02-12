@@ -1,9 +1,5 @@
 
 /*Delete nodes from pl.dtsi which are redefined in ADI dts*/
-/ {
-	/delete-node/ aliases;
-};
-
 /delete-node/ &axi_adrv9009_rx_clkgen;
 /delete-node/ &axi_adrv9009_rx_dma;
 /delete-node/ &axi_adrv9009_rx_jesd_rx_axi;
