@@ -1,8 +1,4 @@
 /*Delete nodes from pl.dtsi which are redefined in ADI dts*/
-/ {
-	/delete-node/ aliases;
-};
-
 /delete-node/ &axi_ad9144_core;
 /delete-node/ &misc_clk_0;
 /delete-node/ &axi_ad9144_dma;
