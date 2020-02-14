@@ -1,0 +1,27 @@
+FROM ubuntu:16.04
+
+RUN dpkg --add-architecture i386
+RUN apt-get update
+RUN apt-get install -y make gcc autoconf build-essential texinfo locales locales-all \
+		unzip gawk xterm socat libssl-dev libncurses5-dev wget \
+		python git chrpath diffstat zlib1g-dev gcc-multilib libsdl1.2-dev \
+		libglib2.0-dev libtool net-tools pax cpio screen vim zlib1g-dev:i386 \
+		bc libtool-bin xvfb libgtk2.0-dev lsb-release
+
+# set proper locale
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+# set bash as default shell
+RUN echo "dash dash/sh boolean false" | debconf-set-selections
+RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+
+# not really necessary, just to make it easier to install packages on the run...
+RUN useradd -ms /bin/bash petalinux
+RUN echo "root:peta" | chpasswd
+
+USER petalinux
