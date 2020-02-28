@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING.txt;md5=7c13b3376cea0ce68d2d2da0a1b3a72c"
 
 BRANCH ?= "master"
 
-SRC_URI = "git://github.com/analogdevicesinc/libiio.git;branch=${BRANCH}"
+SRC_URI = "git://github.com/analogdevicesinc/libiio.git;protocol=https;branch=${BRANCH}"
 S = "${WORKDIR}/git"
 
 DEPENDS = "flex-native bison-native avahi libaio libusb1 libxml2"
