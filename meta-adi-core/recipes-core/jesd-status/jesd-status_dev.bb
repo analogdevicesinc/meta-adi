@@ -9,7 +9,7 @@ NO_GENERIC_LICENSE[ADI-BSD] = "LICENSE.txt"
 BRANCH = "master"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
 SRCREV = "${@ "63766a54193a107dab6ee289ae3e63177621c4a7" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
-SRC_URI = "git://github.com/analogdevicesinc/jesd-eye-scan-gtk.git;branch=${BRANCH}"
+SRC_URI = "git://github.com/analogdevicesinc/jesd-eye-scan-gtk.git;protocol=https;branch=${BRANCH}"
 
 S = "${WORKDIR}/git"
 
