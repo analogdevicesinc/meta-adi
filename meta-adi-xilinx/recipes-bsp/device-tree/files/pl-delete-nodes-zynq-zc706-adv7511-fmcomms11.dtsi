@@ -1,10 +1,10 @@
 /*Delete nodes from pl.dtsi which are redefined in ADI dts*/
-/delete-node/ &axi_ad9162_core_tpl_core;
+/delete-node/ &axi_ad9162_core_dac_tpl_core;
 /delete-node/ &misc_clk_0;
 /delete-node/ &axi_ad9162_dma;
 /delete-node/ &axi_ad9162_jesd_tx_axi;
 /delete-node/ &axi_ad9162_xcvr;
-/delete-node/ &axi_ad9625_core_tpl_core;
+/delete-node/ &axi_ad9625_core_adc_tpl_core;
 /delete-node/ &axi_ad9625_dma;
 /delete-node/ &axi_ad9625_jesd_rx_axi;
 /delete-node/ &axi_ad9625_xcvr;
