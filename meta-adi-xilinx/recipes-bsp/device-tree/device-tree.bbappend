@@ -59,58 +59,16 @@ python __anonymous() {
 Make sure to define it in a conf file...")
 }
 DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
-# used for sanity check
-KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
-			zynq-zc706-adv7511-ad9434-fmc-500ebz \
-			zynq-zc706-adv7511-fmcdaq2 \
-			zynq-zed-adv7511 \
-			zynq-zed-adv7511-ad9467-fmc-250ebz \
-			zynq-zc706-adv7511 \
-			zynq-zc706-adv7511-adrv9009 \
-			zynq-zc706-adv7511-adrv9371 \
-			zynq-zc706-adv7511-ad6676-fmc \
-			zynq-zc706-adv7511-ad9739a-fmc \
-			zynq-zc706-adv7511-ad9625-fmcadc2 \
-			zynq-zc706-adv7511-ad9265-fmc-125ebz \
-			zynq-zc706-adv7511-ad9361-fmcomms2-3 \
-			zynq-zc706-adv7511-ad9361-fmcomms5 \
-			zynq-zc706-adv7511-fmcdaq3-revC \
-			zynq-zc706-adv7511-fmcjesdadc1 \
-			zynq-zc706-adv7511-fmcomms11 \
-			zynq-zed-imageon \
-			zynq-zc702-adv7511 \
-			zynq-zc702-adv7511-ad9361-fmcomms5 \
-			zynq-adrv9361-z7035-bob-cmos \
-			zynq-adrv9361-z7035-bob \
-			zynq-adrv9364-z7020-bob-cmos \
-			zynq-adrv9364-z7020-bob \
-			zynq-adrv9361-z7035-fmc"
-KERNEL_DTB_SUPPORTED_zynqmp = "zynqmp-zcu102-rev10-adrv9009 \
-			zynqmp-zcu102-rev10-fmcdaq2 \
-			zynqmp-zcu102-rev10-adrv9371 \
-			zynqmp-zcu102-rev10-ad9361-fmcomms2-3 \
-			zynqmp-zcu102-rev10-ad9361-fmcomms5 \
-			zynqmp-zcu102-rev10-fmcdaq3"
-KERNEL_DTB_SUPPORTED_microblaze = "kc705_fmcdaq2 \
-				kcu105_adrv9371x \
-				kcu105_fmcdaq2 \
-				kcu105_fmcomms2-3 \
-				kc705_ad9467_fmc \
-				kc705_fmcomms2-3 \
-				kc705_fmcjesdadc1 \
-				vc707_fmcadc2 \
-				vc707_fmcomms2-3 \
-				vc707_fmcjesdadc1 \
-				vc707_fmcadc5"
 
 DTS_INCLUDE_PATH_zynq = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 DTS_INCLUDE_PATH_zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
 DTS_INCLUDE_PATH_microblaze = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
+KERNEL_DTB_PATH ?= "${DTS_INCLUDE_PATH}"
 
 # zynq has some corner case where this will be overwritten
-DTB_TAG_FILE = "${DT_FILES_PATH}/system-top.dts"
+DTB_TAG_FILE ?= "${DT_FILES_PATH}/system-top.dts"
 # zynqMP always uses this devicetree (at least on the supported projects)
-DTB_TAG_FILE_zynqmp = "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
+DTB_TAG_FILE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
 
 # Only used when FPGA_MANAGER is enabled. These are only some defaults. Note that, for example, for Microblaze
 # vc707.dts won't be a good choice if your platform is based on kc705 for instance...
@@ -130,23 +88,6 @@ DEVICETREE_PP_FLAGS += " \
 DEVICETREE_FLAGS += " \
 		-i${DTS_INCLUDE_PATH} \
 		"
-
-# Make sure that the selected device tree is supported on the current ${MACHINE}
-do_sanity_check() {
-
-	local dtb=""
-	local found="n"
-
-	for dtb in ${KERNEL_DTB_SUPPORTED}; do
-		[ "${dtb}" == "${KERNEL_DTB}" ] && { found="y"; break; }
-	done
-
-	[ "${found}" == "n" ] && { bbfatal "Selected dtb=\"${KERNEL_DTB}\" not supported for current machine=${MACHINE}. \
-These are the supported device trees:\"${KERNEL_DTB_SUPPORTED}\"."; }
-
-	return 0
-}
-addtask do_sanity_check after do_patch before do_create_yaml
 
 # Based on the selected device tree, this function will:
 #	copy the device tree to ${WORKDIR}/system-user.dtsi since it is the one included by the top level device tree.
@@ -175,10 +116,10 @@ do_configure_append() {
 		return 0
 	fi
 
-	[ ! -e "${DTS_INCLUDE_PATH}/${KERNEL_DTB}.dts" ] && \
-		{ bbfatal "Error: Could not find selected device tree:\"${KERNEL_DTB}.dts\" in the kernel sources:\"${DTS_INCLUDE_PATH}\"!!"; }
+	[ ! -e "${KERNEL_DTB_PATH}/${KERNEL_DTB}.dts" ] && \
+		{ bbfatal "Error: Could not find selected device tree:\"${KERNEL_DTB}.dts\" in:\"${KERNEL_DTB_PATH}\"!!"; }
 
-	cp "${DTS_INCLUDE_PATH}/${KERNEL_DTB}.dts" "${DT_FILES_PATH}/system-top.dts"
+	cp "${KERNEL_DTB_PATH}/${KERNEL_DTB}.dts" "${DT_FILES_PATH}/system-top.dts"
 
 	# corner cases
 	case "${KERNEL_DTB}" in
