@@ -2,9 +2,6 @@ SUMMARY = "Tools to display JESD204 Status Information"
 SECTION = "console/utils"
 LICENSE = "ADI-BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=38c01601d5c4b84986a8f48ece946aa1"
-# set this variable since ADI BSD is not a generic license supported in yocto and hence,
-# some warning would be printed...
-NO_GENERIC_LICENSE[ADI-BSD] = "LICENSE.txt"
 
 BRANCH = "master"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
