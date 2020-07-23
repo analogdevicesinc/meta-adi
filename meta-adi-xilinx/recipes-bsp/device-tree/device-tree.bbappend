@@ -50,56 +50,15 @@ SRC_URI_append_microblaze = " \
 		file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
 		file://pl-delete-nodes-vc707_fmcadc5.dtsi"
 
-# Set this variable with the desired device tree
-# Supported device tree files
-#  - For zynq platforms:
-#	* zynq-zed-adv7511-ad9361-fmcomms2-3
-#	* zynq-zc706-adv7511-ad9434-fmc-500ebz
-#	* zynq-zc706-adv7511-fmcdaq2
-#	* zynq-zed-adv7511
-#	* zynq-zed-adv7511-ad9467-fmc-250ebz
-#	* zynq-zc706-adv7511
-#	* zynq-zc706-adv7511-adrv9009
-#	* zynq-zc706-adv7511-adrv9371
-#	* zynq-zc706-adv7511-ad6676-fmc
-#	* zynq-zc706-adv7511-ad9739a-fmc
-#	* zynq-zc706-adv7511-ad9625-fmcadc2
-#	* zynq-zc706-adv7511-ad9265-fmc-125ebz
-#	* zynq-zc706-adv7511-ad9361-fmcomms2-3
-#	* zynq-zc706-adv7511-ad9361-fmcomms5
-#	* zynq-zc706-adv7511-fmcdaq3-revC
-#	* zynq-zc706-adv7511-fmcjesdadc1
-#	* zynq-zc706-adv7511-fmcomms11
-#	* zynq-zed-imageon
-#	* zynq-zc702-adv7511-ad9361-fmcomms5
-#	* zynq-zc702-adv7511
-#	* zynq-adrv9361-z7035-bob-cmos
-#	* zynq-adrv9361-z7035-bob
-#	* zynq-adrv9364-z7020-bob-cmos
-#	* zynq-adrv9364-z7020-bob
-#	* zynq-adrv9361-z7035-fmc
-#  - For zynqMP platforms:
-#	* zynqmp-zcu102-rev10-adrv9009
-#	* zynqmp-zcu102-rev10-fmcdaq2
-#	* zynqmp-zcu102-rev10-adrv9371
-#	* zynqmp-zcu102-rev10-ad9361-fmcomms2-3
-#	* zynqmp-zcu102-rev10-ad9361-fmcomms5
-#	* zynqmp-zcu102-rev10-fmcdaq3
-#  - For microblaze platforms
-#	* kc705_fmcdaq2
-#	* kc705_ad9467_fmc
-#	* kc705_fmcomms2-3
-#	* kc705_fmcjesdadc1
-#	* kcu105_fmcdaq2
-#	* kcu105_adrv9371x
-#	* kcu105_fmcomms2-3
-#	* vc707_fmcadc2
-#	* vc707_fmcomms2-3
-#	* vc707_fmcjesdadc1
-#	* vc707_fmcadc5
-KERNEL_DTB = "zynq-zed-adv7511-ad9361-fmcomms2-3"
-
-DTB_PL_DELETE = "pl-delete-nodes-${KERNEL_DTB}"
+python __anonymous() {
+    if not d.getVar("KERNEL_DTB"):
+        """this is a warn and not fatal because `petalinux-config --get-hw-description` is using
+        recipetool to append recipes on the run. With fatal, that process would silently break if
+        KERNEL_DTB is not defined at that point which is likely..."""
+        bb.warn("KERNEL_DTB is not defined. Your build is likely to fail! \
+Make sure to define it in a conf file...")
+}
+DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
 # used for sanity check
 KERNEL_DTB_SUPPORTED_zynq = "zynq-zed-adv7511-ad9361-fmcomms2-3 \
 			zynq-zc706-adv7511-ad9434-fmc-500ebz \
