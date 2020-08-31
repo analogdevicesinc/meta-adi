@@ -1,11 +1,12 @@
-require recipes-kernel/linux/linux-xlnx.inc
-
 DESCRIPTION = "ADI kernel"
-# Default to latest revision
-SRCREV ?= "${AUTOREV}"
-PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
+LINUX_VERSION = "4.19"
+ADI_VERSION = "adi_master"
 
-SRC_URI = "git://github.com/analogdevicesinc/linux.git;protocol=https;branch=${KBRANCH}"
+PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
+KBRANCH = "master"
+# needed for offline build
+SRCREV = "${@ "cc28af1e4e1d9a2deccbad98c6da51f83e52bef5" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"
 
 # override kernel config file
 KBUILD_DEFCONFIG_zynq = "zynq_xcomm_adv7511_defconfig"
