@@ -225,11 +225,11 @@ Having this done, it is time to add both the devicetree and pl-delete-nodes-${KE
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
-	pl-delete-nodes-custom-devicetree.dtsi
-	custom-devicetree.dts
+	pl-delete-nodes-custom-devicetree.dtsi \
+	custom-devicetree.dts \
 "
 
-KERNEL_DTB_PATH = ${WORKDIR}
+KERNEL_DTB_PATH = "${WORKDIR}"
 ```
 
 > If the project being added is supported by ADI (with no custom changes), the devicetree should be present in the kernel sources. In that case, there's no need to redefine `KERNEL_DTB_PATH` and the `SRC_URI_append` should only contain the `pl-delete-nodes` file. In this case, alternatively, one can also  directly change the [devicetree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
