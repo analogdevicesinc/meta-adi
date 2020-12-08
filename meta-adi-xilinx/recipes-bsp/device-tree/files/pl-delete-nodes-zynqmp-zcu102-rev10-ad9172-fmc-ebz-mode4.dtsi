@@ -1,0 +1,8 @@
+/delete-node/ &axi_sysid_0;
+/delete-node/ &dac_dma;
+/delete-node/ &dac_jesd204_link_tx_axi;
+/delete-node/ &misc_clk_0;
+/delete-node/ &dac_jesd204_transport_dac_tpl_core;
+/delete-node/ &dac_jesd204_xcvr;
+/delete-node/ &psu_ctrl_ipi;
+/delete-node/ &psu_message_buffers;
