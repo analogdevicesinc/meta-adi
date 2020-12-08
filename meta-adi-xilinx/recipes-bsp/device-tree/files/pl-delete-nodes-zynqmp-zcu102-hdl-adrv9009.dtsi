@@ -1,0 +1,23 @@
+/*
+ * Delete nodes from pl.dtsi which are redefined in ADI dts. There are more than one project
+ * based on the zcu102 adrv9009 hdl project. Hence, we can just include this file in all of them.
+ */
+/delete-node/ &axi_adrv9009_rx_clkgen;
+/delete-node/ &misc_clk_0;
+/delete-node/ &axi_adrv9009_rx_dma;
+/delete-node/ &axi_adrv9009_rx_jesd_rx_axi;
+/delete-node/ &axi_adrv9009_rx_os_clkgen;
+/delete-node/ &axi_adrv9009_rx_os_dma;
+/delete-node/ &axi_adrv9009_rx_os_jesd_rx_axi;
+/delete-node/ &axi_adrv9009_rx_os_xcvr;
+/delete-node/ &axi_adrv9009_rx_xcvr;
+/delete-node/ &axi_adrv9009_tx_clkgen;
+/delete-node/ &axi_adrv9009_tx_dma;
+/delete-node/ &axi_adrv9009_tx_jesd_tx_axi;
+/delete-node/ &axi_adrv9009_tx_xcvr;
+/delete-node/ &axi_sysid_0;
+/delete-node/ &psu_ctrl_ipi;
+/delete-node/ &psu_message_buffers;
+/delete-node/ &rx_adrv9009_tpl_core_adc_tpl_core;
+/delete-node/ &rx_os_adrv9009_tpl_core_adc_tpl_core;
+/delete-node/ &tx_adrv9009_tpl_core_dac_tpl_core;
