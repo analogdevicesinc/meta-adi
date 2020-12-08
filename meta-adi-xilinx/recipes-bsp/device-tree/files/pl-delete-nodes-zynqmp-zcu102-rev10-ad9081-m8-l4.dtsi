@@ -1,0 +1,12 @@
+/delete-node/ &axi_mxfe_rx_dma;
+/delete-node/ &axi_mxfe_rx_jesd_rx_axi;
+/delete-node/ &misc_clk_0;
+/delete-node/ &axi_mxfe_rx_xcvr;
+/delete-node/ &axi_mxfe_tx_dma;
+/delete-node/ &axi_mxfe_tx_jesd_tx_axi;
+/delete-node/ &axi_mxfe_tx_xcvr;
+/delete-node/ &axi_sysid_0;
+/delete-node/ &psu_ctrl_ipi;
+/delete-node/ &psu_message_buffers;
+/delete-node/ &rx_mxfe_tpl_core_adc_tpl_core;
+/delete-node/ &tx_mxfe_tpl_core_dac_tpl_core;
