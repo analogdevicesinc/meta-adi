@@ -39,7 +39,9 @@ SRC_URI_append_zynqmp = " \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9008-1-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9008-2-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4.dtsi \
-		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9081-m8-l4.dtsi"
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9081-m8-l4.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002-rx2tx2.dtsi"
 
 SRC_URI_append_microblaze = " \
 		file://pl-delete-nodes-fmcdaq2.dtsi \
