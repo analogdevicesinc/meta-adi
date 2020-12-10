@@ -41,7 +41,8 @@ SRC_URI_append_zynqmp = " \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9081-m8-l4.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002.dtsi \
-		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002-rx2tx2.dtsi"
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002-rx2tx2.dtsi \
+		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi"
 
 SRC_URI_append_microblaze = " \
 		file://pl-delete-nodes-fmcdaq2.dtsi \
@@ -74,7 +75,7 @@ KERNEL_DTB_PATH ?= "${DTS_INCLUDE_PATH}"
 
 # zynq has some corner case where this will be overwritten
 DTB_TAG_FILE ?= "${DT_FILES_PATH}/system-top.dts"
-# zynqMP always uses this devicetree (at least on the supported projects)
+# zynqMP has some corner cases where this will be overwritten
 DTB_TAG_FILE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
 
 # Only used when FPGA_MANAGER is enabled. These are only some defaults. Note that, for example, for Microblaze
@@ -138,6 +139,9 @@ do_configure_append() {
 		;;
 	"zynq-adrv9364-z7020-bob-cmos")
 		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-adrv9364-z7020-bob.dts"
+		;;
+	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm")
+		dtb_tag_file="${DTS_INCLUDE_PATH}/zynqmp-adrv9009-zu11eg-reva.dtsi"
 		;;
 	esac
 
