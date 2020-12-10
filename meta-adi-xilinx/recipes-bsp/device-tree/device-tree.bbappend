@@ -29,7 +29,7 @@ SRC_URI_append_zynq = " \
 		file://pl-delete-nodes-zynq-zc702-adv7511.dtsi"
 
 SRC_URI_append_zynqmp = " \
-		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9361-fmcomms2-3.dtsi \
