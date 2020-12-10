@@ -19,6 +19,7 @@ SRC_URI_append_zynq = " \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcomms11.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq3-revC.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcjesdadc1.dtsi \
+		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9008-1-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynq-zed-imageon.dtsi \
 		file://pl-delete-nodes-zynq-adrv9361-z7035-bob-cmos.dtsi \
 		file://pl-delete-nodes-zynq-adrv9361-z7035-bob.dtsi \
@@ -139,6 +140,9 @@ do_configure_append() {
 		;;
 	"zynq-adrv9364-z7020-bob-cmos")
 		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-adrv9364-z7020-bob.dts"
+		;;
+	"zynq-zc706-adv7511-adrv9008-1-jesd204-fsm")
+		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-zc706-adv7511-adrv9008-1.dts"
 		;;
 	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm")
 		dtb_tag_file="${DTS_INCLUDE_PATH}/zynqmp-adrv9009-zu11eg-reva.dtsi"
