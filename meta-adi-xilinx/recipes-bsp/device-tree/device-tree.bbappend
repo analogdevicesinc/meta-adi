@@ -63,7 +63,8 @@ SRC_URI_append_microblaze = " \
 		file://pl-delete-nodes-vc707_fmcadc2.dtsi \
 		file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
 		file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
-		file://pl-delete-nodes-vc707_fmcadc5.dtsi"
+		file://pl-delete-nodes-vc707_fmcadc5.dtsi \
+		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi"
 
 python __anonymous() {
     if not d.getVar("KERNEL_DTB"):
@@ -159,6 +160,9 @@ do_configure_append() {
 	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm")
 		dtb_tag_file="${DTS_INCLUDE_PATH}/zynqmp-adrv9009-zu11eg-reva.dtsi"
 		;;
+	 "vcu118_ad9081_m8_l4")
+		dtb_tag_file="${DTS_INCLUDE_PATH}/vcu118_ad9081.dts"
+		;;
 	esac
 
 	# The only way to make sure that the pl.dtsi + pl-delete-nodes logic is not breaking the selected
@@ -176,7 +180,9 @@ do_configure_append() {
 	# petalinux automatically generates proper bootargs depending on the project configuration (eg: use initramfs or sdcard as rootfs).
 	# This will make things work out of the box without having to care with uEnv.txt for instance. On the other hand, this file also
 	# defines the qspi partitions which conflicts with our devicetrees. Hence, the next command removes the the &qspi node...
-	sed -i '/&qspi/,/^$/d' "${DT_FILES_PATH}/system-conf.dtsi"
+	# We also need to delete the axi_ethernet node as for some platforms we get nodes with names different from axi_ethernet which is
+	# the one used in our devicetrees. Hence, since all PL nodes are removed, we will get a compilation error if referenced...
+	sed -i '/&qspi/,/^$/d; /&axi_ethernet/,/^$/d' "${DT_FILES_PATH}/system-conf.dtsi"
 	# add the user dts extension
 	echo "#include \"system-user.dtsi\"" >> "${DT_FILES_PATH}/system-top.dts"
 }
