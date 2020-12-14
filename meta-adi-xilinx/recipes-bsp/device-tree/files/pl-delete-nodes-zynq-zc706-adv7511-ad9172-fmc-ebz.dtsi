@@ -1,0 +1,13 @@
+/delete-node/ &axi_hdmi_clkgen;
+/delete-node/ &axi_hdmi_core;
+/delete-node/ &misc_clk_0;
+/delete-node/ &axi_hdmi_dma;
+/delete-node/ &axi_iic_main;
+/delete-node/ &axi_spdif_tx_core;
+/delete-node/ &misc_clk_1;
+/delete-node/ &axi_sysid_0;
+/delete-node/ &dac_dma;
+/delete-node/ &dac_jesd204_link_tx_axi;
+/delete-node/ &misc_clk_2;
+/delete-node/ &dac_jesd204_transport_dac_tpl_core;
+/delete-node/ &dac_jesd204_xcvr;
