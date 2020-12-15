@@ -1,7 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append_zynq = " \
-		file://pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi \
 		file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
@@ -36,6 +35,7 @@ SRC_URI_append_zynq = " \
 		file://pl-delete-nodes-zynq-zc702-adv7511.dtsi"
 
 SRC_URI_append_zynqmp = " \
+		file://pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9371-jesd204-fsm.dtsi \
