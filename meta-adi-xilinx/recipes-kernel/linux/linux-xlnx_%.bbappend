@@ -1,9 +1,9 @@
 DESCRIPTION = "ADI kernel"
 LINUX_VERSION = "4.19"
-ADI_VERSION = "adi_master"
+ADI_VERSION = "adi_2019_R2"
 
 PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
-KBRANCH = "master"
+KBRANCH = "2019_R2"
 # needed for offline build
 SRCREV = "${@ "cc28af1e4e1d9a2deccbad98c6da51f83e52bef5" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"
