@@ -4,7 +4,7 @@ This is the Analog Devices yocto layer to make it easier to integrate ADI linux 
 
 ### Dependencies
 
-To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/analogdevicesinc/meta-adi/tree/master/meta-adi-core) has to be included. By default, when building [petalinux-user-image](https://github.com/analogdevicesinc/meta-adi/tree/master/meta-adi-xilinx/recipes-core/images/petalinux-user-image.bbappend), this layer is needed.
+To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/analogdevicesinc/meta-adi/tree/master/meta-adi-core) has to be included. By default, when building [petalinux-user-image](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/dynamic-layers/meta-plnx-generated/recipes-core/images/petalinux-user-image.bbappend), this layer is needed.
 
 ### Supported Projects
 
