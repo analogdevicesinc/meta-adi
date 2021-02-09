@@ -1,5 +1,5 @@
 DESCRIPTION = "ADI kernel"
-LINUX_VERSION = "4.19"
+LINUX_VERSION = "5.4"
 ADI_VERSION = "adi_master"
 
 PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
