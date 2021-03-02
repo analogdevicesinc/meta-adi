@@ -1,0 +1,12 @@
+diff --git a/Modules/_ctypes/libffi/fficonfig.py.in b/Modules/_ctypes/libffi/fficonfig.py.in
+index d102498..79d73ca 100644
+--- a/Modules/_ctypes/libffi/fficonfig.py.in
++++ b/Modules/_ctypes/libffi/fficonfig.py.in
+@@ -28,6 +28,7 @@ ffi_platforms = {
+     'PA': ['src/pa/linux.S', 'src/pa/ffi.c'],
+     'PA_LINUX': ['src/pa/linux.S', 'src/pa/ffi.c'],
+     'PA_HPUX': ['src/pa/hpux32.S', 'src/pa/ffi.c'],
++    'MICROBLAZE': ['src/microblaze/sysv.S', 'src/microblaze/ffi.c'],
+ }
+ 
+ ffi_sources += ffi_platforms['@TARGET@']
