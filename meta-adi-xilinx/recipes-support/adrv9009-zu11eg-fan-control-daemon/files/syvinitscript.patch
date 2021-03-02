@@ -1,0 +1,68 @@
+diff --git a/init/fancontrold.init.cmakein b/init/fancontrold.init.cmakein
+index cd5f56b..001cf7e 100644
+--- a/init/fancontrold.init.cmakein
++++ b/init/fancontrold.init.cmakein
+@@ -11,10 +11,14 @@
+ # Debian init.d script for the FANCONTROL Daemon
+ # Copyright (C) 2016 Analog Devices Inc.
+ 
+-. /lib/lsb/init-functions
++. /etc/init.d/functions
++
++set -e
+ 
+ # Server-side demuxing by default
+ FANCONTROL_OPTS=axi_fan_control
++DAEMON=@CMAKE_INSTALL_FULL_SBINDIR@/@BIN@
++PID=/var/run/@BIN@.pid
+ 
+ if test -f /etc/default/@BIN@; then
+     . /etc/default/@BIN@
+@@ -22,21 +26,15 @@ fi
+ 
+ case "$1" in
+ 	start)
+-		log_daemon_msg "Starting FANCONTROL Daemon" "@BIN@" || true
+-		if start-stop-daemon -S -b -q -m -p /var/run/@BIN@.pid -x @CMAKE_INSTALL_FULL_SBINDIR@/@BIN@ -- $FANCONTROL_OPTS; then
+-			log_end_msg 0 || true
+-		else
+-			log_end_msg 1 || true
+-		fi
++		echo -n "Starting Fancontrol Daemon: "
++		start-stop-daemon -S -b -q -m -p $PID -x $DAEMON -- $FANCONTROL_OPTS
++		echo "@BIN@"
+ 		;;
+ 
+ 	stop)
+-		log_daemon_msg "Stopping FANCONTROL Daemon" "@BIN@" || true
+-		if start-stop-daemon -K -q -p /var/run/@BIN@.pid; then
+-			log_end_msg 0 || true
+-		else
+-			log_end_msg 1 || true
+-		fi
++		echo -n "Stopping Fancontrol Daemon: "
++		start-stop-daemon -K -q -p $PID
++		echo "@BIN@"
+ 		;;
+ 
+ 	restart|force-reload)
+@@ -45,15 +43,13 @@ case "$1" in
+ 		;;
+ 
+ 	status)
+-		if [ -f /var/run/@BIN@.pid ] ; then
+-			status_of_proc -p /var/run/@BIN@.pid @CMAKE_INSTALL_FULL_SBINDIR@/@BIN@ @BIN@ && exit 0 || exit $?
+-		else
+-			status_of_proc @CMAKE_INSTALL_FULL_SBINDIR@/@BIN@ @BIN@ && exit 0 || exit $?
+-		fi
++		# otherwise status will exit without any echo since pidof does not return 0
++		set +e
++		status $DAEMON
+ 		;;
+ 
+ 	*)
+-		log_action_msg "Usage: /etc/init.d/@BIN@.sh {start|stop|restart|status}" || true
++		echo "Usage: /etc/init.d/@BIN@ {start|stop|restart|status}" || true
+ 		exit 1
+ esac
+ 
