@@ -17,5 +17,5 @@ KBUILD_DEFCONFIG_microblaze = "adi_mb_defconfig"
 # Since we are in petalinux already, a simpleImage will be build with the proper
 # initramfs so that, we don't have to provide an external one...
 do_configure_prepend_microblaze() {
-	sed -i 's,CONFIG_INITRAMFS_SOURCE=.*,,' ${B}/.config
+	[ -f ${B}/.config ] && sed -i 's,CONFIG_INITRAMFS_SOURCE=.*,,' ${B}/.config
 }
