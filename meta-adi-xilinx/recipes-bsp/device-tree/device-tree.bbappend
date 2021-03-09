@@ -79,12 +79,15 @@ DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
 DTS_INCLUDE_PATH_zynq = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 DTS_INCLUDE_PATH_zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
 DTS_INCLUDE_PATH_microblaze = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
+# can be set to "n", if we do not use in kernel devicetrees and hence, we do not need to copy them to ${WORKDIR}.
+# it naturally implies ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH}
+USE_KERNEL_SOURCES ?= "y"
 KERNEL_DTB_PATH ?= "${DTS_INCLUDE_PATH}"
 
 # zynq has some corner case where this will be overwritten
 DTB_TAG_FILE ?= "${DT_FILES_PATH}/system-top.dts"
 # zynqMP has some corner cases where this will be overwritten
-DTB_TAG_FILE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-revA.dts"
+DTB_TAG_FILE_zynqmp ?= "${WORKDIR}/zynqmp-zcu102-revA.dts"
 
 # Only used when FPGA_MANAGER is enabled. These are only some defaults. Note that, for example, for Microblaze
 # vc707.dts won't be a good choice if your platform is based on kc705 for instance...
@@ -96,17 +99,16 @@ DTS_OVERLAY_PATH ?= "${WORKDIR}"
 # Make sure that the kernel sources are available
 do_configure[depends] += "virtual/kernel:do_configure"
 
-# Important for the pre-processor
-DEVICETREE_PP_FLAGS += " \
-		-I${DTS_INCLUDE_PATH} \
-		"
-# For dtc
-DEVICETREE_FLAGS += " \
-		-i${DTS_INCLUDE_PATH} \
-		"
+# By default, devicetree.bbclass will point dtc and the preprocessor to the kernel
+# sources to look for devicetrees. Since we will always copy all the devicetrees of
+# interest to the local WORKDIR (being them in kernel or not) we will just add
+# include-prefixes as include dir. Otherwise, we would have two different locations
+# with the same files given as include dir and hope that the directory we want to take
+# effect to be included first...
+KERNEL_INCLUDE ?= "${STAGING_KERNEL_DIR}/scripts/dtc/include-prefixes"
 
 # Based on the selected device tree, this function will:
-#	copy the device tree to ${WORKDIR}/system-user.dtsi since it is the one included by the top level device tree.
+#	copy the device trees of interest to ${WORKDIR}.
 #	overwrite the ${DT_FILES_PATH}/system-top.dts with the selected devicetree.
 #	add the pl.dtsi so that IPs added to our reference designs are also included.
 #	Add the /include "pl-delete-nodes-*" to remove all the duplicated labels between ADI device trees and pl.dtsi.
@@ -116,6 +118,13 @@ do_configure_append() {
 
 	[ ! -e "${WORKDIR}/${DTB_PL_DELETE}.dtsi" ] && \
 		{ bbfatal "Error: Could not find \"${DTB_PL_DELETE}.dtsi\" in \"${WORKDIR}\""; }
+
+	# Copy all the devicetrees to the local workdir. The goal is to apply our pl + pl-delete-nodes
+	# logic on the $dtb_tag_file without directly changing the original file (being it an in kernel
+	# devicetree or not). In case it's an in kernel devicetree, changing it would actually
+	# break the kernel compilation
+	[ ${USE_KERNEL_SOURCES} == "y" ] && cp -rf "${DTS_INCLUDE_PATH}/"* "${WORKDIR}/"
+	[ ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH} ] && cp -rf "${KERNEL_DTB_PATH}/"* "${WORKDIR}/"
 
 	# Used to see if the PL part is being compiled as an overlay! In that case, we cannot apply our normal workflow since it would fail!
 	# We try to keep the approach used by petalinux here, which is, if you build your PL as an overlay, then you should just have a
@@ -140,28 +149,28 @@ do_configure_append() {
 	# corner cases
 	case "${KERNEL_DTB}" in
 	"zynq-zc706-adv7511-fmcdaq3-revC")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-zc706-adv7511-fmcdaq3.dts"
+		dtb_tag_file="${WORKDIR}/zynq-zc706-adv7511-fmcdaq3.dts"
 		;;
 	"zynq-adrv9361-z7035-bob-cmos")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-adrv9361-z7035-bob.dts"
+		dtb_tag_file="${WORKDIR}/zynq-adrv9361-z7035-bob.dts"
 		;;
 	"zynq-adrv9364-z7020-bob-cmos")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-adrv9364-z7020-bob.dts"
+		dtb_tag_file="${WORKDIR}/zynq-adrv9364-z7020-bob.dts"
 		;;
 	"zynq-zc706-adv7511-adrv9008-1-jesd204-fsm")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-zc706-adv7511-adrv9008-1.dts"
-		;;
+		dtb_tag_file="${WORKDIR}/zynq-zc706-adv7511-adrv9008-1.dts"
+		;;#
 	"zynq-zc706-adv7511-adrv9008-2-jesd204-fsm")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-zc706-adv7511-adrv9008-2.dts"
+		dtb_tag_file="${WORKDIR}/zynq-zc706-adv7511-adrv9008-2.dts"
 		;;
 	"zynq-zc706-adv7511-adrv9375-jesd204-fsm")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynq-zc706-adv7511-adrv9371.dts"
+		dtb_tag_file="${WORKDIR}/zynq-zc706-adv7511-adrv9371.dts"
 		;;
 	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/zynqmp-adrv9009-zu11eg-reva.dtsi"
+		dtb_tag_file="${WORKDIR}/zynqmp-adrv9009-zu11eg-reva.dtsi"
 		;;
 	 "vcu118_ad9081_m8_l4")
-		dtb_tag_file="${DTS_INCLUDE_PATH}/vcu118_ad9081.dts"
+		dtb_tag_file="${WORKDIR}/vcu118_ad9081.dts"
 		;;
 	esac
 
@@ -169,12 +178,7 @@ do_configure_append() {
 	# devicetree is to include pl.dtsi right after the devicetree tag. Hence, this logic is the first
 	# thing to be included. If there are errors, then [most likely] the problem should be in the pl-delete-nodes
 	# (or in the petalinux logic to autogenerate pl.dtsi).
-	# FIXME: For projects where the top devicetree does not hold the tag, this process will directly change the
-	# files on the fetched kernel tree. We should think of mechanism to avoid this or, at least, to bring the file
-	# to it's default after we are done...
-	if ! grep -qse "pl.dtsi" "${dtb_tag_file}"; then
-		sed -i '0,/\/dts-v1\/;/s//&\n#include "pl.dtsi"/' "${dtb_tag_file}"
-	fi
+	sed -i '0,/\/dts-v1\/;/s//&\n#include "pl.dtsi"/' "${dtb_tag_file}"
 	echo "/include/ \"${DTB_PL_DELETE}.dtsi\"" >> "${DT_FILES_PATH}/pl.dtsi"
 	# As it turns out, system-conf.dtsi has some autogenerated nodes that we can use. Specially, the chosen node since
 	# petalinux automatically generates proper bootargs depending on the project configuration (eg: use initramfs or sdcard as rootfs).
