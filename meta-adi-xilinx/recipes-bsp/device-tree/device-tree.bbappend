@@ -22,7 +22,6 @@ SRC_URI_append_zynq = " \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9008-2-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9172-fmc-ebz.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9375-jesd204-fsm.dtsi \
-		file://pl-delete-nodes-zynq-zc706-adv7511-ad9081.dtsi \
 		file://pl-delete-nodes-zynq-zed-imageon.dtsi \
 		file://pl-delete-nodes-zynq-zed-adrv9002.dtsi \
 		file://pl-delete-nodes-zynq-zed-adrv9002-rx2tx2.dtsi \
