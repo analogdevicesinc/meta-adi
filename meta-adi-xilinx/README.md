@@ -72,7 +72,7 @@ To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/
 
 Xilinx based platforms use Petalinx SDK in order to customize, build and deploy Embedded Linux on their platforms. Petalinux is a set of tools which work on top of yocto making it easy to add extra custom layers. For more information on Petalinux and on how to install the SDK refer to the following links:
 
-* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf)
+* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1144-petalinux-tools-reference-guide.pdf)
 * [Petalinux Wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842250/PetaLinux)
 
 **This layer supports:**
@@ -126,8 +126,8 @@ con
 >
 >1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
 >2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
->3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_3/SDK_Doc/concepts/sdk_c_xsd_over.htm)
->4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
+>3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/html_docs/xilinx2018_1/SDK_Doc/SDK_concepts/concept_Xilinxsystemdebugger.html)
+>4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 
 For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs. To disable initramfs on petalinux:
 
@@ -137,7 +137,7 @@ petalinux-config
 # On the config menu go to Image Packaging Configuration->Root filesystem type and select SD card
 ```
 
-With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password,`petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/recipes-cores/images/petalinux-user-image.bbappend` and comment the following lines:
+With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password, `petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/recipes-cores/images/petalinux-user-image.bbappend` and comment the following lines:
 
 ```
 EXTRA_USERS_PARAMS = "  \
@@ -247,4 +247,4 @@ SRC_URI_append = " \
 KERNEL_DTB_PATH = "${WORKDIR}"
 ```
 
-> If the project being added is supported by ADI (with no custom changes), the devicetree should be present in the kernel sources. In that case, there's no need to redefine `KERNEL_DTB_PATH` and the `SRC_URI_append` should only contain the `pl-delete-nodes` file. In this case, alternatively, one can also  directly change the [devicetree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/2019_R2/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
+> If the project being added is supported by ADI (with no custom changes), the devicetree should be present in the kernel sources. In that case, there's no need to redefine `KERNEL_DTB_PATH` and the `SRC_URI_append` should only contain the `pl-delete-nodes` file. In this case, alternatively, one can also  directly change the [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/2019_R2/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
