@@ -24,8 +24,8 @@ SRC_URI_append_zynq = " \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9375-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9081.dtsi \
 		file://pl-delete-nodes-zynq-zed-imageon.dtsi \
-		file://pl-delete-nodes-zynq-zed-adrv9002.dtsi \
-		file://pl-delete-nodes-zynq-zed-adrv9002-rx2tx2.dtsi \
+		file://pl-delete-nodes-zynq-zed-adv7511-adrv9002.dtsi \
+		file://pl-delete-nodes-zynq-zed-adv7511-adrv9002-rx2tx2.dtsi \
 		file://pl-delete-nodes-zynq-adrv9361-z7035-bob-cmos.dtsi \
 		file://pl-delete-nodes-zynq-adrv9361-z7035-bob.dtsi \
 		file://pl-delete-nodes-zynq-adrv9361-z7035-fmc.dtsi \
@@ -202,7 +202,7 @@ do_configure_append() {
 		sed -i '0,/bootargs.*= "/s//&console=ttyUL0,115200 earlycon/' "${DT_FILES_PATH}/system-conf.dtsi";
 		sed -i '/stdout-path.*=/,/;/s/notfound/115200/' "${DT_FILES_PATH}/system-conf.dtsi";
 	}
-	
+
 	return 0
 }
 
