@@ -4,7 +4,7 @@ This is the Analog Devices yocto layer to make it easier to integrate ADI linux 
 
 ### Dependencies
 
-To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/analogdevicesinc/meta-adi/tree/master/meta-adi-core) has to be included. By default, when building [petalinux-user-image](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/dynamic-layers/meta-plnx-generated/recipes-core/images/petalinux-user-image.bbappend), this layer is needed.
+To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/analogdevicesinc/meta-adi/tree/master/meta-adi-core) has to be included. By default, when building [petalinux-image-minimal](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/dynamic-layers/meta-petalinux/recipes-core/images/petalinux-image-minimal.bbappend), this layer is needed.
 
 ### Supported Projects
 
@@ -32,8 +32,8 @@ To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/
 |[adv7511_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adv7511/zc706)|[zynq-zc706-adv7511](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511.dts)|
 |[adv7511_zc702](https://github.com/analogdevicesinc/hdl/tree/master/projects/adv7511/zc702)|[zynq-zc702-adv7511](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc702-adv7511.dts)|
 |[adv7511_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adv7511/zed)|[zynq-zed-adv7511](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511.dts)|
-|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zed)|[zynq-zed-adrv9002](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adrv9002.dts)|
-|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zed)|[zynq-zed-adrv9002-rx2tx2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adrv9002-rx2tx2.dts)|
+|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zed)|[zynq-zed-adv7511-adrv9002](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-adrv9002.dts)|
+|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zed)|[zynq-zed-adv7511-adrv9002-rx2tx2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-adrv9002-rx2tx2.dts)|
 |[ad9434_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9434_fmc/zc706)|[zynq-zc706-adv7511-ad9434-fmc-500ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9434-fmc-500ebz.dts)|
 |[ad9467_fmc_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9467_fmc/zed)|[zynq-zed-adv7511-ad9467-fmc-250ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-ad9467-fmc-250ebz.dts)|
 |[ad9265_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9265_fmc/zc706)|[zynq-zc706-adv7511-ad9265-fmc-125ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9265-fmc-125ebz.dts)|
@@ -72,12 +72,12 @@ To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/
 
 Xilinx based platforms use Petalinx SDK in order to customize, build and deploy Embedded Linux on their platforms. Petalinux is a set of tools which work on top of yocto making it easy to add extra custom layers. For more information on Petalinux and on how to install the SDK refer to the following links:
 
-* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf)
+* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_1/ug1144-petalinux-tools-reference-guide.pdf)
 * [Petalinux Wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842250/PetaLinux)
 
 **This layer supports:**
 
-* **Petalinux-v2019.1;**
+* **Petalinux-v2020.1;**
 * **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
@@ -93,7 +93,7 @@ cd <path-to-project>
 # Check the Building HDL link below
 petalinux-config --get-hw-description=<path to hdf file>
 # Select the devicetree that fits the project being built
-echo "KERNEL_DTB=${dts_to_use}" >> project-spec/meta-user/conf/petalinuxbsp.conf
+echo "KERNEL_DTB=\"${dts_to_use}\"" >> project-spec/meta-user/conf/petalinuxbsp.conf
 cd build
 petalinux-build
 ```
@@ -104,18 +104,51 @@ When running the `petalinux-config --get-hw-description=<path to hdf file>`, a c
 
 >**IMPORTANT: Since this layer depends on meta-adi-core (because of userspace tools), it has to be included after meta-adi-core, otherwise `petalinux-config` will fail.**
 
+#### **A note on Microblaze**
 
-To build a BOOT.bin for [Zynq](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842549/Zynq-7000+SoC) and [ZynqMP](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html) platforms run `petalinux-package --boot --fsbl --fpga --u-boot`.  The output file will be placed in `path-to-petalinux-project>/images/linux`. Finally, copy  BOOT.bin and image.ub (FIT image including kernel, device tree and iniramfs) to the boot partition of a SD card.
+There's a problem with [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) based projects when using `uartlite`. Since this core is used in ADI reference designs, some workarounds had to be done. Most notably, users using this core will have to add the following line to their `petalinuxbsp.conf` file:
 
-For [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) platforms the Xilinx System Debugger is used to run the linux kernel directly from memory. Run the following commands:
-
+``` bash
+SERIAL_CONSOLES = "115200;ttyUL0"
 ```
+Without the previous line, no login prompt will come up when booting. Moreover, in ADI designs the `uartlite` core is defined as `axi_uart`. Hence, that's the default name that will be used in both [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) and [fs-boot_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fsboot/fs-boot_%.bbappend). To change the default name, the following variables have to be changed in your configuration file:
+
+``` bash
+DTS_CONSOLE_DEVICE_CONFIG = "some_other_name"
+FSBOOT_CONSOLE_STDIN = "some_other_name"
+FSBOOT_CONSOLE_STDOUT = "some_other_name"
+```
+> For more details on this issue and the workarounds taken, check [here](https://forums.xilinx.com/t5/Embedded-Linux/AXI-Uartlite-issues-with-Petalinux-2020-1-and-Microblaze-systems/td-p/1126614)...
+
+### Booting your platform
+
+To build a BOOT.bin for [Zynq](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842549/Zynq-7000+SoC) and [ZynqMP](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html) platforms run `petalinux-package --boot --fsbl --fpga --u-boot`.  The output file will be placed in `path-to-petalinux-project>/images/linux`. Finally, copy  BOOT.bin, image.ub and boot.scr to the boot partition of your SD card.
+
+For [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) platforms the Xilinx System Debugger is used to start the kernel. As initrd is now used as default root filesystem, u-boot is used to boot. Hence, one needs to open two terminals, one for running `xsdb` and other to connect to the board Serial port. On your `xsdb` terminal, run:
+
+``` bash
+cd <path-to-petalinux-project>/images/linux
+source <path-to-vivado-sdk>/settings64.sh
+connect
+# run the command targets without any argument to see the available targets
+targets <desired target number>
+fpga -f system.bit
+dow u-boot.elf
+dow -data image.ub 0x85000000
+con
+```
+
+After running `con`, on your Serial terminal, stop u-boot at the command line and run `bootm 0x85000000`. Your kernel should now start to boot...
+
+If using iniramfs as root, there's no need to use u-boot as `image.elf` is builtin with your initramfs. Hence, the following is sufficient:
+
+``` bash
 cd <path-to-petalinux-project>/images/linux
 source <path-to-vivado-sdk>/settings64.sh
 xsdb
 # In the xsdb system debugger run
 connect
-run the command targets without any argument to see the available targets
+# run the command targets without any argument to see the available targets
 targets <desired target number>
 fpga -f system.bit
 dow image.elf
@@ -126,48 +159,48 @@ con
 >
 >1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
 >2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
->3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2014_3/SDK_Doc/concepts/sdk_c_xsd_over.htm)
->4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2018_3/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
+>3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/html_docs/xilinx2018_1/SDK_Doc/SDK_concepts/concept_Xilinxsystemdebugger.html)
+>4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_1/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 
-For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs. To disable initramfs on petalinux:
+For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs/initrd. To change the root filesystem on petalinux:
 
-```bash
+``` bash
 cd <path-to-project>
 petalinux-config
 # On the config menu go to Image Packaging Configuration->Root filesystem type and select SD card
 ```
 
-With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password,`petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/recipes-cores/images/petalinux-user-image.bbappend` and comment the following lines:
+With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password, `petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/dynamic-layers/meta-petalinux/recipes-core/images/petalinux-image-minimal.bbappend` and comment the following lines:
 
-```
+``` bash
 EXTRA_USERS_PARAMS = "  \
 	usermod -P analog root;"
 ```
 
 ### Extending the devicetree
 
-To extend ADI devicetrees, the normal Petalinux method should be used. Hence, the `system-user.dtsi` file should be used. This file is located under `path-to-project/project-spec/meta-user/recipes-bsp/device-tree/files/`. There is also a `device-tree.bbappend` which automatically selects this file for the build. With this mind, one can either:
+To extend ADI devicetrees, the normal Petalinux method should be used. Hence, the `system-user.dtsi` file should be used. This file is located under `path-to-project/project-spec/meta-user/recipes-bsp/device-tree/files/`. There is also a `device-tree.bbappend` which automatically selects this file for the build. With this in mind, one can either:
 
  1. Directly change this file with the new devicetree nodes;
- 2. Create a new file and add a `#include` or `/include/`directive in `system-user.dtsi`. In these case, changes to the `device-tree.bbappend` recipe are also needed.
+ 2. Create a new file and add a `#include` or `/include/`directive in `system-user.dtsi`. In these case, changes to the `device-tree.bbappend` recipe are also needed (or further appending the recipe).
 
 ### Offline Build
 
-To build petalinux without internet access, run `petalinux-config` and select `BB_NO_NETWORK`. Check [Xilinx Yocto Builds without an Internet Connection](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/60129817/Xilinx+Yocto+Builds+without+an+Internet+Connection) for more information.
+To build petalinux without internet access, run `petalinux-config` and select `BB_NO_NETWORK` in the Yocto Settings section. Check [Xilinx Yocto Builds without an Internet Connection](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/60129817/Xilinx+Yocto+Builds+without+an+Internet+Connection) for more information.
 
 ### FPGA Manager
 
 **FPGA Manager is not officially supported by meta-adi! We just provide some guidelines and hooks in our layer to make it easier to use this feature. In the end, is up to the user to provide the devicetree overlay to be used by the build system.**
 
-When using this, the fpga bitstream is not included in the `BOOT.bin` file, so that, only a base devicetree must be compiled in order to boot the system. This devicetree should not have any node/device that is instantiated by the bitstream (this can, most likely, stuck your kernel at boot). To define the base devicetree add this to your local conf file:
+When using this, the fpga bitstream is not included in the `BOOT.bin` file, so that, only a base devicetree must be compiled in order to boot the system. This devicetree should not have any node/device that is instantiated by the bitstream (this can, most likely, stuck your kernel at boot). To define the base devicetree add this to your `petalinuxbsp.conf` file:
 
-```
+``` bash
 DTS_BASE = "your-devicetree"
 ```
 
 If you don't provide this, the following defaults are taken:
 
-```
+``` bash
 DTS_BASE_zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
 DTS_BASE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
 DTS_BASE_microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
@@ -175,9 +208,9 @@ DTS_BASE_microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
 
 > Naturally, if you are building for a zedboard, you probably don't want to use `zynq-zc706.dts`
 
-After this, it is time to provide your devicetree overlay, by defining the next variables in your local conf file:
+After this, it is time to provide your devicetree overlay, by defining the next variables in your `petalinuxbsp.conf` file:
 
-```
+``` bash
 DTS_OVERLAY = "your-overlay"
 DTS_OVERLAY_PATH = "path-to-your-overlay"
 ```
@@ -186,12 +219,12 @@ DTS_OVERLAY_PATH = "path-to-your-overlay"
 
 By default, the devicetree recipe defines:
 
-```
+``` bash
 DTS_OVERLAY ?= "pl-${KERNEL_DTB}-overlay.dtsi"
 DTS_OVERLAY_PATH ?= "${WORKDIR}"
 ```
 
-If you use the above defaults, you don't need to define these variables in your local conf. Just make sure to append the recipe's `SRC_URI` so that, your overlay is copied to the recipe's `WORKDIR`. (hint: you can further append this recipe...).
+If you use the above defaults, you don't need to define these variables in your `petalinuxbsp.conf`. Just make sure to append the recipe's `SRC_URI` so that, your overlay is copied to the recipe's `WORKDIR`. (hint: you can further append this recipe...).
 
 > You can see an overlay example for [zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/files/pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi) and [zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/files/pl-fmcomms5-zcu102-overlay.dtsi).
 
@@ -203,7 +236,7 @@ Additionally, you can also "**Specify hw directory path**" under the FPGA Manage
 
 This section serves as guidelines to add a new/custom devicetree which is not supported by default in meta-adi. The first thing that needs to be done is to prepare the `pl-delete-nodes-${KERNEL_DTB}` for the HW being built. We first run a petalinux build just to see the generated nodes in `pl.dtsi` which is found under `path-to-project/components/plnx_workspace/device-tree/device-tree/pl.dtsi`. Assuming the file looks like:
 
-```
+``` bash
 amba_pl: amba_pl {
 	#address-cells = <1>;
 	#size-cells = <1>;
@@ -226,17 +259,17 @@ amba_pl: amba_pl {
 
 The `pl-delete-nodes-${KERNEL_DTB}` should look:
 
-```
+``` bash
 /delete-node/ &custom-node1;
 /delete-node/ &custom-node2;
 /delete-node/ &custom-node3;
 ```
 
-> NOTE: We typically just want to delete custom nodes which do not refer to xilinx IP cores. If your reference design uses some xilinx IP, you should not delete those nodes since they should be just fine!
+> NOTE: We typically just want to delete custom nodes which do not refer to xilinx IP cores. If your reference design uses some xilinx IPs, you should not delete those nodes since they should be just fine!
 
 Having this done, it is time to add both the devicetree and pl-delete-nodes-${KERNEL_DTB} to the build system. The recommended way of doing this is to further append the devicetree recipe in the following manner (assuming you devicetree is named "`custom-devicetree`"):
 
-```
+``` bash
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
@@ -244,7 +277,10 @@ SRC_URI_append = " \
 	custom-devicetree.dts \
 "
 
+# If the project being added is supported by ADI (with no custom changes), the devicetree should be present in the kernel sources. Hence, there's no need to redefine KERNEL_DTB_PATH
 KERNEL_DTB_PATH = "${WORKDIR}"
+# The following variable can be defined in case the new devicetree has no dependencies on the kernel sources (eg: by including a devicetree that is to be found there). If set to "n", it will prevent the device-tree recipe from copying all the kernel's devicetrees into ${WORKDIR}...
+USE_KERNEL_SOURCES = "n"
 ```
 
-> If the project being added is supported by ADI (with no custom changes), the devicetree should be present in the kernel sources. In that case, there's no need to redefine `KERNEL_DTB_PATH` and the `SRC_URI_append` should only contain the `pl-delete-nodes` file. In this case, alternatively, one can also  directly change the [devicetree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
+> If the project being added is supported by ADI (with no custom changes), one can just directly change the [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
