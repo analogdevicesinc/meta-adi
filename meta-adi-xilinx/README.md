@@ -111,7 +111,7 @@ There's a problem with [Microblaze](https://xilinx-wiki.atlassian.net/wiki/space
 ``` bash
 SERIAL_CONSOLES = "115200;ttyUL0"
 ```
-Without the previous line, no login prompt will come up when booting. Moreover, in ADI designs the `uartlite` core is defined as `axi_uart`. Hence, that's the default name that will be used in both [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) and [fs-boot_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fsboot/fs-boot_%.bbappend). To change the default name, the following variables have to be changed in your configuration file:
+Without the previous line, no login prompt will come up when booting. Moreover, in ADI designs the `uartlite` core is defined as `axi_uart`. Hence, that's the default name that will be used in both [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) and [fs-boot_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fsboot/fs-boot_%25.bbappend). To change the default name, the following variables have to be changed in your configuration file:
 
 ``` bash
 DTS_CONSOLE_DEVICE_CONFIG = "some_other_name"
@@ -229,7 +229,7 @@ If you use the above defaults, you don't need to define these variables in your 
 > You can see an overlay example for [zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/files/pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi) and [zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/files/pl-fmcomms5-zcu102-overlay.dtsi).
 
 
-Additionally, you can also "**Specify hw directory path**" under the FPGA Manager configurations. We also provide an example on how this can be used with meta-adi. Please refer to [fpga-manager-util_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/fpga-manager-util_%.bbappend).
+Additionally, you can also "**Specify hw directory path**" under the FPGA Manager configurations. We also provide an example on how this can be used with meta-adi. Please refer to [fpga-manager-util_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/fpga-manager-util_%25.bbappend).
 
 
 ### Adding a new Devicetree
