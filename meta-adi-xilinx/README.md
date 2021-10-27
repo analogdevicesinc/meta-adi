@@ -72,12 +72,12 @@ To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/
 
 Xilinx based platforms use Petalinx SDK in order to customize, build and deploy Embedded Linux on their platforms. Petalinux is a set of tools which work on top of yocto making it easy to add extra custom layers. For more information on Petalinux and on how to install the SDK refer to the following links:
 
-* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_1/ug1144-petalinux-tools-reference-guide.pdf)
+* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2021_1/ug1144-petalinux-tools-reference-guide.pdf)
 * [Petalinux Wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842250/PetaLinux)
 
 **This layer supports:**
 
-* **Petalinux-v2020.1;**
+* **Petalinux-v2021.1;**
 * **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
@@ -104,27 +104,11 @@ When running the `petalinux-config --get-hw-description=<path to hdf file>`, a c
 
 >**IMPORTANT: Since this layer depends on meta-adi-core (because of userspace tools), it has to be included after meta-adi-core, otherwise `petalinux-config` will fail.**
 
-#### **A note on Microblaze**
-
-There's a problem with [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) based projects when using `uartlite`. Since this core is used in ADI reference designs, some workarounds had to be done. Most notably, users using this core will have to add the following line to their `petalinuxbsp.conf` file:
-
-``` bash
-SERIAL_CONSOLES = "115200;ttyUL0"
-```
-Without the previous line, no login prompt will come up when booting. Moreover, in ADI designs the `uartlite` core is defined as `axi_uart`. Hence, that's the default name that will be used in both [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) and [fs-boot_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fsboot/fs-boot_%25.bbappend). To change the default name, the following variables have to be changed in your configuration file:
-
-``` bash
-DTS_CONSOLE_DEVICE_CONFIG = "some_other_name"
-FSBOOT_CONSOLE_STDIN = "some_other_name"
-FSBOOT_CONSOLE_STDOUT = "some_other_name"
-```
-> For more details on this issue and the workarounds taken, check [here](https://forums.xilinx.com/t5/Embedded-Linux/AXI-Uartlite-issues-with-Petalinux-2020-1-and-Microblaze-systems/td-p/1126614)...
-
 ### Booting your platform
 
 To build a BOOT.bin for [Zynq](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842549/Zynq-7000+SoC) and [ZynqMP](https://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html) platforms run `petalinux-package --boot --fsbl --fpga --u-boot`.  The output file will be placed in `path-to-petalinux-project>/images/linux`. Finally, copy  BOOT.bin, image.ub and boot.scr to the boot partition of your SD card.
 
-For [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) platforms the Xilinx System Debugger is used to start the kernel. As initrd is now used as default root filesystem, u-boot is used to boot. Hence, one needs to open two terminals, one for running `xsdb` and other to connect to the board Serial port. On your `xsdb` terminal, run:
+For [Microblaze](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842560/MicroBlaze) platforms the Xilinx System Debugger is used to start the kernel. U-boot can be used to boot from JTAG so that, one needs to open two terminals, one for running `xsdb` and other to connect to the board Serial port. On your `xsdb` terminal, run:
 
 ``` bash
 cd <path-to-petalinux-project>/images/linux
@@ -140,27 +124,19 @@ con
 
 After running `con`, on your Serial terminal, stop u-boot at the command line and run `bootm 0x85000000`. Your kernel should now start to boot...
 
-If using iniramfs as root, there's no need to use u-boot as `image.elf` is builtin with your initramfs. Hence, the following is sufficient:
+### A note on ZynqMP
 
-``` bash
-cd <path-to-petalinux-project>/images/linux
-source <path-to-vivado-sdk>/settings64.sh
-xsdb
-# In the xsdb system debugger run
-connect
-# run the command targets without any argument to see the available targets
-targets <desired target number>
-fpga -f system.bit
-dow image.elf
-con
-```
+There are some identified issues in petalinux on ultrascale platforms:
+
+1. When using initrd/initramfs as root filesystem, petalinux-initramfs-image will be automatically selected as ramdisk and the boot will fail (if there's no valid ext4 partition on the sdcard) since it is a tiny image that does not contain everything needed to successfully finish the boot process. Workarounds can be found [here](https://support.xilinx.com/s/article/76842?language=en_US);
+2. On the bootlog, the following can be seen: "**[Firmware Bug]: Kernel image misaligned at boot, please fix your bootloader!**". Explanations and solutions [here](https://support.xilinx.com/s/article/76712?language=en_US).
 
 > Notes:
 >
 >1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
 >2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
 >3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/html_docs/xilinx2018_1/SDK_Doc/SDK_concepts/concept_Xilinxsystemdebugger.html)
->4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_1/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
+>4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2021_1/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 
 For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs/initrd. To change the root filesystem on petalinux:
 
