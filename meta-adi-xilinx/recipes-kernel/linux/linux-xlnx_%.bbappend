@@ -1,11 +1,11 @@
 DESCRIPTION = "ADI kernel"
-LINUX_VERSION = "5.4"
+LINUX_VERSION = "5.10"
 ADI_VERSION = "adi_master"
 
 PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
 KBRANCH = "master"
 # needed for offline build
-SRCREV = "${@ "89450f163b0404eb7248b5d6ba9b4ca8cc94a675" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "564bb35721991e0a65efd72aca0d40e6cb5f0ce7" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"
 
 # override kernel config file
