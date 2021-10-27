@@ -1,6 +1,7 @@
 IMAGE_INSTALL_append = " libiio  \
 			 libiio-tests \
 			 libiio-iiod \
+			 libiio-python3 \
 			 fru-tools \
 			 libad9361-iio \
 			 jesd-status \
