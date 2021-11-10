@@ -2,10 +2,8 @@
 /delete-node/ &sys_mb;
 /delete-node/ &clk_cpu;
 /delete-node/ &clk_bus_0;
-/delete-node/ &axi_ad9250_0_core;
-/delete-node/ &axi_ad9250_0_dma;
-/delete-node/ &axi_ad9250_1_core;
-/delete-node/ &axi_ad9250_1_dma;
+/delete-node/ &axi_ad9250_core_adc_tpl_core;
+/delete-node/ &axi_ad9250_dma;
 /delete-node/ &axi_ad9250_jesd_rx_axi;
 /delete-node/ &axi_ad9250_xcvr;
 /delete-node/ &axi_ddr_cntrl;
