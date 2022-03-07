@@ -49,7 +49,8 @@ SRC_URI_append_zynqmp = " \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-ad9081-m8-l4.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002-rx2tx2.dtsi \
-		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi"
+		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi \
+		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dtsi"
 
 SRC_URI_append_microblaze = " \
 		file://pl-delete-nodes-fmcdaq2.dtsi \
@@ -166,7 +167,8 @@ do_configure_append() {
 	"zynq-zc706-adv7511-adrv9375-jesd204-fsm")
 		dtb_tag_file="${WORKDIR}/zynq-zc706-adv7511-adrv9371.dts"
 		;;
-	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm")
+	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm" | \
+	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm")
 		dtb_tag_file="${WORKDIR}/zynqmp-adrv9009-zu11eg-reva.dtsi"
 		;;
 	 "vcu118_ad9081_m8_l4")

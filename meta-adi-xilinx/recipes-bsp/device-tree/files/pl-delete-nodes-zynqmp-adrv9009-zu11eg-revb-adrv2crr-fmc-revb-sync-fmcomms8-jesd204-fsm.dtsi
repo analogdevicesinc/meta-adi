@@ -1,0 +1,3 @@
+/include/ "pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi"
+
+/delete-node/ &axi_fmcomms8_gpio;
