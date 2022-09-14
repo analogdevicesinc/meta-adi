@@ -73,12 +73,12 @@ To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/
 
 Xilinx based platforms use Petalinx SDK in order to customize, build and deploy Embedded Linux on their platforms. Petalinux is a set of tools which work on top of yocto making it easy to add extra custom layers. For more information on Petalinux and on how to install the SDK refer to the following links:
 
-* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2021_1/ug1144-petalinux-tools-reference-guide.pdf)
+* [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2021_2/ug1144-petalinux-tools-reference-guide.pdf)
 * [Petalinux Wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842250/PetaLinux)
 
 **This layer supports:**
 
-* **Petalinux-v2021.1;**
+* **Petalinux-v2021.2;**
 * **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
@@ -124,13 +124,6 @@ con
 ```
 
 After running `con`, on your Serial terminal, stop u-boot at the command line and run `bootm 0x85000000`. Your kernel should now start to boot...
-
-### A note on ZynqMP
-
-There are some identified issues in petalinux on ultrascale platforms:
-
-1. When using initrd/initramfs as root filesystem, petalinux-initramfs-image will be automatically selected as ramdisk and the boot will fail (if there's no valid ext4 partition on the sdcard) since it is a tiny image that does not contain everything needed to successfully finish the boot process. Workarounds can be found [here](https://support.xilinx.com/s/article/76842?language=en_US);
-2. On the bootlog, the following can be seen: "**[Firmware Bug]: Kernel image misaligned at boot, please fix your bootloader!**". Explanations and solutions [here](https://support.xilinx.com/s/article/76712?language=en_US).
 
 > Notes:
 >
