@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "ADI-BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=38c01601d5c4b84986a8f48ece946aa1"
 
-BRANCH = "master"
+BRANCH = "2021_R1"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
 SRCREV = "${@ "ba6364123d6c820d3490aa2c91e41c8cb859ce30" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "git://github.com/analogdevicesinc/jesd-eye-scan-gtk.git;protocol=https;branch=${BRANCH}"
