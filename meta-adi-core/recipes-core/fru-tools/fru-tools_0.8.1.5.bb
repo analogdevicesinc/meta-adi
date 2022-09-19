@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://license.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 BRANCH = "master"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
-SRCREV = "${@ "5ee5bf5ab59abdcc350df79696758ea5ff9f33c7" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "72951d8e76d4e3ea047ecbbebe52a980c1909c56" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "git://github.com/analogdevicesinc/fru_tools.git;protocol=https;branch=${BRANCH}"
 PV_append = "+git${SRCPV}"
 
