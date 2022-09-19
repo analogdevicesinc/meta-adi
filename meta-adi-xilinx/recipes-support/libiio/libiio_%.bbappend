@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 BRANCH ?= "master"
-SRCREV = "${@ "92d6a35f3d8d721cda7d6fe664b435311dd368b4" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "4a869116f0bad8d669319611c0ebb4596a33e2a3" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI_append = ";branch=${BRANCH} file://syvinitscript.patch"
 PV = "0.24+git${SRCPV}"
 
