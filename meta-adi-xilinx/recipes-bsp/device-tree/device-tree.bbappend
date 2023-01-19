@@ -124,8 +124,11 @@ do_configure_append() {
 	# logic on the $dtb_tag_file without directly changing the original file (being it an in kernel
 	# devicetree or not). In case it's an in kernel devicetree, changing it would actually
 	# break the kernel compilation
-	[ ${USE_KERNEL_SOURCES} == "y" ] && cp -rf "${DTS_INCLUDE_PATH}/"* "${WORKDIR}/"
-	[ ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH} ] && cp -rf "${KERNEL_DTB_PATH}/"* "${WORKDIR}/"
+	[ "${USE_KERNEL_SOURCES}" == "y" ] && cp -Rf "${DTS_INCLUDE_PATH}/"* "${WORKDIR}/"
+
+	[ "${KERNEL_DTB_PATH}" != "${WORKDIR}" ] && \
+		[ "${KERNEL_DTB_PATH}" != "${DTS_INCLUDE_PATH}" ] && cp -Rf "${KERNEL_DTB_PATH}/"* "${WORKDIR}/"
+
 
 	# Used to see if the PL part is being compiled as an overlay! In that case, we cannot apply our normal workflow since it would fail!
 	# We try to keep the approach used by petalinux here, which is, if you build your PL as an overlay, then you should just have a
