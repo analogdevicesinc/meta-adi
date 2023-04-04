@@ -18,4 +18,6 @@ inherit update-rc.d setuptools3
 
 INITSCRIPT_NAME = "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'iiod', '', d)}"
 
-PACKAGECONFIG ?= "usb_backend network_backend serial_backend libiio-python3"
+PACKAGECONFIG ?= "usb_backend network_backend serial_backend libiio-python3 hwmon"
+
+PACKAGECONFIG[hwmon] = "-DWITH_HWMON=ON,-DWITH_HWMON=OFF"
