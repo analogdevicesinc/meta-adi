@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 BRANCH ?= "master"
-SRCREV = "${@ "4a869116f0bad8d669319611c0ebb4596a33e2a3" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "c4498c27761d04d4ac631ec59c1613bfed079da5" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 # Just overwrite SRC_URI as we would need to delete the python bindings patch since it does not apply
 # (already fixed in 0.24) and we do not want to hardcode ';branch=master' so that we would also have to
 # remove that leaving the variable empty anyways.
