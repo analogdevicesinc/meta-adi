@@ -10,8 +10,18 @@ IMAGE_INSTALL:append = " libiio  \
 
 IMAGE_INSTALL:microblaze:remove = "avahi-daemon"
 
-# The petalinux default root password is root. To change it, one
-# has to run petalinux-config -c rootfs and change the passoword. This lines below
-# force the root password to be analog. To keep the petalinux way, just comment this lines...
+# Mimic what petalinux is doing in petalinux.conf. The big difference is that the user is
+# called analog instead of petalinux. Also, we just set 'analog' as the root password to
+# make things simpler and more in sync with kuiper. Otherwise, we would need to check when
+# debug-tweaks is part of IMAGE_FEATURES to force the password to 'analog'.
+# One thing that differs from kuiper is that auto login and root ssh connection are not
+# enabled by default. Use 'petalinux-config -c rootfs' for that.
 EXTRA_USERS_PARAMS = "	\
-	usermod -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' root;"
+	useradd -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' analog; \
+	usermod -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' root; \
+	usermod -a -G audio analog; \
+	usermod -a -G video analog; \
+	groupadd -r aie; \
+	usermod -a -G aie analog; \
+"
+EXTRA_USERS_SUDOERS = "analog ALL=(ALL) ALL;"
