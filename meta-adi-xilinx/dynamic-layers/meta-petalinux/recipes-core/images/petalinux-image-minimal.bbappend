@@ -2,10 +2,13 @@ IMAGE_INSTALL:append = " libiio  \
 			 libiio-tests \
 			 libiio-iiod \
 			 libiio-python3 \
+			 avahi-daemon \
 			 fru-tools \
 			 libad9361-iio \
 			 jesd-status \
 			 adrv9009-zu11eg-fan-control"
+
+IMAGE_INSTALL:microblaze:remove = "avahi-daemon"
 
 # The petalinux default root password is root. To change it, one
 # has to run petalinux-config -c rootfs and change the passoword. This lines below
