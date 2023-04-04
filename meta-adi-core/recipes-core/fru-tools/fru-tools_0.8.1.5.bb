@@ -8,7 +8,7 @@ BRANCH = "master"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
 SRCREV = "${@ "72951d8e76d4e3ea047ecbbebe52a980c1909c56" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "git://github.com/analogdevicesinc/fru_tools.git;protocol=https;branch=${BRANCH}"
-PV_append = "+git${SRCPV}"
+PV:append = "+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
@@ -16,7 +16,7 @@ userlocaldir = "/usr/local"
 bindest = "${userlocaldir}/bin"
 masterfile = "${userlocaldir}/lib/fmc-tools/"
 
-FILES_${PN} = "${bindest}/fru-dump ${masterfile} \
+FILES:${PN} = "${bindest}/fru-dump ${masterfile} \
 	${userlocaldir}/share/man/man1/fru-dump.1"
 
 # so that the compiled artifact respects the OpenEmbedded ldflags

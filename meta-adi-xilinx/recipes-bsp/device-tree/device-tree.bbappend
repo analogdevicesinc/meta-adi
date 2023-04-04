@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI_append_zynq = " \
+SRC_URI:append:zynq = " \
 		file://pl-delete-nodes-zynq-zed-adv7511-ad9361-fmcomms2-3.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9434-fmc-500ebz.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq2.dtsi \
@@ -34,7 +34,7 @@ SRC_URI_append_zynq = " \
 		file://pl-delete-nodes-zynq-zc702-adv7511-ad9361-fmcomms5.dtsi \
 		file://pl-delete-nodes-zynq-zc702-adv7511.dtsi"
 
-SRC_URI_append_zynqmp = " \
+SRC_URI:append:zynqmp = " \
 		file://pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9009-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-fmcdaq2.dtsi \
@@ -52,7 +52,7 @@ SRC_URI_append_zynqmp = " \
 		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dtsi"
 
-SRC_URI_append_microblaze = " \
+SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-fmcdaq2.dtsi \
 		file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
 		file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
@@ -77,9 +77,9 @@ Make sure to define it in a conf file...")
 }
 DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
 
-DTS_INCLUDE_PATH_zynq = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
-DTS_INCLUDE_PATH_zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
-DTS_INCLUDE_PATH_microblaze = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
+DTS_INCLUDE_PATH:zynq = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
+DTS_INCLUDE_PATH:zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
+DTS_INCLUDE_PATH:microblaze = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 # can be set to "n", if we do not use in kernel devicetrees and hence, we do not need to copy them to ${WORKDIR}.
 # it naturally implies ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH}
 USE_KERNEL_SOURCES ?= "y"
@@ -88,13 +88,13 @@ KERNEL_DTB_PATH ?= "${DTS_INCLUDE_PATH}"
 # zynq has some corner case where this will be overwritten
 DTB_TAG_FILE ?= "${DT_FILES_PATH}/system-top.dts"
 # zynqMP has some corner cases where this will be overwritten
-DTB_TAG_FILE_zynqmp ?= "${WORKDIR}/zynqmp-zcu102-revA.dts"
+DTB_TAG_FILE:zynqmp ?= "${WORKDIR}/zynqmp-zcu102-revA.dts"
 
 # Only used when FPGA_MANAGER is enabled. These are only some defaults. Note that, for example, for Microblaze
 # vc707.dts won't be a good choice if your platform is based on kc705 for instance...
-DTS_BASE_zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
-DTS_BASE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
-DTS_BASE_microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
+DTS_BASE:zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
+DTS_BASE:zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
+DTS_BASE:microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
 DTS_OVERLAY ?= "pl-${KERNEL_DTB}-overlay.dtsi"
 DTS_OVERLAY_PATH ?= "${WORKDIR}"
 # Make sure that the kernel sources are available
@@ -108,13 +108,21 @@ do_configure[depends] += "virtual/kernel:do_configure"
 # effect to be included first...
 KERNEL_INCLUDE ?= "${STAGING_KERNEL_DIR}/scripts/dtc/include-prefixes"
 
+# Remove this path from being included as it was conflicting with our internal devicetrees.
+# Moreover, the order by which the include paths are given to dtc looks to be random and changes
+# from build to build. Hence, for some projects (eg: kcu105_adrv9371x), whenever this path was
+# given first, the build was failing since there are "colliding" .dtsi files and the ones given
+# by xilinx make some assumptions about node names that are not true for every devicetree
+# (including our owns).
+DT_INCLUDE:remove = "${S}/device_tree/data/kernel_dtsi/${DT_RELEASE_VERSION}/BOARD/"
+
 # Based on the selected device tree, this function will:
 #	copy the device trees of interest to ${WORKDIR}.
 #	overwrite the ${DT_FILES_PATH}/system-top.dts with the selected devicetree.
 #	add the pl.dtsi so that IPs added to our reference designs are also included.
 #	Add the /include "pl-delete-nodes-*" to remove all the duplicated labels between ADI device trees and pl.dtsi.
 #	Include system-user.dtsi at the end of the devicetree so users can extend it.
-do_configure_append() {
+do_configure:append() {
 	local dtb_tag_file=${DTB_TAG_FILE}
 
 	[ ! -e "${WORKDIR}/${DTB_PL_DELETE}.dtsi" ] && \

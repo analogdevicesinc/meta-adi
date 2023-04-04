@@ -6,7 +6,7 @@ BRANCH = "master"
 
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
 SRCREV = "${@ "43643ab0ef8a3fbdb6c7595f42842f534a291664" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
-PV_append = "+git${SRCPV}"
+PV:append = "+git${SRCPV}"
 
 SRC_URI = "git://github.com/analogdevicesinc/libad9361-iio.git;protocol=https;branch=${BRANCH}"
 

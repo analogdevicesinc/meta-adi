@@ -22,7 +22,7 @@ do_compile() {
 
 bindest = "/usr/local/bin"
 
-FILES_${PN} = "${bindest}/jesd_status"
+FILES:${PN} = "${bindest}/jesd_status"
 
 do_install() {
 	install -d ${D}/${bindest}
