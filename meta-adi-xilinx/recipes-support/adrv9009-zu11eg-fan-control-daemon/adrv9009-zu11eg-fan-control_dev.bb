@@ -13,10 +13,14 @@ PV:append = "+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit update-rc.d cmake
+inherit update-rc.d cmake systemd
 
 DEPENDS = "libiio"
 
 EXTRA_OECMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', '-DWITH_SYSVINIT=on', '', d)}"
+EXTRA_OECMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '-DWITH_SYSTEMD=on -DSYSTEMD_UNIT_INSTALL_DIR=${systemd_system_unitdir}', '', d)}"
 
 INITSCRIPT_NAME = "fancontrold"
+
+SYSTEMD_PACKAGES = "${PN}"
+SYSTEMD_SERVICE:${PN} = "fancontrold.service"
