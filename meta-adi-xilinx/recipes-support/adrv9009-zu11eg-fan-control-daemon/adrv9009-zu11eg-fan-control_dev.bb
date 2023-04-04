@@ -9,7 +9,7 @@ SRC_URI = "\
 	git://github.com/analogdevicesinc/adrv9009-zu11eg-fan-control-daemon.git;protocol=https;branch=${BRANCH} \
 	file://syvinitscript.patch \
 	"
-PV_append = "+git${SRCPV}"
+PV:append = "+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
