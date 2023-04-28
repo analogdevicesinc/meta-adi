@@ -68,6 +68,9 @@ To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/
 |[fmcjesdadc1_vc707](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcjesdadc1/vc707)|[vc707_fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vc707_fmcjesdadc1.dts)|
 |[ad9467_fmc_kc705](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9467_fmc/kc705)|[kc705_ad9467_fmc](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kc705_ad9467_fmc.dts)|
 |[ad9081_fmca_ebz_vcu118](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vcu118)|[vcu118_ad9081_m8_l4](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vcu118_ad9081_m8_l4.dts)|
+|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081.dts)|
+|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dts)|
+|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9082-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9082-204c-txmode22-rxmode23.dts)|
 
 ### Building with Petalinux
 
