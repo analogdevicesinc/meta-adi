@@ -77,9 +77,8 @@ Make sure to define it in a conf file...")
 }
 DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
 
-DTS_INCLUDE_PATH:zynq = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
+DTS_INCLUDE_PATH = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 DTS_INCLUDE_PATH:zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
-DTS_INCLUDE_PATH:microblaze = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 # can be set to "n", if we do not use in kernel devicetrees and hence, we do not need to copy them to ${WORKDIR}.
 # it naturally implies ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH}
 USE_KERNEL_SOURCES ?= "y"
