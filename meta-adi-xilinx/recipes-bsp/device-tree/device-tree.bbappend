@@ -67,6 +67,11 @@ SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-vc707_fmcadc5.dtsi \
 		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi"
 
+SRC_URI:append:versal = " \
+		file://pl-delete-nodes-versal-vck190-reva-ad9081.dtsi \
+		file://pl-delete-nodes-versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dtsi \
+		file://pl-delete-nodes-versal-vck190-reva-ad9082-204c-txmode22-rxmode23.dtsi"
+
 python __anonymous() {
     if not d.getVar("KERNEL_DTB"):
         """this is a warn and not fatal because `petalinux-config --get-hw-description` is using
@@ -79,6 +84,7 @@ DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
 
 DTS_INCLUDE_PATH = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
 DTS_INCLUDE_PATH:zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
+DTS_INCLUDE_PATH:versal = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
 # can be set to "n", if we do not use in kernel devicetrees and hence, we do not need to copy them to ${WORKDIR}.
 # it naturally implies ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH}
 USE_KERNEL_SOURCES ?= "y"
@@ -88,12 +94,14 @@ KERNEL_DTB_PATH ?= "${DTS_INCLUDE_PATH}"
 DTB_TAG_FILE ?= "${DT_FILES_PATH}/system-top.dts"
 # zynqMP has some corner cases where this will be overwritten
 DTB_TAG_FILE:zynqmp ?= "${WORKDIR}/zynqmp-zcu102-revA.dts"
+DTB_TAG_FILE:versal ?= "${WORKDIR}/versal.dtsi"
 
 # Only used when FPGA_MANAGER is enabled. These are only some defaults. Note that, for example, for Microblaze
 # vc707.dts won't be a good choice if your platform is based on kc705 for instance...
 DTS_BASE:zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
 DTS_BASE:zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
 DTS_BASE:microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
+DTS_BASE:versal ?= "${DTS_INCLUDE_PATH}/versal-vck190-revA"
 DTS_OVERLAY ?= "pl-${KERNEL_DTB}-overlay.dtsi"
 DTS_OVERLAY_PATH ?= "${WORKDIR}"
 # Make sure that the kernel sources are available
