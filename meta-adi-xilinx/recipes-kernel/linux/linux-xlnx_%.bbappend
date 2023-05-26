@@ -12,6 +12,7 @@ KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"
 KBUILD_DEFCONFIG:zynq = "zynq_xcomm_adv7511_defconfig"
 KBUILD_DEFCONFIG:zynqmp = "adi_zynqmp_defconfig"
 KBUILD_DEFCONFIG:microblaze = "adi_mb_defconfig"
+KBUILD_DEFCONFIG:versal = "adi_versal_defconfig"
 
 # In adi_mb_defconfig, CONFIG_INITRAMFS_SOURCE is enabled by default.
 # Since we are in petalinux already, a simpleImage will be build with the proper
