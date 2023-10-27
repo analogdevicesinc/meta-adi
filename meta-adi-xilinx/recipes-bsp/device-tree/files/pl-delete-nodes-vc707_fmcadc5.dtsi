@@ -9,7 +9,6 @@
 /delete-node/ &axi_ad9625_1_jesd_rx_axi;
 /delete-node/ &axi_ad9625_1_xcvr;
 /delete-node/ &axi_ad9625_dma;
-/delete-node/ &axi_ddr_cntrl;
 /delete-node/ &axi_ethernet;
 /delete-node/ &axi_ethernet_dma;
 /delete-node/ &axi_fmcadc5_sync;
