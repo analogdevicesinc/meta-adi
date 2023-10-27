@@ -4,7 +4,6 @@
 /delete-node/ &clk_bus_0;
 /delete-node/ &axi_ad9467;
 /delete-node/ &axi_ad9467_dma;
-/delete-node/ &axi_ddr_cntrl;
 /delete-node/ &axi_ethernet;
 /delete-node/ &axi_gpio;
 /delete-node/ &axi_gpio_lcd;
