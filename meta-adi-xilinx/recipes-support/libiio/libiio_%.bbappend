@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 BRANCH ?= "libiio-v0"
-SRCREV = "${@ "c4498c27761d04d4ac631ec59c1613bfed079da5" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "0d8a69aaf2f064cafaa9a962308f679f9b8fa982" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 # Just overwrite SRC_URI as we would need to delete the python bindings patch since it does not apply
 # (already fixed in 0.24) and we do not want to hardcode ';branch=master' so that we would also have to
 # remove that leaving the variable empty anyways.
