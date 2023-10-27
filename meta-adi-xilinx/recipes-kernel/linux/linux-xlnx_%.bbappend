@@ -1,6 +1,6 @@
 DESCRIPTION = "ADI kernel"
-LINUX_VERSION = "5.15"
-ADI_VERSION = "adi_master"
+LINUX_VERSION = "6.1"
+ADI_VERSION = "adi-master"
 
 PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
 KBRANCH = "master"
