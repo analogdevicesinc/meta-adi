@@ -10,6 +10,12 @@ IMAGE_INSTALL:append = " libiio  \
 
 IMAGE_INSTALL:remove:microblaze = "avahi-daemon"
 
+# fsboot fails to build in vc707 and kc705 based projects. This is a petalinux bug or
+# something missing in our hdl projects that petalinux is expecting to exist. Anyways,
+# we never really used fsboot as part of our workflow and, AFAIK, no one is really
+# using it. Hence just don't build it. If someone raises his hand, we can then dig further.
+EXTRA_IMAGEDEPENDS:remove:microblaze = "virtual/fsboot"
+
 # Mimic what petalinux is doing in petalinux.conf. The big difference is that the user is
 # called analog instead of petalinux. Also, we just set 'analog' as the root password to
 # make things simpler and more in sync with kuiper. Otherwise, we would need to check when
