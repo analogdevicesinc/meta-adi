@@ -8,7 +8,7 @@ IMAGE_INSTALL:append = " libiio  \
 			 jesd-status \
 			 adrv9009-zu11eg-fan-control"
 
-IMAGE_INSTALL:microblaze:remove = "avahi-daemon"
+IMAGE_INSTALL:remove:microblaze = "avahi-daemon"
 
 # Mimic what petalinux is doing in petalinux.conf. The big difference is that the user is
 # called analog instead of petalinux. Also, we just set 'analog' as the root password to
