@@ -4,7 +4,7 @@ SECTION = "console/utils"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://license.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-BRANCH = "master"
+BRANCH = "main"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
 SRCREV = "${@ "4a18979382d59dd956bc11a6606d460e3f8937ca" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "git://github.com/analogdevicesinc/fru_tools.git;protocol=https;branch=${BRANCH}"
