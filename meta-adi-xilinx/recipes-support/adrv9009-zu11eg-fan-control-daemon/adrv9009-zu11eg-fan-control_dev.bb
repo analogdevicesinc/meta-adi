@@ -2,7 +2,7 @@ SUMMARY = "System daemon for controlling the fan speed on the ADRV9009-ZU11EG Sy
 SECTION = "base"
 LICENSE = "ADI-BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=38c01601d5c4b84986a8f48ece946aa1"
-BRANCH = "master"
+BRANCH = "main"
 
 SRCREV = "${@ "e00aed02214146e61c9087a57b2918b48efeabde" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "\
