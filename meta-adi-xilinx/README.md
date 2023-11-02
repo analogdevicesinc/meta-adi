@@ -2,75 +2,72 @@
 
 This is the Analog Devices yocto layer to make it easier to integrate ADI linux kernel, device trees and userspace utilities (eg: libiio) onto Xilinx SoC FPGA based systems.
 
-### Dependencies
-
-To add Analog devices tools (eg: libiio) the [meta-adi-core](https://github.com/analogdevicesinc/meta-adi/tree/master/meta-adi-core) has to be included. By default, when building [petalinux-image-minimal](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/dynamic-layers/meta-petalinux/recipes-core/images/petalinux-image-minimal.bbappend), this layer is needed.
 
 ### Supported Projects
 
 | HDL | Devicetree |
 | --- | ---------- |
-|[fmcomms2_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms2/zed)|[zynq-zed-adv7511-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-ad9361-fmcomms2-3.dts)|
-|[fmcomms2_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms2/zc706)|[zynq-zc706-adv7511-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9361-fmcomms2-3.dts)|
-|[fmcomms5_zc702](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms5/zc702)|[zynq-zc702-adv7511-ad9361-fmcomms5](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc702-adv7511-ad9361-fmcomms5.dts)|
-|[fmcomms5_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms5/zc706)|[zynq-zc706-adv7511-ad9361-fmcomms5](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9361-fmcomms5.dts)|
-|[fmcomms11_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms11/zc706)|[zynq-zc706-adv7511-fmcomms11](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-fmcomms11.dts)|
-|[daq2_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/daq2/zc706)|[zynq-zc706-adv7511-fmcdaq2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-fmcdaq2.dts)|
-|[adrv9361z7035_ccbob_cmos](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9361z7035/ccbob_cmos)|[zynq-adrv9361-z7035-bob-cmos](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-adrv9361-z7035-bob-cmos.dts)|
-|[adrv9361z7035_ccbob_lvds](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9361z7035/ccbob_lvds)|[zynq-adrv9361-z7035-bob](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-adrv9361-z7035-bob.dts)|
-|[adrv9361z7035_ccfmc_lvds](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9361z7035/ccfmc_lvds)|[zynq-adrv9361-z7035-fmc](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-adrv9361-z7035-fmc.dts)|
-|[adrv9364z7020_ccbob_cmos](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9364z7020/ccbob_cmos)|[zynq-adrv9364-z7020-bob-cmos](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-adrv9364-z7020-bob-cmos.dts)|
-|[adrv9364z7020_ccbob_lvds](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9364z7020/ccbob_lvds)|[zynq-adrv9364-z7020-bob](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-adrv9364-z7020-bob.dts)|
-|[adrv9009_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009/zc706)|[zynq-zc706-adv7511-adrv9009](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9009.dts)|
-|[adrv9009_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009/zc706)|[zynq-zc706-adv7511-adrv9008-1-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9008-1-jesd204-fsm.dts)|
-|[adrv9009_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009/zc706)|[zynq-zc706-adv7511-adrv9008-2-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9008-2-jesd204-fsm.dts)|
-|[adrv9371x_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9371x/zc706)|[zynq-zc706-adv7511-adrv9371](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9371.dts)|
-|[fmcadc2_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcadc2/zc706)|[zynq-zc706-adv7511-ad9625-fmcadc2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9625-fmcadc2.dts)|
-|[ad6676evb_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad6676evb/zc706)|[zynq-zc706-adv7511-ad6676-fmc](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad6676-fmc.dts)|
-|[daq3_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/daq3/zc706)|[zynq-zc706-adv7511-fmcdaq3-revC](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-fmcdaq3-revC.dts)|
-|[imageon_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/imageon/zed)|[zynq-zed-imageon](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-imageon.dts)|
-|[adv7511_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adv7511/zc706)|[zynq-zc706-adv7511](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511.dts)|
-|[adv7511_zc702](https://github.com/analogdevicesinc/hdl/tree/master/projects/adv7511/zc702)|[zynq-zc702-adv7511](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc702-adv7511.dts)|
-|[adv7511_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adv7511/zed)|[zynq-zed-adv7511](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511.dts)|
-|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zed)|[zynq-zed-adv7511-adrv9002](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-adrv9002.dts)|
-|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zed)|[zynq-zed-adv7511-adrv9002-rx2tx2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-adrv9002-rx2tx2.dts)|
-|[ad9434_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9434_fmc/zc706)|[zynq-zc706-adv7511-ad9434-fmc-500ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9434-fmc-500ebz.dts)|
-|[ad9467_fmc_zed](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9467_fmc/zed)|[zynq-zed-adv7511-ad9467-fmc-250ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zed-adv7511-ad9467-fmc-250ebz.dts)|
-|[ad9265_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9265_fmc/zc706)|[zynq-zc706-adv7511-ad9265-fmc-125ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9265-fmc-125ebz.dts)|
-|[fmcjesdadc1_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcjesdadc1/zc706)|[zynq-zc706-adv7511-fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-fmcjesdadc1.dts)|
-|[ad9739a_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9739a_fmc/zc706)|[zynq-zc706-adv7511-ad9739a-fmc](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9739a-fmc.dts)|
-|[dac_fmc_ebz_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/dac_fmc_ebz/zc706)|[zynq-zc706-adv7511-ad9172-fmc-ebz](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9172-fmc-ebz.dts)|
-|[adrv9371x_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9371x/zc706)|[zynq-zc706-adv7511-adrv9375-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9375-jesd204-fsm.dts)|
-|[ad9081_fmca_ebz_zc706](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/zc706)|[zynq-zc706-adv7511-ad9081](https://github.com/analogdevicesinc/linux/blob/master/arch/arm/boot/dts/zynq-zc706-adv7511-ad9081.dts)|
-|[adrv9009_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009/zcu102)|[zynqmp-zcu102-rev10-adrv9009-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9009-jesd204-fsm.dts)|
-|[adrv9009_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009/zcu102)|[zynqmp-zcu102-rev10-adrv9008-1-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9008-1-jesd204-fsm.dts)|
-|[adrv9009_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009/zcu102)|[zynqmp-zcu102-rev10-adrv9008-2-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9008-2-jesd204-fsm.dts)|
-|[daq2_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/daq2/zcu102)|[zynqmp-zcu102-rev10-fmcdaq2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-fmcdaq2.dts)|
-|[fmcomms2_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms2/zcu102)|[zynqmp-zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9361-fmcomms2-3.dts)|
-|[fmcomms5_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms5/zcu102)|[zynqmp-zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9361-fmcomms5.dts)|
-|[daq3_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/daq3/zcu102)|[zynqmp-zcu102-rev10-fmcdaq3](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-fmcdaq3.dts)|
-|[adrv9371x_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9371x/zcu102)|[zynqmp-zcu102-rev10-adrv9371-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9371-jesd204-fsm.dts)|
-|[dac_fmc_ebz_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/dac_fmc_ebz/zcu102)|[zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4.dts)|
-|[ad9081_fmca_ebz_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/zcu102)|[zynqmp-zcu102-rev10-ad9081-m8-l4](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9081-m8-l4.dts)|
-|[adrv9009zu11eg_adrv2crr_fmc](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009zu11eg/adrv2crr_fmc)|[zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dts)|
-[adrv9009zu11eg_adrv2crr_fmcomms8](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9009zu11eg/adrv2crr_fmcomms8)|[zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dts)|
-|[adrv9001_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zcu102)|[zynqmp-zcu102-rev10-adrv9002](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9002.dts)|
-|[adrv9001_zcu102](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9001/zcu102)|[zynqmp-zcu102-rev10-adrv9002-rx2tx2](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9002-rx2tx2.dts)|
-|[fmcomms2_kc705](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms2/kc705)|[kc705_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kc705_fmcomms2-3.dts)|
-|[fmcomms2_kcu105](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms2/kcu105)|[kcu105_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kcu105_fmcomms2-3.dts)|
-|[fmcomms2_vc707](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcomms2/vc707)|[vc707_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vc707_fmcomms2-3.dts)|
-|[daq2_kc705](https://github.com/analogdevicesinc/hdl/tree/master/projects/daq2/kc705)|[kc705_fmcdaq2](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kc705_fmcdaq2.dts)|
-|[daq2_kcu105](https://github.com/analogdevicesinc/hdl/tree/master/projects/daq2/kcu105)|[kcu105_fmcdaq2](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kcu105_fmcdaq2.dts)|
-|[adrv9371x_kcu105](https://github.com/analogdevicesinc/hdl/tree/master/projects/adrv9371x/kcu105)|[kcu105_adrv9371x](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kcu105_adrv9371x.dts)|
-|[fmcadc2_vc707](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcadc2/vc707)|[vc707_fmcadc2](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vc707_fmcadc2.dts)|
-|[fmcadc5_vc707](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcadc5/vc707)|[vc707_fmcadc5](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vc707_fmcadc5.dts)|
-|[fmcjesdadc1_kc705](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcjesdadc1/kc705)|[kc705_fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kc705_fmcjesdadc1.dts)|
-|[fmcjesdadc1_vc707](https://github.com/analogdevicesinc/hdl/tree/master/projects/fmcjesdadc1/vc707)|[vc707_fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vc707_fmcjesdadc1.dts)|
-|[ad9467_fmc_kc705](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9467_fmc/kc705)|[kc705_ad9467_fmc](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/kc705_ad9467_fmc.dts)|
-|[ad9081_fmca_ebz_vcu118](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vcu118)|[vcu118_ad9081_m8_l4](https://github.com/analogdevicesinc/linux/blob/master/arch/microblaze/boot/dts/vcu118_ad9081_m8_l4.dts)|
-|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081.dts)|
-|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dts)|
-|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/master/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9082-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/master/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9082-204c-txmode22-rxmode23.dts)|
+|[fmcomms2_zed](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/zed)|[zynq-zed-adv7511-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zed-adv7511-ad9361-fmcomms2-3.dts)|
+|[fmcomms2_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/zc706)|[zynq-zc706-adv7511-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9361-fmcomms2-3.dts)|
+|[fmcomms5_zc702](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms5/zc702)|[zynq-zc702-adv7511-ad9361-fmcomms5](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc702-adv7511-ad9361-fmcomms5.dts)|
+|[fmcomms5_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms5/zc706)|[zynq-zc706-adv7511-ad9361-fmcomms5](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9361-fmcomms5.dts)|
+|[fmcomms11_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms11/zc706)|[zynq-zc706-adv7511-fmcomms11](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-fmcomms11.dts)|
+|[daq2_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq2/zc706)|[zynq-zc706-adv7511-fmcdaq2](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-fmcdaq2.dts)|
+|[adrv9361z7035_ccbob_cmos](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9361z7035/ccbob_cmos)|[zynq-adrv9361-z7035-bob-cmos](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-adrv9361-z7035-bob-cmos.dts)|
+|[adrv9361z7035_ccbob_lvds](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9361z7035/ccbob_lvds)|[zynq-adrv9361-z7035-bob](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-adrv9361-z7035-bob.dts)|
+|[adrv9361z7035_ccfmc_lvds](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9361z7035/ccfmc_lvds)|[zynq-adrv9361-z7035-fmc](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-adrv9361-z7035-fmc.dts)|
+|[adrv9364z7020_ccbob_cmos](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9364z7020/ccbob_cmos)|[zynq-adrv9364-z7020-bob-cmos](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-adrv9364-z7020-bob-cmos.dts)|
+|[adrv9364z7020_ccbob_lvds](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9364z7020/ccbob_lvds)|[zynq-adrv9364-z7020-bob](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-adrv9364-z7020-bob.dts)|
+|[adrv9009_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009/zc706)|[zynq-zc706-adv7511-adrv9009](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9009.dts)|
+|[adrv9009_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009/zc706)|[zynq-zc706-adv7511-adrv9008-1-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9008-1-jesd204-fsm.dts)|
+|[adrv9009_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009/zc706)|[zynq-zc706-adv7511-adrv9008-2-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9008-2-jesd204-fsm.dts)|
+|[adrv9371x_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9371x/zc706)|[zynq-zc706-adv7511-adrv9371](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9371.dts)|
+|[fmcadc2_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcadc2/zc706)|[zynq-zc706-adv7511-ad9625-fmcadc2](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9625-fmcadc2.dts)|
+|[ad6676evb_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad6676evb/zc706)|[zynq-zc706-adv7511-ad6676-fmc](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad6676-fmc.dts)|
+|[daq3_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq3/zc706)|[zynq-zc706-adv7511-fmcdaq3-revC](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-fmcdaq3-revC.dts)|
+|[imageon_zed](https://github.com/analogdevicesinc/hdl/tree/main/projects/imageon/zed)|[zynq-zed-imageon](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zed-imageon.dts)|
+|[adv7511_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/adv7511/zc706)|[zynq-zc706-adv7511](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511.dts)|
+|[adv7511_zc702](https://github.com/analogdevicesinc/hdl/tree/main/projects/adv7511/zc702)|[zynq-zc702-adv7511](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc702-adv7511.dts)|
+|[adv7511_zed](https://github.com/analogdevicesinc/hdl/tree/main/projects/adv7511/zed)|[zynq-zed-adv7511](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zed-adv7511.dts)|
+|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9001/zed)|[zynq-zed-adv7511-adrv9002](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zed-adv7511-adrv9002.dts)|
+|[adrv9001_zed](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9001/zed)|[zynq-zed-adv7511-adrv9002-rx2tx2](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zed-adv7511-adrv9002-rx2tx2.dts)|
+|[ad9434_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9434_fmc/zc706)|[zynq-zc706-adv7511-ad9434-fmc-500ebz](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9434-fmc-500ebz.dts)|
+|[ad9467_fmc_zed](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9467_fmc/zed)|[zynq-zed-adv7511-ad9467-fmc-250ebz](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zed-adv7511-ad9467-fmc-250ebz.dts)|
+|[ad9265_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9265_fmc/zc706)|[zynq-zc706-adv7511-ad9265-fmc-125ebz](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9265-fmc-125ebz.dts)|
+|[fmcjesdadc1_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcjesdadc1/zc706)|[zynq-zc706-adv7511-fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-fmcjesdadc1.dts)|
+|[ad9739a_fmc_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9739a_fmc/zc706)|[zynq-zc706-adv7511-ad9739a-fmc](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9739a-fmc.dts)|
+|[dac_fmc_ebz_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/dac_fmc_ebz/zc706)|[zynq-zc706-adv7511-ad9172-fmc-ebz](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9172-fmc-ebz.dts)|
+|[adrv9371x_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9371x/zc706)|[zynq-zc706-adv7511-adrv9375-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-adrv9375-jesd204-fsm.dts)|
+|[ad9081_fmca_ebz_zc706](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/zc706)|[zynq-zc706-adv7511-ad9081](https://github.com/analogdevicesinc/linux/blob/main/arch/arm/boot/dts/zynq-zc706-adv7511-ad9081.dts)|
+|[adrv9009_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009/zcu102)|[zynqmp-zcu102-rev10-adrv9009-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9009-jesd204-fsm.dts)|
+|[adrv9009_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009/zcu102)|[zynqmp-zcu102-rev10-adrv9008-1-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9008-1-jesd204-fsm.dts)|
+|[adrv9009_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009/zcu102)|[zynqmp-zcu102-rev10-adrv9008-2-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9008-2-jesd204-fsm.dts)|
+|[daq2_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq2/zcu102)|[zynqmp-zcu102-rev10-fmcdaq2](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-fmcdaq2.dts)|
+|[fmcomms2_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/zcu102)|[zynqmp-zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9361-fmcomms2-3.dts)|
+|[fmcomms5_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms5/zcu102)|[zynqmp-zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9361-fmcomms5.dts)|
+|[daq3_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq3/zcu102)|[zynqmp-zcu102-rev10-fmcdaq3](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-fmcdaq3.dts)|
+|[adrv9371x_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9371x/zcu102)|[zynqmp-zcu102-rev10-adrv9371-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9371-jesd204-fsm.dts)|
+|[dac_fmc_ebz_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/dac_fmc_ebz/zcu102)|[zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9172-fmc-ebz-mode4.dts)|
+|[ad9081_fmca_ebz_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/zcu102)|[zynqmp-zcu102-rev10-ad9081-m8-l4](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9081-m8-l4.dts)|
+|[adrv9009zu11eg_adrv2crr_fmc](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009zu11eg/adrv2crr_fmc)|[zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dts)|
+[adrv9009zu11eg_adrv2crr_fmcomms8](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9009zu11eg/adrv2crr_fmcomms8)|[zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dts)|
+|[adrv9001_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9001/zcu102)|[zynqmp-zcu102-rev10-adrv9002](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9002.dts)|
+|[adrv9001_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9001/zcu102)|[zynqmp-zcu102-rev10-adrv9002-rx2tx2](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9002-rx2tx2.dts)|
+|[fmcomms2_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/kc705)|[kc705_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_fmcomms2-3.dts)|
+|[fmcomms2_kcu105](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/kcu105)|[kcu105_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kcu105_fmcomms2-3.dts)|
+|[fmcomms2_vc707](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/vc707)|[vc707_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vc707_fmcomms2-3.dts)|
+|[daq2_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq2/kc705)|[kc705_fmcdaq2](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_fmcdaq2.dts)|
+|[daq2_kcu105](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq2/kcu105)|[kcu105_fmcdaq2](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kcu105_fmcdaq2.dts)|
+|[adrv9371x_kcu105](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9371x/kcu105)|[kcu105_adrv9371x](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kcu105_adrv9371x.dts)|
+|[fmcadc2_vc707](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcadc2/vc707)|[vc707_fmcadc2](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vc707_fmcadc2.dts)|
+|[fmcadc5_vc707](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcadc5/vc707)|[vc707_fmcadc5](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vc707_fmcadc5.dts)|
+|[fmcjesdadc1_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcjesdadc1/kc705)|[kc705_fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_fmcjesdadc1.dts)|
+|[fmcjesdadc1_vc707](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcjesdadc1/vc707)|[vc707_fmcjesdadc1](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vc707_fmcjesdadc1.dts)|
+|[ad9467_fmc_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9467_fmc/kc705)|[kc705_ad9467_fmc](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_ad9467_fmc.dts)|
+|[ad9081_fmca_ebz_vcu118](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vcu118)|[vcu118_ad9081_m8_l4](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vcu118_ad9081_m8_l4.dts)|
+|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081.dts)|
+|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dts)|
+|[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9082-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9082-204c-txmode22-rxmode23.dts)|
 
 ### Building with Petalinux
 
@@ -81,7 +78,7 @@ Xilinx based platforms use Petalinx SDK in order to customize, build and deploy 
 
 **This layer supports:**
 
-* **Petalinux-v2022.2;**
+* **Petalinux-v2023.1;**
 * **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
@@ -102,11 +99,9 @@ cd build
 petalinux-build
 ```
 
-When running the `petalinux-config --get-hw-description=<path to xsa file>`, a configuration menu will come up. Go to Yocto Settings->User layers and add the meta-adi-xilinx and meta-adi-core layers.
+When running the `petalinux-config --get-hw-description=<path to xsa file>`, a configuration menu will come up. Go to Yocto Settings->User layers and add the meta-adi-xilinx layer.
 
 ![alt text](images/petalinux_config.png "Yocto Layers")
-
->**IMPORTANT: Since this layer depends on meta-adi-core (because of userspace tools), it has to be included after meta-adi-core, otherwise `petalinux-config` will fail.**
 
 ### Booting your platform
 
@@ -128,12 +123,18 @@ con
 
 After running `con`, on your Serial terminal, stop u-boot at the command line and run `bootm 0x85000000`. Your kernel should now start to boot...
 
+**IMPORTANT: The above steps won't work for vc707 and kc705 based projects as the kernel will crash early on a page fault. Not sure if it's a petalinux issue or something missing in the hdl project. Hence, initrd is not supported and one needs to use INITRAMFS by running `petalinux-config`:**
+
+![alt text](images/petalinux_initramfs.png "INITRAMFS selection")
+
+To boot, the steps are the same as the above until `fpga -f system.bit`. Then, one just needs to run `dow image.elf` and `con`. Note that in this case, we are directly starting the kernel and so there's no u-boot to stop.
+
 > Notes:
 >
 >1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
 >2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
 >3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/html_docs/xilinx2018_1/SDK_Doc/SDK_concepts/concept_Xilinxsystemdebugger.html)
->4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2022_2/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
+>4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2023_1/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 
 For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs/initrd. To change the root filesystem on petalinux:
 
@@ -146,8 +147,15 @@ petalinux-config
 With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password, `petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/dynamic-layers/meta-petalinux/recipes-core/images/petalinux-image-minimal.bbappend` and comment the following lines:
 
 ``` bash
-EXTRA_USERS_PARAMS = "  \
-	usermod -P analog root;"
+EXTRA_USERS_PARAMS = "	\
+	useradd -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' analog; \
+	usermod -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' root; \
+	usermod -a -G audio analog; \
+	usermod -a -G video analog; \
+	groupadd -r aie; \
+	usermod -a -G aie analog; \
+"
+EXTRA_USERS_SUDOERS = "analog ALL=(ALL) ALL;"
 ```
 
 ### Extending the devicetree
@@ -161,9 +169,8 @@ To extend ADI devicetrees, the normal Petalinux method should be used. Hence, th
 
 To build petalinux without internet access, run `petalinux-config` and select `BB_NO_NETWORK` in the Yocto Settings section. Check [Xilinx Yocto Builds without an Internet Connection](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/60129817/Xilinx+Yocto+Builds+without+an+Internet+Connection) for more information.
 
-### FPGA Manager
+### Devicetree Overlays
 
-**FPGA Manager is not officially supported by meta-adi! We just provide some guidelines and hooks in our layer to make it easier to use this feature. In the end, is up to the user to provide the devicetree overlay to be used by the build system.**
 
 When using this, the fpga bitstream is not included in the `BOOT.bin` file, so that, only a base devicetree must be compiled in order to boot the system. This devicetree should not have any node/device that is instantiated by the bitstream (this can, most likely, stuck your kernel at boot). To define the base devicetree add this to your `petalinuxbsp.conf` file:
 
@@ -200,10 +207,6 @@ DTS_OVERLAY_PATH ?= "${WORKDIR}"
 If you use the above defaults, you don't need to define these variables in your `petalinuxbsp.conf`. Just make sure to append the recipe's `SRC_URI` so that, your overlay is copied to the recipe's `WORKDIR`. (hint: you can further append this recipe...).
 
 > You can see an overlay example for [zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/files/pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi) and [zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/files/pl-fmcomms5-zcu102-overlay.dtsi).
-
-
-Additionally, you can also "**Specify hw directory path**" under the FPGA Manager configurations. We also provide an example on how this can be used with meta-adi. Please refer to [fpga-manager-util_%.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/fpga-manager-util_%25.bbappend).
-
 
 ### Adding a new Devicetree
 
@@ -243,9 +246,9 @@ The `pl-delete-nodes-${KERNEL_DTB}` should look:
 Having this done, it is time to add both the devicetree and pl-delete-nodes-${KERNEL_DTB} to the build system. The recommended way of doing this is to further append the devicetree recipe in the following manner (assuming you devicetree is named "`custom-devicetree`"):
 
 ``` bash
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
 	pl-delete-nodes-custom-devicetree.dtsi \
 	custom-devicetree.dts \
 "
