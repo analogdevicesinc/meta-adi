@@ -1,0 +1,11 @@
+/delete-node/ &axi_adrv9026_rx_dma;
+/delete-node/ &misc_clk_0;
+/delete-node/ &axi_adrv9026_rx_jesd_rx_axi;
+/delete-node/ &axi_adrv9026_rx_xcvr;
+/delete-node/ &axi_adrv9026_tx_dma;
+/delete-node/ &axi_adrv9026_tx_jesd_tx_axi;
+/delete-node/ &axi_adrv9026_tx_xcvr;
+/delete-node/ &axi_sysid_0;
+/delete-node/ &rx_adrv9026_tpl_core_adc_tpl_core;
+/delete-node/ &tx_adrv9026_tpl_core_dac_tpl_core;
+

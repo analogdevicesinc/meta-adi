@@ -50,6 +50,7 @@ SRC_URI:append:zynqmp = " \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002-rx2tx2.dtsi \
 		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi \
+		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9025.dtsi \
 		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dtsi"
 
 SRC_URI:append:microblaze = " \
