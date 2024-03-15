@@ -108,14 +108,6 @@ DTS_OVERLAY_PATH ?= "${WORKDIR}"
 # Make sure that the kernel sources are available
 do_configure[depends] += "virtual/kernel:do_configure"
 
-# By default, devicetree.bbclass will point dtc and the preprocessor to the kernel
-# sources to look for devicetrees. Since we will always copy all the devicetrees of
-# interest to the local WORKDIR (being them in kernel or not) we will just add
-# include-prefixes as include dir. Otherwise, we would have two different locations
-# with the same files given as include dir and hope that the directory we want to take
-# effect to be included first...
-KERNEL_INCLUDE ?= "${STAGING_KERNEL_DIR}/scripts/dtc/include-prefixes"
-
 # Remove this path from being included as it was conflicting with our internal devicetrees.
 # Moreover, the order by which the include paths are given to dtc looks to be random and changes
 # from build to build. Hence, for some projects (eg: kcu105_adrv9371x), whenever this path was
@@ -140,7 +132,11 @@ do_configure:append() {
 	# logic on the $dtb_tag_file without directly changing the original file (being it an in kernel
 	# devicetree or not). In case it's an in kernel devicetree, changing it would actually
 	# break the kernel compilation
-	[ "${USE_KERNEL_SOURCES}" = "y" ] && cp -Rf "${DTS_INCLUDE_PATH}/"* "${WORKDIR}/"
+	[ "${USE_KERNEL_SOURCES}" = "y" ] && { \
+		cp -Rf "${DTS_INCLUDE_PATH}/"* "${WORKDIR}/"
+		# make sure to follow symlinks
+		cp -Rfl "${STAGING_KERNEL_DIR}/scripts/dtc/include-prefixes/"* "${WORKDIR}/"
+	}
 
 	[ "${KERNEL_DTB_PATH}" != "${WORKDIR}" ] && \
 		[ "${KERNEL_DTB_PATH}" != "${DTS_INCLUDE_PATH}" ] && cp -Rf "${KERNEL_DTB_PATH}/"* "${WORKDIR}/"
