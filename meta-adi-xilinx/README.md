@@ -79,7 +79,7 @@ Xilinx based platforms use Petalinx SDK in order to customize, build and deploy 
 
 **This layer supports:**
 
-* **Petalinux-v2023.1;**
+* **Petalinux-v2023.2;**
 * **hdl master branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
@@ -124,8 +124,6 @@ con
 
 After running `con`, on your Serial terminal, stop u-boot at the command line and run `bootm 0x85000000`. Your kernel should now start to boot...
 
-**IMPORTANT: The above steps won't work for vc707 and kc705 based projects as the kernel will crash early on a page fault. Not sure if it's a petalinux issue or something missing in the hdl project. Hence, initrd is not supported and one needs to use INITRAMFS by running `petalinux-config`:**
-
 ![alt text](images/petalinux_initramfs.png "INITRAMFS selection")
 
 To boot, the steps are the same as the above until `fpga -f system.bit`. Then, one just needs to run `dow image.elf` and `con`. Note that in this case, we are directly starting the kernel and so there's no u-boot to stop.
@@ -135,7 +133,7 @@ To boot, the steps are the same as the above until `fpga -f system.bit`. Then, o
 >1. To build the desired hdf file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
 >2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
 >3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/html_docs/xilinx2018_1/SDK_Doc/SDK_concepts/concept_Xilinxsystemdebugger.html)
->4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2023_1/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
+>4. Refer to  [Petalinux User guide](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2023_2/ug1144-petalinux-tools-reference-guide.pdf) for building a MCS boot file for Microblaze
 
 For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs/initrd. To change the root filesystem on petalinux:
 
@@ -207,7 +205,7 @@ DTS_OVERLAY_PATH ?= "${WORKDIR}"
 
 If you use the above defaults, you don't need to define these variables in your `petalinuxbsp.conf`. Just make sure to append the recipe's `SRC_URI` so that, your overlay is copied to the recipe's `WORKDIR`. (hint: you can further append this recipe...).
 
-> You can see an overlay example for [zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/files/pl-zynqmp-zcu102-rev10-ad9361-fmcomms2-3-overlay.dtsi) and [zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/fpga-manager-util/files/pl-fmcomms5-zcu102-overlay.dtsi).
+> You can see an overlay example for [zcu102-rev10-ad9361-fmcomms2-3](https://github.com/analogdevicesinc/meta-adi/blob/main/meta-adi-xilinx/recipes-bsp/device-tree/files/pl-zynqmp-zcu146-rev10-ad9361-fmcomms2-3-overlay.dtsi) and [zcu102-rev10-ad9361-fmcomms5](https://github.com/analogdevicesinc/meta-adi/blob/main/meta-adi-xilinx/recipes-bsp/fpga-manager-util/files/pl-fmcomms5-zcu102-overlay.dtsi).
 
 ### Adding a new Devicetree
 
@@ -260,4 +258,4 @@ KERNEL_DTB_PATH = "${WORKDIR}"
 USE_KERNEL_SOURCES = "n"
 ```
 
-> If the project being added is supported by ADI (with no custom changes), one can just directly change the [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/master/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
+> If the project being added is supported by ADI (with no custom changes), one can just directly change the [device-tree.bbappend](https://github.com/analogdevicesinc/meta-adi/blob/main/meta-adi-xilinx/recipes-bsp/device-tree/device-tree.bbappend) recipe and send a PR to meda-adi!
