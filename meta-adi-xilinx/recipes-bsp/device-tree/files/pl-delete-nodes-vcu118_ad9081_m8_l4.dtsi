@@ -17,6 +17,8 @@
 /delete-node/ &axi_sysid_0;
 /delete-node/ &axi_timer;
 /delete-node/ &axi_uart;
+/delete-node/ &mxfe_rx_data_offload_i_data_offload;
+/delete-node/ &mxfe_tx_data_offload_i_data_offload;
 /delete-node/ &rx_mxfe_tpl_core_adc_tpl_core;
 /delete-node/ &sys_mb_debug;
 /delete-node/ &tx_mxfe_tpl_core_dac_tpl_core;
