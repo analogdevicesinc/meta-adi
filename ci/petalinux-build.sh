@@ -7,21 +7,24 @@
 set -xe
 
 _docker() {
-	docker run --rm -v ${WORKSPACE}:${WORKSPACE} -v /opt:/opt -v $PWD:$PWD --workdir $PWD petalinux bash -c "$@"
+	docker run --rm -v ${WORKSPACE}:${WORKSPACE} -v /opt:/opt -v $PWD:$PWD \
+			-v /shared/petalinux_dl_shared:/shared/petalinux_dl_shared \
+			--workdir $PWD petalinux bash -c "$@"
 }
 
 get_hdl_artifact() {
+	local base_path="https://artifactory.analog.com/artifactory/sdg-generic-development/hdl"
 	local hdl=""
 	local l
-	local folders=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | egrep '<a href=\"[0-9]+.*' | wc -l)
+	local folders=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | grep -E '<a href=\"[0-9]+.*' | wc -l)
 
 	# try to find the latest successful artifact
 	for ((l=0; l<${folders}; l++)); do
-		hdl=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | egrep '<a href=\"[0-9]+.*' | tail -$((l+1)) | head -1)
+		hdl=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | grep -E '<a href=\"[0-9]+.*' | tail -$((l+1)) | head -1)
 		hdl=${hdl##*'/">'}
 		hdl=${hdl%%'/</a'*}
 		# check if file exists
-		[[ $(wget -S --spider "${base_path}/${export_branch}/hdl_output/${hdl}/${project}/${hdl_output}" 2>&1 | grep 'HTTP/1.1 200 OK') ]] && break
+		[[ $(wget -S --spider "${base_path}/${export_branch}/hdl_output/${hdl}/${project}/system_top.xsa" 2>&1 | grep 'HTTP/1.1 200 OK') ]] && break
 	done
 
 	if [[ ${l} == ${folders} ]]; then
@@ -30,62 +33,32 @@ get_hdl_artifact() {
 	fi
 
 	echo "Get hdl artifacts from: ${base_path}/${export_branch}/hdl_output/${hdl}/${project}"
-	wget --tries=10 ${base_path}/${export_branch}/hdl_output/${hdl}/${project}/${hdl_output} -O ${WORKSPACE}/${hdl_output}
+	wget --tries=10 ${base_path}/${export_branch}/hdl_output/${hdl}/${project}/system_top.xsa -O ${WORKSPACE}/system_top.xsa
 }
 
-get_release() {
-	local rel=$(grep -E -o '([0-9]+_R[0-9]|master)' <<<${WORKSPACE})
-
-	[[ -z ${rel} ]] && {
-		echo "Could not find a valid release from \"${WORKSPACE}\""
-		exit 1
-	}
-
-	[[ ${rel} == master ]] && echo "2023.1" || echo "${rel/_R/.}"
-}
-
-# Vivado/Petalinux release
 project=$1
 template=$2
 dts=$3
-release=$(get_release)
-PETALINUX="/opt/petalinux/${release}"
-export_branch="master"
-hdl_output="system_top.xsa"
-base_path="https://artifactory.analog.com/artifactory/sdg-generic-development/hdl"
-
-case "${release}" in
-"2023.1")
-	branch="main"
-	;;
-"2022.2")
-	branch="2022_R2"
-	export_branch="releases/hdl_2022_r2"
-	;;
-*)
-	echo "Invalid release: ${release}"
-	exit 1
-	;;
-esac
+PETALINUX="/opt/petalinux/2023.2"
+export_branch="main"
 
 # remove any possible leftover
 rm -rf ${project}/
-rm -rf meta-adi
-rm -f ${hdl_output}
+rm -f system_top.xsa
 
-git clone -b ${branch} https://github.com/analogdevicesinc/meta-adi.git
-get_hdl_artifact
+get_hdl_artifact || \
+	{
+		# if we can't find the artifact in main, let's try legacy master
+		export_branch=master
+		get_hdl_artifact
+	}
 
 _docker "source ${PETALINUX}/settings.sh; petalinux-create -t project --template ${template} --name ${project}"
 cd ${project}
-if [ "${release}" == "2023.1" ]; then
-	echo "CONFIG_USER_LAYER_0=\"${WORKSPACE}/meta-adi/meta-adi-xilinx\"" >> project-spec/configs/config
-else
-	echo "CONFIG_USER_LAYER_0=\"${WORKSPACE}/meta-adi/meta-adi-core\"" >> project-spec/configs/config
-	echo "CONFIG_USER_LAYER_1=\"${WORKSPACE}/meta-adi/meta-adi-xilinx\"" >> project-spec/configs/config
-fi
 
+echo "CONFIG_USER_LAYER_0=\"${WORKSPACE}/meta-adi/meta-adi-xilinx\"" >> project-spec/configs/config
 echo "KERNEL_DTB=\"${dts}\"" >> project-spec/meta-user/conf/petalinuxbsp.conf
+echo "DL_DIR=\"/shared/petalinux_dl_shared/${PETALINUX##*/}\"" >> project-spec/meta-user/conf/petalinuxbsp.conf
 
 # This is copied from
 #	https://github.com/webOS-ports/jenkins-jobs/blob/75e65d15226f55fe8a72f81c4307d224efb75689/jenkins-job.sh#L230
@@ -97,9 +70,8 @@ echo "KERNEL_DTB=\"${dts}\"" >> project-spec/meta-user/conf/petalinuxbsp.conf
 _docker "source ${PETALINUX}/settings.sh; petalinux-config --get-hw-description=${WORKSPACE}/ --silentconfig; petalinux-build 2>&1" | tee bitbake.log
 PETA_RETURN=${PIPESTATUS[0]}
 if [ "${PETA_RETURN}" -ne 0 ] ; then
-	if grep -E -q "Summary: There [was|were]+ .* ERROR message[s]? shown, returning a non-zero exit code." bitbake.log; then
-		ERRORS_FOUND=`grep -E "Summary: There [was|were]+ .* ERROR message[s]? shown, returning a non-zero exit code." bitbake.log | \
-			sed 's/Summary: There .* \(.*\) ERROR .* shown, returning a non-zero exit code./\1/g'`
+	if grep -E -q "Summary: There [was|were]+ .* ERROR message[s]?.*" bitbake.log; then
+		ERRORS_FOUND=`grep -E "Summary: There [was|were]+ .* ERROR message[s]?.*" bitbake.log | sed 's/Summary: There .* \(.*\) ERROR .*/\1/g'`
 		ERRORS_SETSCENE=`grep -c "^ERROR: .* do_.*_setscene: Fetcher failure: Unable to find file" bitbake.log || true`
 		ERRORS_SETSCENE2=`grep -c "^ERROR: .* do_.*_setscene: No suitable staging package found" bitbake.log || true`
 		ERRORS_SETSCENE3=`grep -c "^ERROR: .* do_.*_setscene: Error executing a python function in .*" bitbake.log || true`
@@ -141,4 +113,5 @@ mv images/linux/image.ub ${WORKSPACE}/
 cd -
 rm -rf ${project}/
 rm -rf meta-adi
-rm -f ${hdl_output}
+rm -f system_top.xsa
+
