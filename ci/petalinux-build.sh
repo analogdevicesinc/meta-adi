@@ -29,7 +29,7 @@ get_hdl_artifact() {
 
 	if [[ ${l} == ${folders} ]]; then
 		echo "Could not find HDL artifact for: \"${project}\""
-		exit 1
+		return 1
 	fi
 
 	echo "Get hdl artifacts from: ${base_path}/${export_branch}/hdl_output/${hdl}/${project}"
