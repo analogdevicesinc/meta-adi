@@ -1,0 +1,9 @@
+/*Delete nodes from pl.dtsi which are redefined in ADI dts*/
+/include/ "pl-delete-nodes-zynq-zed-adv7511.dtsi"
+/delete-node/ &axi_ad463x_dma;
+/delete-node/ &cnv_generator;
+/delete-node/ &misc_clk_2;
+/delete-node/ &misc_clk_3;
+/delete-node/ &spi_ad463x_spi_ad463x_axi_regmap;
+/delete-node/ &spi_clkgen;
+/delete-node/ &sync_generator;
