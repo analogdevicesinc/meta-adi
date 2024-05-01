@@ -248,8 +248,8 @@ Having this done, it is time to add both the devicetree and pl-delete-nodes-${KE
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI:append = " \
-	pl-delete-nodes-custom-devicetree.dtsi \
-	custom-devicetree.dts \
+	file://pl-delete-nodes-custom-devicetree.dtsi \
+	file://custom-devicetree.dts \
 "
 
 # If the project being added is supported by ADI (with no custom changes), the devicetree should be present in the kernel sources. Hence, there's no need to redefine KERNEL_DTB_PATH
