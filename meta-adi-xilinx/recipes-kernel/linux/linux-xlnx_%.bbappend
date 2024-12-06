@@ -1,13 +1,13 @@
 DESCRIPTION = "ADI kernel"
-LINUX_VERSION = "6.1"
+LINUX_VERSION = "6.1.70"
 # Taken from the xilinx recipe. We include the version from the recipe filename so we can
 # properly match it from PREFERRED_VERSION_linux-xlnx amd hence get the right recipe to run.
 LINUX_VERSION_EXTENSION = "adi-v${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or ''}"
 
 PV = "${LINUX_VERSION}-${LINUX_VERSION_EXTENSION}+git${SRCPV}"
-KBRANCH = "main"
+KBRANCH = "2023_R2"
 # needed for offline build
-SRCREV = "${@ "dc4d9bb93a52833fb3950389e2b9a5be58767eb3" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "54eb23f4b5c6093916f208772627f7b68f495559" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"
 
 # override kernel config file
