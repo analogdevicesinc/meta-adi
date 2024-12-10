@@ -14,6 +14,7 @@ _docker() {
 
 get_hdl_artifact() {
 	local base_path="https://artifactory.analog.com/artifactory/sdg-generic-development/hdl"
+	local export_branch="releases/hdl_2023_r2"
 	local hdl=""
 	local l
 	local folders=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | grep -E '<a href=\"[0-9]+.*' | wc -l)
@@ -28,8 +29,13 @@ get_hdl_artifact() {
 	done
 
 	if [[ ${l} == ${folders} ]]; then
-		echo "Could not find HDL artifact for: \"${project}\""
-		return 1
+		[[ ${obsolete} == "no" ]] && {
+			echo "Could not find HDL artifact for: \"${project}\""
+			exit 1
+		} || {
+			echo "Project is obsolete, not reporting failure..."
+			exit 0
+		}
 	fi
 
 	echo "Get hdl artifacts from: ${base_path}/${export_branch}/hdl_output/${hdl}/${project}"
@@ -39,19 +45,14 @@ get_hdl_artifact() {
 project=$1
 template=$2
 dts=$3
+obsolete=${4:-no}
 PETALINUX="/opt/petalinux/2023.2"
-export_branch="main"
 
 # remove any possible leftover
 rm -rf ${project}/
 rm -f system_top.xsa
 
-get_hdl_artifact || \
-	{
-		# if we can't find the artifact in main, let's try legacy master
-		export_branch=master
-		get_hdl_artifact
-	}
+get_hdl_artifact
 
 _docker "source ${PETALINUX}/settings.sh; petalinux-create -t project --template ${template} --name ${project}"
 cd ${project}
