@@ -1,8 +1,10 @@
 DESCRIPTION = "ADI kernel"
 LINUX_VERSION = "6.1"
-ADI_VERSION = "adi-main"
+# Taken from the xilinx recipe. We include the version from the recipe filename so we can
+# properly match it from PREFERRED_VERSION_linux-xlnx amd hence get the right recipe to run.
+LINUX_VERSION_EXTENSION = "adi-v${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or ''}"
 
-PV = "${LINUX_VERSION}-${ADI_VERSION}+git${SRCPV}"
+PV = "${LINUX_VERSION}-${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 KBRANCH = "main"
 # needed for offline build
 SRCREV = "${@ "dc4d9bb93a52833fb3950389e2b9a5be58767eb3" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
