@@ -1,15 +1,15 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN dpkg --add-architecture i386
 RUN apt-get update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2 gawk python3 python build-essential \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2 gawk python3 build-essential \
 		gcc git make net-tools libncurses5-dev tftpd zlib1g-dev libssl-dev flex bison \
 		libselinux1 gnupg wget git-core diffstat chrpath socat xterm autoconf libtool tar \
 		unzip texinfo zlib1g-dev gcc-multilib automake zlib1g:i386 screen pax gzip cpio \
 		python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git \
-		python3-jinja2 libegl1-mesa libsdl1.2-dev bc pylint3 rsync lsb-release vim locales \
-		locales-all
+		python3-jinja2 libegl1-mesa libsdl1.2-dev bc rsync lsb-release vim locales \
+		locales-all dnsutils libtinfo5
 
 # set proper locale
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
