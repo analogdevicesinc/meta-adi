@@ -67,7 +67,8 @@ SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
 		file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
 		file://pl-delete-nodes-vc707_fmcadc5.dtsi \
-		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi"
+		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi \
+		file://petalinux-dtg.tcl"
 
 SRC_URI:append:versal = " \
 		file://pl-delete-nodes-versal-vck190-reva-ad9081.dtsi \
@@ -84,9 +85,9 @@ Make sure to define it in a conf file...")
 }
 DTB_PL_DELETE ?= "pl-delete-nodes-${KERNEL_DTB}"
 
-DTS_INCLUDE_PATH = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
-DTS_INCLUDE_PATH:zynqmp = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
-DTS_INCLUDE_PATH:versal = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
+DTS_INCLUDE_PATH = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/xilinx"
+DTS_INCLUDE_PATH:microblaze = "${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts"
+
 # can be set to "n", if we do not use in kernel devicetrees and hence, we do not need to copy them to ${WORKDIR}.
 # it naturally implies ${KERNEL_DTB_PATH} != ${DTS_INCLUDE_PATH}
 USE_KERNEL_SOURCES ?= "y"
@@ -115,7 +116,25 @@ do_configure[depends] += "virtual/kernel:do_configure"
 # given first, the build was failing since there are "colliding" .dtsi files and the ones given
 # by xilinx make some assumptions about node names that are not true for every devicetree
 # (including our owns).
-DT_INCLUDE:remove = "${S}/device_tree/data/kernel_dtsi/${DT_RELEASE_VERSION}/BOARD/"
+DT_INCLUDE:remove:microblaze = "${S}/device_tree/data/kernel_dtsi/${DT_RELEASE_VERSION}/BOARD/"
+# The dt-bindings includes were conflicting with the zyznqmp.dtsi header that comes from ADI kernel
+# (which is the same as in linux-xlnx). For some reason, there are some differences for petalinux in
+# that header when compared with what xilinx has in the linux tree. More specifically, the remoteproc
+# node is not defined in petalinux and hence PD_RPU_0 is not define in the bindings headers
+# (brought by petalinux) leading to compilation errors. Hence, remove this path as we want,
+# as much as possible, to have similar results between building with petalinux or building in source in
+# the ADI kernel tree.
+DT_INCLUDE:remove:zynqmp = "${S}/device_tree/data/kernel_dtsi/${DT_RELEASE_VERSION}/include/"
+
+do_configure:prepend:microblaze() {
+	# Overwrite the default petalinux-dtg.tcl with the one we provide. The one in 2024.1 is
+	# not working as it's apparently not recognizing microblaze as the processor_ip and was
+	# not skipping gen_dts_u_boot_node(). Our file is the same with one extra line:
+	#	 set processor_ip_name [hsi get_property IP_NAME [hsi get_cells -hier $processor_ip_name]]
+	# The above line was taken from petalinux 2024.2 so I guess Xilinx stumbled this at some
+	# point.
+	cp ${WORKDIR}/petalinux-dtg.tcl ${WORKDIR}/${PLNX_SCRIPTS_PATH}/libs/petalinux-dtg.tcl
+}
 
 # Based on the selected device tree, this function will:
 #	copy the device trees of interest to ${WORKDIR}.
@@ -137,6 +156,10 @@ do_configure:append() {
 		cp -Rf "${DTS_INCLUDE_PATH}/"* "${WORKDIR}/"
 		# make sure to follow symlinks
 		cp -Rfl "${STAGING_KERNEL_DIR}/scripts/dtc/include-prefixes/"* "${WORKDIR}/"
+		# arm now also has vendor subfolders and we do have some DTs that are common to more
+		# than one vendor and we include this using their relative path and just go back one directory. Hence,
+		# we copy them to the parent directory of DT_FILES_PATH and remove them later after do_install
+		[ "${ARCH}" = "arm" ] && cp ${STAGING_KERNEL_DIR}/arch/${ARCH}/boot/dts/adi-*.dtsi "${DT_FILES_PATH}/.."
 	}
 
 	[ "${KERNEL_DTB_PATH}" != "${WORKDIR}" ] && \
@@ -197,6 +220,9 @@ do_configure:append() {
 	# thing to be included. If there are errors, then [most likely] the problem should be in the pl-delete-nodes
 	# (or in the petalinux logic to autogenerate pl.dtsi).
 	sed -i '0,/\/dts-v1\/;/s//&\n#include "pl.dtsi"/' "${dtb_tag_file}"
+	# Microblaze now generated a node also called amba_pl. This is a problem since we have a node with the same name
+	# in our DTs. Hence just rename the petalinux generated node.
+	[ ${ARCH} = "microblaze" ] && sed -i 's/amba_pl/amba_pl_xlnx/g' "${DT_FILES_PATH}/pl.dtsi"
 	echo "/include/ \"${DTB_PL_DELETE}.dtsi\"" >> "${DT_FILES_PATH}/pl.dtsi"
 	# Just remove all the nodes after the chosen node since it is the only one we care about in system-conf.
 	# The next command makes some assumptions like the chosen node to be the only one defined in the root
@@ -208,3 +234,6 @@ do_configure:append() {
 	echo "#include \"system-user.dtsi\"" >> "${DT_FILES_PATH}/system-top.dts"
 }
 
+do_install:append:zynq() {
+	rm -rf ${DT_FILES_PATH}/../adi-*.dtsi
+}
