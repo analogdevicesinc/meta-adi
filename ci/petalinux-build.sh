@@ -14,7 +14,7 @@ _docker() {
 
 get_hdl_artifact() {
 	local base_path="https://artifactory.analog.com/artifactory/sdg-generic-development/hdl"
-	local export_branch="releases/hdl_2023_r2"
+	local export_branch="main"
 	local hdl=""
 	local l
 	local folders=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | grep -E '<a href=\"[0-9]+.*' | wc -l)
@@ -46,7 +46,7 @@ project=$1
 template=$2
 dts=$3
 obsolete=${4:-no}
-PETALINUX="/opt/petalinux/2023.2"
+PETALINUX="/opt/petalinux/2024.1"
 
 # remove any possible leftover
 rm -rf ${project}/
