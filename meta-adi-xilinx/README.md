@@ -145,19 +145,16 @@ petalinux-config
 ```
 ![alt text](images/petalinux_initramfs.png "INITRAMFS selection")
 
-With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password, `petalinux-config -c rootfs`, will no longer work since this layer always overwrites the chosen password. To keep the Petalinux default way go to `<path-to-meta-adi>/meta-adi-xilinx/dynamic-layers/meta-petalinux/recipes-core/images/petalinux-image-minimal.bbappend` and comment the following lines:
+With this layer, the default root password is forced to **analog**, overwriting the Petalinux default one. Also note, that the mechanism used by Petalinux to change the password, `petalinux-config -c rootfs`, might not work. The command `petalinux-config -c rootfs` works by changing the variable EXTRA_USERS_PARAMS in `<path-to-your-project>/build/conf/plnxtool.conf`. This variable is then appended to by bbappend for image petalinux-image-minimal located in `<path-to-meta-adi>/meta-adi-xilinx/dynamic-layers/meta-petalinux/recipes-core/images/petalinux-image-minimal.bbappend`. This means that all changes to EXTRA_USERS_PARAMS made by this layer take precedence over changes made by user.
+
+This is made so so that by default the behaviour is in line with Kuiper Linux, which is a raspbian based image with support for ADI related projects and EVBs. To keep the Petalinux default way go to `<path-to-your-project>/project-spec/meta-user/conf/petalinuxbsp.conf` and add the following lines:
 
 ``` bash
-EXTRA_USERS_PARAMS = "	\
-	useradd -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' analog; \
-	usermod -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' root; \
-	usermod -a -G audio analog; \
-	usermod -a -G video analog; \
-	groupadd -r aie; \
-	usermod -a -G aie analog; \
-"
-EXTRA_USERS_SUDOERS = "analog ALL=(ALL) ALL;"
+KUIPER_COMPAT_USERADD = ""
+KUIPER_COMPAT_SUDOERS = ""
 ```
+
+You should **never** modify meta-adi directly. This will make it impossible to upgrade the layer to a newer version without manually going through all of your non-upstreamed patches.
 
 ### Extending the devicetree
 
