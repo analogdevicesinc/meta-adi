@@ -22,7 +22,11 @@ EXTRA_IMAGEDEPENDS:remove:microblaze = "virtual/fsboot"
 # debug-tweaks is part of IMAGE_FEATURES to force the password to 'analog'.
 # One thing that differs from kuiper is that auto login and root ssh connection are not
 # enabled by default. Use 'petalinux-config -c rootfs' for that.
-EXTRA_USERS_PARAMS = "	\
+#
+# This behaviour can be reverted by adding following lines to petalinuxbsp.conf:
+# - KUIPER_COMPAT_USERADD = ""
+# - KUIPER_COMPAT_SUDOERS = ""
+KUIPER_COMPAT_USERADD ??= "	\
 	useradd -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' analog; \
 	usermod -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' root; \
 	usermod -a -G audio analog; \
@@ -30,4 +34,6 @@ EXTRA_USERS_PARAMS = "	\
 	groupadd -r aie; \
 	usermod -a -G aie analog; \
 "
-EXTRA_USERS_SUDOERS = "analog ALL=(ALL) ALL;"
+KUIPER_COMPAT_SUDOERS ??= "analog ALL=(ALL) ALL;"
+EXTRA_USERS_PARAMS:append = "${KUIPER_COMPAT_USERADD}"
+EXTRA_USERS_SUDOERS:append = "${KUIPER_COMPAT_SUDOERS}"
