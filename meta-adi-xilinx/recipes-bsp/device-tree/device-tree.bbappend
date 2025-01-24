@@ -10,14 +10,11 @@ SRC_URI:append:zynq = " \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9009.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9371.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad6676-fmc.dtsi \
-		file://pl-delete-nodes-zynq-zc706-adv7511-ad9739a-fmc.dtsi \
-		file://pl-delete-nodes-zynq-zc706-adv7511-ad9625-fmcadc2.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9265-fmc-125ebz.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9361-fmcomms2-3.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9361-fmcomms5.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcomms11.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-fmcdaq3-revC.dtsi \
-		file://pl-delete-nodes-zynq-zc706-adv7511-fmcjesdadc1.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9008-1-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-adrv9008-2-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynq-zc706-adv7511-ad9172-fmc-ebz.dtsi \
@@ -58,14 +55,10 @@ SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
 		file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
 		file://pl-delete-nodes-kc705_fmcomms2-3.dtsi \
-		file://pl-delete-nodes-kc705_fmcjesdadc1.dtsi \
 		file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
 		file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 		file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
-		file://pl-delete-nodes-vc707_fmcadc2.dtsi \
 		file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
-		file://pl-delete-nodes-vc707_fmcjesdadc1.dtsi \
-		file://pl-delete-nodes-vc707_fmcadc5.dtsi \
 		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi \
 		file://petalinux-dtg.tcl"
 
