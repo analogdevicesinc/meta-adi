@@ -1,0 +1,7 @@
+/delete-node/ &axi_adrv9001;
+/delete-node/ &axi_adrv9001_rx1_dma;
+/delete-node/ &axi_adrv9001_rx2_dma;
+/delete-node/ &axi_adrv9001_tx1_dma;
+/delete-node/ &axi_adrv9001_tx2_dma;
+/delete-node/ &axi_sysid_0;
+/delete-node/ &misc_clk_0;
