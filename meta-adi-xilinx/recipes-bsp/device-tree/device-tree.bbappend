@@ -51,7 +51,9 @@ SRC_URI:append:zynqmp = " \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9002-rx2tx2.dtsi \
 		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm.dtsi \
 		file://pl-delete-nodes-zynqmp-zcu102-rev10-adrv9025.dtsi \
-		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dtsi"
+		file://pl-delete-nodes-zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm.dtsi \
+		file://pl-delete-nodes-zynqmp-jupiter-sdr.dtsi \
+		file://pl-delete-nodes-zynqmp-jupiter-sdr-rx2tx2.dtsi"
 
 SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-fmcdaq2.dtsi \
@@ -208,6 +210,9 @@ do_configure:append() {
 	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-jesd204-fsm" | \
 	"zynqmp-adrv9009-zu11eg-revb-adrv2crr-fmc-revb-sync-fmcomms8-jesd204-fsm")
 		dtb_tag_file="${WORKDIR}/zynqmp-adrv9009-zu11eg-reva.dtsi"
+		;;
+	"zynqmp-jupiter-sdr" | "zynqmp-jupiter-sdr-rx2tx2")
+		dtb_tag_file="${DT_FILES_PATH}/system-top.dts"
 		;;
 	 "vcu118_ad9081_m8_l4")
 		dtb_tag_file="${WORKDIR}/vcu118_ad9081.dts"
