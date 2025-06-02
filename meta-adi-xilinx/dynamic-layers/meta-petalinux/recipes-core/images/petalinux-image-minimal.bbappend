@@ -2,6 +2,7 @@ IMAGE_INSTALL:append = " libiio  \
 			 libiio-tests \
 			 libiio-iiod \
 			 libiio-python3 \
+			 pyadi-iio \
 			 avahi-daemon \
 			 fru-tools \
 			 libad9361-iio \
