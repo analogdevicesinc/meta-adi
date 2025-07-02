@@ -1,8 +1,6 @@
 DESCRIPTION = "ADI kernel"
 LINUX_VERSION = "6.6"
-# Taken from the xilinx recipe. We include the version from the recipe filename so we can
-# properly match it from PREFERRED_VERSION_linux-xlnx
-LINUX_VERSION_EXTENSION = "adi-v${@bb.parse.vars_from_file(d.getVar('FILE', False),d)[1] or ''}"
+LINUX_VERSION_EXTENSION = "adi-v2024.2"
 
 PV = "${LINUX_VERSION}-${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 KBRANCH = "main"

@@ -9,7 +9,7 @@ IMAGE_INSTALL:append = " libiio  \
 			 jesd-status \
 			 adrv9009-zu11eg-fan-control"
 
-IMAGE_INSTALL:remove:microblaze = "avahi-daemon"
+IMAGE_INSTALL:remove:microblaze = "avahi-daemon pyadi-iio"
 
 # fsboot fails to build in vc707 and kc705 based projects. This is a petalinux bug or
 # something missing in our hdl projects that petalinux is expecting to exist. Anyways,

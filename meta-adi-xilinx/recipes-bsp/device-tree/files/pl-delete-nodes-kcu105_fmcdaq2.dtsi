@@ -1,3 +1,5 @@
 /include/ "pl-delete-nodes-fmcdaq2.dtsi"
 
 /delete-node/ &axi_ethernet_dma;
+/delete-node/ &axi_ddr_cntrl;
+

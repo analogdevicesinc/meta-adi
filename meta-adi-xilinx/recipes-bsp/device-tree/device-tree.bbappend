@@ -61,8 +61,7 @@ SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 		file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
 		file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
-		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi \
-		file://petalinux-dtg.tcl"
+		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi"
 
 SRC_URI:append:versal = " \
 		file://pl-delete-nodes-versal-vck190-reva-ad9081.dtsi \
@@ -119,16 +118,6 @@ DT_INCLUDE:remove:microblaze = "${S}/device_tree/data/kernel_dtsi/${DT_RELEASE_V
 # as much as possible, to have similar results between building with petalinux or building in source in
 # the ADI kernel tree.
 DT_INCLUDE:remove:zynqmp = "${S}/device_tree/data/kernel_dtsi/${DT_RELEASE_VERSION}/include/"
-
-do_configure:prepend:microblaze() {
-	# Overwrite the default petalinux-dtg.tcl with the one we provide. The one in 2024.1 is
-	# not working as it's apparently not recognizing microblaze as the processor_ip and was
-	# not skipping gen_dts_u_boot_node(). Our file is the same with one extra line:
-	#	 set processor_ip_name [hsi get_property IP_NAME [hsi get_cells -hier $processor_ip_name]]
-	# The above line was taken from petalinux 2024.2 so I guess Xilinx stumbled this at some
-	# point.
-	cp ${WORKDIR}/petalinux-dtg.tcl ${WORKDIR}/${PLNX_SCRIPTS_PATH}/libs/petalinux-dtg.tcl
-}
 
 # Based on the selected device tree, this function will:
 #	copy the device trees of interest to ${WORKDIR}.

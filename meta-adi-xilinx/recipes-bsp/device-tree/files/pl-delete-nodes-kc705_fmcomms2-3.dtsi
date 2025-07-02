@@ -5,7 +5,6 @@
 /delete-node/ &axi_ad9361;
 /delete-node/ &axi_ad9361_adc_dma;
 /delete-node/ &axi_ad9361_dac_dma;
-/delete-node/ &axi_ddr_cntrl;
 /delete-node/ &axi_ethernet;
 /delete-node/ &axi_gpio;
 /delete-node/ &axi_gpio_lcd;

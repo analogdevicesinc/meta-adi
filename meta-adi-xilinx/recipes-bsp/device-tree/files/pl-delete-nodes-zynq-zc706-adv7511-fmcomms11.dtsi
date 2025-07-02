@@ -1,4 +1,6 @@
 /*Delete nodes from pl.dtsi which are redefined in ADI dts*/
+/delete-node/ &ad9162_data_offload_i_data_offload;
+/delete-node/ &ad9625_data_offload_i_data_offload;
 /delete-node/ &axi_ad9162_core_dac_tpl_core;
 /delete-node/ &misc_clk_0;
 /delete-node/ &axi_ad9162_dma;

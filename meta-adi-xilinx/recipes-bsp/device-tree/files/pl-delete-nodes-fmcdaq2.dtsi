@@ -13,7 +13,6 @@
 /delete-node/ &axi_ad9680_offload_i_data_offload;
 /delete-node/ &axi_ad9680_tpl_adc_tpl_core;
 /delete-node/ &axi_ad9680_xcvr;
-/delete-node/ &axi_ddr_cntrl;
 /delete-node/ &axi_ethernet;
 /delete-node/ &axi_gpio;
 /delete-node/ &axi_iic_main;
