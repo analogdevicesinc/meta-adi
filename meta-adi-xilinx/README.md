@@ -72,12 +72,12 @@ main
 
 Xilinx based platforms use Petalinx SDK in order to customize, build and deploy Embedded Linux on their platforms. Petalinux is a set of tools which work on top of yocto making it easy to add extra custom layers. For more information on Petalinux and on how to install the SDK refer to the following links:
 
-* [Petalinux User guide](https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/Overview)
+* [Petalinux User guide](https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/Overview)
 * [Petalinux Wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842250/PetaLinux)
 
 **This layer supports:**
 
-* **Petalinux-v2024.1;**
+* **Petalinux-v2024.2;**
 * **hdl main branch (see [hdl](https://github.com/analogdevicesinc/hdl)).**
 
 To build a petalinux project using Analog Devices yocto layer, run:
@@ -129,7 +129,7 @@ To boot, the steps are the same as the above until `fpga -f system.bit`. Then, o
 >1. To build the desired xsa file refer to [Building HDL](https://wiki.analog.com/resources/fpga/docs/build).
 >2. To run the produced image.elf (**for microblaze**) make sure that the Xilinx Vivado SDK is installed.
 >3. For an overview of `xsdb` refer to [Xilinx System Debugger Overview](https://www.xilinx.com/html_docs/xilinx2018_1/SDK_Doc/SDK_concepts/concept_Xilinxsystemdebugger.html)
->4. Refer to  [Petalinux User guide](https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/Overview) for building a MCS boot file for Microblaze
+>4. Refer to  [Petalinux User guide](https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/Overview) for building a MCS boot file for Microblaze
 
 For **Zynq** and **ZynqMP**, one might want to use a complete root filesystem instead of initramfs/initrd. To change the root filesystem on petalinux:
 
