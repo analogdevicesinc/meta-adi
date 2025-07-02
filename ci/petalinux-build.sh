@@ -46,7 +46,7 @@ project=$1
 template=$2
 dts=$3
 obsolete=${4:-no}
-PETALINUX="/opt/petalinux/2024.1"
+PETALINUX="/opt/petalinux/2024.2"
 
 # remove any possible leftover
 rm -rf ${project}/
