@@ -28,8 +28,8 @@ EXTRA_IMAGEDEPENDS:remove:microblaze = "virtual/fsboot"
 # - KUIPER_COMPAT_USERADD = ""
 # - KUIPER_COMPAT_SUDOERS = ""
 KUIPER_COMPAT_USERADD ??= "	\
-	useradd -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' analog; \
-	usermod -p '\$6\$xx\$OCk/lHkXahf1zu7kG4wzEic75NlaPVNtK8uwW3Ytjas229MmjVA.x/WFjQMIOFrlO.OQUc0KGyVzr8h3nwfWi1' root; \
+	useradd -p '\$5\$nm3GV.LXs/a4iNj5\$T24HKi4aXHMpO3nPGbM5gv3e22T1AzOtE6Vvs3hnJRA' analog; \
+	usermod -p '\$5\$nm3GV.LXs/a4iNj5\$T24HKi4aXHMpO3nPGbM5gv3e22T1AzOtE6Vvs3hnJRA' root; \
 	usermod -a -G audio analog; \
 	usermod -a -G video analog; \
 	groupadd -r aie; \
