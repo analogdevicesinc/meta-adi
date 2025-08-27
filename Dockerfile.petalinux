@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN dpkg --add-architecture i386
 RUN apt-get update
@@ -15,9 +15,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2 gawk python3 buil
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 # set bash as default shell
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
