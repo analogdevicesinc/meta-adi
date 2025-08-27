@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 BRANCH ?= "libiio-v0"
-SRCREV = "${@ "1ae8815858d7ca07da2cb7db76ec3fbb1a84588a" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "ba74e6c53007925ff714ed28a258b5aebf6a3ad4" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 # Just overwrite SRC_URI as we would need to delete the python bindings patch since it does not apply
 # (already fixed in 0.24) and we do not want to hardcode ';branch=master' so that we would also have to
 # remove that leaving the variable empty anyways.
@@ -16,7 +16,7 @@ EXTRA_OECMAKE += " \
 	-DBISON_TARGET_ARG_COMPILE_FLAGS='--no-lines' \
 "
 
-inherit update-rc.d pkgconfig
+inherit update-rc.d
 
 INITSCRIPT_NAME = "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'iiod', '', d)}"
 

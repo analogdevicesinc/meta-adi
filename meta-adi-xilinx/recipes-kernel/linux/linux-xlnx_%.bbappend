@@ -1,11 +1,14 @@
 DESCRIPTION = "ADI kernel"
-LINUX_VERSION = "6.6"
-LINUX_VERSION_EXTENSION = "adi-v2024.2"
+LINUX_VERSION_EXTENSION = "adi-v2025.1"
 
+# Note that xilinx is on 6.12.x. but we are still on 6.12 so that will mismatch on the package version.
+# We let it mismatch so we do not mess with PREFERRED_VERSION_linux-xlnx set by xilinx layer in a way that
+# the wrong recipe would be picked or the build would complain about no recipe suiting the preferred version.
+# Also since the major version is the same, there's no issue with the yocto kernel version sanity check.
 PV = "${LINUX_VERSION}-${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 KBRANCH = "main"
 # needed for offline build
-SRCREV = "${@ "c8daf49830b2d19b155756d151f4c881a001a67e" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "ec1bbe510ba6764423efea7738f0feca8d0b4fb1" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"
 
 # override kernel config file
