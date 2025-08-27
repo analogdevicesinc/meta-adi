@@ -10,21 +10,8 @@ SRC_URI = "git://github.com/analogdevicesinc/jesd-eye-scan-gtk.git;protocol=http
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "ncurses"
+inherit cmake pkgconfig
 
-# so that the compiled artifact respects the OpenEmbedded ldflags
-# fixes the "No GNU_HASH in the elf binary" package_qa error
-TARGET_CC_ARCH += "${LDFLAGS}"
-# overwrite do_compile since we only want to build jesd_status
-do_compile() {
-	oe_runmake jesd_status
-}
+EXTRA_OECMAKE = "-DUSE_JESD_EYE_SCAN=OFF -DUSE_LIBIIO=ON"
 
-bindest = "/usr/local/bin"
-
-FILES:${PN} = "${bindest}/jesd_status"
-
-do_install() {
-	install -d ${D}/${bindest}
-	install -m 755 ${B}/jesd_status ${D}/${bindest}/jesd_status
-}
+DEPENDS = "ncurses libiio"
