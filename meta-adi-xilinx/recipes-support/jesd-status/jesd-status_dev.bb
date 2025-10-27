@@ -1,7 +1,7 @@
 SUMMARY = "Tools to display JESD204 Status Information"
 SECTION = "console/utils"
 LICENSE = "ADI-BSD"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=38c01601d5c4b84986a8f48ece946aa1"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=982e522e7ec5a0beed8de5114ebfea50"
 
 BRANCH = "main"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
