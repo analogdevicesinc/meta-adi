@@ -64,6 +64,8 @@ main
 |[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081.dts)|
 |[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dts)|
 |[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9082-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9082-204c-txmode22-rxmode23.dts)|
+|adrv903x_tetra|[versal-tetra-15mhz](https://github.com/analogdevicesinc/linux/blob/staging/ADSY1201_versal/arch/arm64/boot/dts/xilinx/versal-tetra-15mhz.dts)|
+|adrv903x_tetra|[versal-tetra-15mhz-nls](https://github.com/analogdevicesinc/linux/blob/staging/ADSY1201_versal/arch/arm64/boot/dts/xilinx/versal-tetra-15mhz-nls.dts)|
 
 > [!WARNING]
 > Projects marked with (*) are obsolete or blacklisted (this means they currently don't build in hdl but it's still not clear they will be obsoleted) and are not guaranteed to build. It is also possible for them to be completely removed in the future if that happens in the hdl tree! However that should only happen between releases...

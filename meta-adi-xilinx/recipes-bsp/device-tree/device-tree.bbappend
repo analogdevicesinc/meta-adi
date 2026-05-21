@@ -64,6 +64,8 @@ SRC_URI:append:microblaze = " \
 		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi"
 
 SRC_URI:append:versal = " \
+		file://pl-delete-nodes-versal-tetra-15mhz.dtsi \
+		file://pl-delete-nodes-versal-tetra-15mhz-nls.dtsi \
 		file://pl-delete-nodes-versal-vck190-reva-ad9081.dtsi \
 		file://pl-delete-nodes-versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dtsi \
 		file://pl-delete-nodes-versal-vck190-reva-ad9082-204c-txmode22-rxmode23.dtsi"

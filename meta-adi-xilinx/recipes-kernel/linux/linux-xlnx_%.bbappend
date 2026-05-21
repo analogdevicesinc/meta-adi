@@ -7,6 +7,7 @@ LINUX_VERSION_EXTENSION = "adi-v2025.1"
 # Also since the major version is the same, there's no issue with the yocto kernel version sanity check.
 PV = "${LINUX_VERSION}-${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 KBRANCH = "main"
+KBRANCH:versal = "staging/adrv903x-tetra-yocto"
 # needed for offline build
 SRCREV = "${@ "ec1bbe510ba6764423efea7738f0feca8d0b4fb1" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 KERNELURI = "git://github.com/analogdevicesinc/linux.git;protocol=https"

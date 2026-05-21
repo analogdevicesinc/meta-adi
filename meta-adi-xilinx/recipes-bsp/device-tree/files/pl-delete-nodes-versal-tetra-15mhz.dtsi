@@ -1,0 +1,13 @@
+/delete-node/ &axi_gpio;
+/delete-node/ &axi_jesd_rx_dma;
+/delete-node/ &axi_jesd_tx_dma;
+/delete-node/ &axi_jesd_tx_tx_axi;
+/delete-node/ &axi_jesd_rx_rx_axi;
+/delete-node/ &axi_ethernet;
+/delete-node/ &axi_ethernet_dma;
+/delete-node/ &axi_timer;
+/delete-node/ &axi_sysid_0;
+/delete-node/ &jesd_tx_data_offload_i_data_offload;
+/delete-node/ &jesd_rx_data_offload_i_data_offload;
+/delete-node/ &rx_jesd_tpl_core_adc_tpl_core;
+/delete-node/ &tx_jesd_tpl_core_dac_tpl_core;
