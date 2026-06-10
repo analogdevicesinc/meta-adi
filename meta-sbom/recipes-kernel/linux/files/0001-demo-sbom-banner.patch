@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Demo <demo@example.com>
+Date: Mon, 01 Jan 2024 00:00:00 +0000
+Subject: [PATCH] demo: print SBOM TEST
+
+Patch to verify a custom kernel patch is propagated to the SPDX SBOM.
+
+Upstream-Status: Inappropriate [demo]
+---
+ init/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/init/main.c b/init/main.c
+index XXXXXXX..YYYYYYY 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -914,6 +914,9 @@
+ 	char *command_line;
+ 	char *after_dashes;
+ 
++
++	pr_info("DEMO TEST\n");
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();

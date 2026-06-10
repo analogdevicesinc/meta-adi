@@ -1,0 +1,107 @@
+# kas configuration — Yocto Project 6.0 "Wrynose" (LTS, released May 2026)
+#
+# Key of Wrynose:
+#  - poky combo-repo is deprecated; canonical repos are oe-core + bitbake + meta-yocto
+#  - sbom-cve-check is the official CVE tool, replacing cve-check bbclass
+#  - SPDX 3.0 output by default (create-spdx.bbclass), with PURL + concluded license support
+#  - SPDX_INCLUDE_VEX = "all" is the recommended setting for >= 5.3 (Whinlatter+)
+#  - Linux kernel 6.18 LTS, GCC 15.2, glibc 2.43
+#  - Supported on OpenSUSE Leap 16.0, Fedora 43, Ubuntu 26.04
+#
+# https://www.yoctoproject.org/blog/2026/05/13/yocto-project-6-0-wrynose-is-here/
+# https://sbom-cve-check.readthedocs.io/en/latest/sbom.html
+
+header:
+  version: 17
+
+machine: qemux86-64
+distro: poky
+target: core-image-minimal
+
+build_system: oe
+
+repos:
+  # openembedded-core: meta + meta-skeleton layers
+  openembedded-core:
+    url: https://git.openembedded.org/openembedded-core
+    tag: yocto-6.0
+    commit: 42fa856a00ac16b2a7a83d7ecfa60a5be192b16c
+    layers:
+      meta:
+
+  # BitBake build engine — not a layer, no entry in BBLAYERS
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    tag: yocto-6.0
+    commit: 33581c84f3a85008239acbd940501a35de48dc91
+    layers: {}
+
+  # meta-sbom: local layer — kernel cfg fragment for SPDX_INCLUDE_COMPILED_SOURCES
+  meta-sbom:
+    path: meta-sbom
+    layers:
+      .:
+
+  # meta-yocto: Poky distro policy + BSP for reference machines
+  meta-yocto:
+    url: https://git.yoctoproject.org/meta-yocto
+    tag: yocto-6.0
+    commit: 904846ae078ee20de073040ebb77c86e19250f56
+    layers:
+      meta-poky:
+      meta-yocto-bsp:
+
+bblayers_conf_header:
+  standard: |
+    BBPATH = "${TOPDIR}"
+    BBFILES ?= ""
+
+local_conf_header:
+  base: |
+    MACHINE ??= "qemux86-64"
+    DISTRO  ??= "poky"
+
+  perf: |
+    BB_NUMBER_THREADS ?= "${@max(int(__import__('os').cpu_count() or 1) - 2, 1)}"
+    PARALLEL_MAKE     ?= "-j ${BB_NUMBER_THREADS}"
+
+  cache: |
+    DL_DIR    ?= "/data/yocto-cache/downloads"
+    SSTATE_DIR ?= "/data/yocto-cache/sstate-cache"
+
+  slim: |
+    DISTRO_FEATURES_OPTED_OUT = "\
+        alsa \
+        bluetooth \
+        debuginfod \
+        gobject-introspection-data \
+        multiarch \
+        nfc \
+        nfs \
+        opengl \
+        ptest \
+        pulseaudio \
+        vulkan \
+        wayland \
+        wifi \
+        x11 \
+        zeroconf \
+        3g \
+        "
+    PACKAGE_CLASSES = "package_ipk"
+    NO_RECOMMENDATIONS = "1"
+
+  # SPDX_INCLUDE_VEX = "all"
+  #   Embeds every CVE_STATUS annotation from every recipe into the SBOM
+  #   as VEX statements.
+  #
+  # SPDX_INCLUDE_COMPILED_SOURCES:pn-linux-yocto = "1"
+  #   Records which kernel source files were actually compiled, enabling
+  #   sbom-cve-check to exclude CVEs for code paths not present in the build.
+  #
+  # SPDX_INCLUDE_PACKAGECONFIG = "1"
+  #   Captures enabled/disabled PACKAGECONFIG features per recipe.
+  sbom: |
+    SPDX_INCLUDE_VEX = "all"
+    SPDX_INCLUDE_COMPILED_SOURCES:pn-linux-yocto = "1"
+    SPDX_INCLUDE_PACKAGECONFIG = "1"

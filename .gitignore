@@ -1,0 +1,9 @@
+# Yocto build
+build/
+/data/yocto-cache/
+
+# kas-managed layer checkouts
+meta-openembedded/
+openembedded-core/
+bitbake/
+meta-yocto/
