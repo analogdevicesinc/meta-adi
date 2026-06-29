@@ -7,3 +7,4 @@ meta-openembedded/
 openembedded-core/
 bitbake/
 meta-yocto/
+bitbake-cookerdaemon.log
