@@ -1,0 +1,147 @@
+name: Build ADI Yocto artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      machine:
+        description: "Yocto machine"
+        default: "adsp-sc598-som-ezkit"
+      image:
+        description: "Yocto image"
+        default: "adsp-sc5xx-minimal"
+      distro:
+        description: "Yocto distro"
+        default: "adi-distro-glibc"
+      manifest:
+        description: "Manifest"
+        default: main
+      manifest-repo:
+        description: "Manifest repository"
+        default: ""
+      build-config-file:
+        description: "Build configuration file used with tools like kas/bitbake-setup"
+        type: string
+        default: ""
+      build-sdk:
+        description: "Build the SDK installer for this image"
+        type: boolean
+        default: true
+      upload-artifacts:
+        description: "Store image artifacts and expose them to cloudsmith"
+        type: boolean
+        default: true
+      manifest-branch:
+        description: "Manifest repository branch/ref"
+        default: "main"
+      override-meta-adi:
+        description: "Override sources/meta-adi with the checked-out ref"
+        type: boolean
+        default: false
+      app-token-repositories:
+        description: "Comma-separated repositories to scope the GitHub App token to"
+        type: string
+        default: ""
+  workflow_call:
+    inputs:
+      machine:
+        type: string
+        default: "adsp-sc598-som-ezkit"
+      image:
+        type: string
+        default: "adsp-sc5xx-minimal"
+      distro:
+        type: string
+        default: "adi-distro-glibc"
+      manifest:
+        type: string
+        default: main
+      manifest-repo:
+        type: string
+        default: ""
+      build-config-file:
+        description: "Build configuration file used with tools like kas/bitbake-setup"
+        type: string
+        default: ""
+      build-sdk:
+        type: boolean
+        default: true
+      upload-artifacts:
+        type: boolean
+        default: true
+      manifest-branch:
+        type: string
+        default: "main"
+      override-meta-adi:
+        type: boolean
+        default: false
+      app-token-repositories:
+        description: "Comma-separated repositories to scope the GitHub App token to"
+        type: string
+        default: ""
+    secrets:
+      APP_CLIENT_ID:
+        required: false
+      APP_PRIVATE_KEY:
+        required: false
+      CLOUDSMITH_USER:
+        required: false
+
+jobs:
+  build:
+    runs-on: ${{ vars.RUNNER != '' && fromJSON(vars.RUNNER) || 'ubuntu-latest' }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/create-github-app-token@v3
+        if: ${{ github.repository_owner == 'adi-innersource' }}
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_CLIENT_ID  }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY  }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ inputs.app-token-repositories || 'linux,u-boot,lnxdsp-adi-meta,lnxdsp-adi-security-meta,lnxdsp-repo-manifest,lnxdsp-scripts,openocd' }}
+
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          token: ${{ steps.app-token.outputs.token || github.token }}
+          persist-credentials: false
+
+      - name: Build
+        uses: ./actions/build
+        with:
+          machine: ${{ inputs.machine }}
+          image: ${{ inputs.image }}
+          distro: ${{ inputs.distro }}
+          manifest: ${{ inputs.manifest }}
+          manifest-repo: ${{ inputs.manifest-repo }}
+          build-config-file: ${{ inputs.build-config-file }}
+          build-sdk: ${{ inputs.build-sdk }}
+          upload-artifacts: ${{ inputs.upload-artifacts }}
+          manifest-branch: ${{ inputs.manifest-branch }}
+          override-meta-adi: ${{ inputs.override-meta-adi }}
+          gh-token: ${{ steps.app-token.outputs.token || github.token }}
+          cloudsmith-user: ${{ secrets.CLOUDSMITH_USER }}
+
+  release:
+    needs: build
+    if: ${{ github.event_name == 'release' && inputs.upload-artifacts }}
+    runs-on: ${{ vars.RUNNER != '' && fromJSON(vars.RUNNER) || 'ubuntu-latest' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: "{images-${{ inputs.machine }}-${{ inputs.image }}-${{ github.event.release.tag_name }}.tar.xz,${{ inputs.machine }}-${{ inputs.image }}.sdk}"
+          path: release
+          merge-multiple: true
+
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ github.token }}
+          file: release/*
+          file_glob: true
+          tag: ${{ github.ref }}

@@ -1,0 +1,218 @@
+name: LLM Agent
+run-name: LLM run ${{ inputs.ref }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The branch, tag, PR number, or SHA to checkout"
+        required: false
+        type: string
+      prompt:
+        description: "Prompt to use, overwrites the default"
+        required: false
+        type: string
+        default: ""
+      prompt-extra:
+        description: "Extra prompt to concatenate"
+        required: false
+        type: string
+        default: ""
+      model:
+        description: "Model size"
+        type: choice
+        options:
+        - small
+        - medium
+        - large
+      strategy:
+        description: "Review strategy"
+        type: choice
+        options:
+        - commit
+        - files
+  workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
+        default: ${{ github.ref }}
+      prompt:
+        required: false
+        type: string
+        default: ""
+      prompt-extra:
+        required: false
+        type: string
+        default: ""
+      model:
+        required: false
+        type: string
+        default: "medium"
+      strategy:
+        description: "Review strategy"
+        type: string
+        default: "commit"
+      checkout-path:
+        description: "Path to checkout the repository to review"
+        type: string
+        default: "."
+      app-token-repositories:
+        description: "Comma-separated repositories to scope a GitHub App token to, empty to use github.token"
+        type: string
+        default: ""
+    secrets:
+      PORTKEY_API_KEY:
+        required: true
+      APP_CLIENT_ID:
+        required: false
+      APP_PRIVATE_KEY:
+        required: false
+
+jobs:
+  llm:
+    runs-on: ${{ vars.RUNNER != '' && fromJSON(vars.RUNNER) || 'ubuntu-latest' }}
+    permissions:
+      contents: read
+      checks: read
+      pull-requests: read
+
+    outputs:
+      pr: ${{ steps.llm.outputs.pr }}
+      comment: ${{ steps.llm.outputs.comment }}
+
+    steps:
+      - name: Prepare prompt
+        env:
+          PROMPT: ${{ inputs.prompt }}
+          PROMPT_EXTRA: ${{ inputs.prompt-extra }}
+          STRATEGY: ${{ inputs.strategy }}
+        run: |
+          prompt_file=$(mktemp --suffix=.md)
+          echo "prompt_file=$prompt_file" >> "$GITHUB_ENV"
+
+          printf '%s\n' "$PROMPT" > "$prompt_file"
+
+          grep -q '[^[:space:]]' "$prompt_file" || \
+          cat <<'EOF' > "$prompt_file"
+          # Run a deep lnxdsp-adi-meta (Yocto meta layer) analysis.
+
+          The Yocto meta layer is used in the production of toolchains, uboot images,
+          kernel and filesystem for ADI ADSP reference boards (e.g. `adsp-sc598-som-ezkit`).
+
+          Your review should be based on the current Yocto documentation
+          (./yocto-docs/documentation) and focus on the metadata standards:
+
+          - Verify SRC_URI and ensure matching checksums.
+          - Validate the presence and accuracy of LIC_FILES_CHKSUM.
+          - Confirm that the version of any .bbappend file matches the base recipe it extends.
+          - Check LAYERSERIES_COMPAT settings validating against the version Wrynose (6.0)
+
+          The LAYERSERIES_COMPAT prevent a build from breaking due to incompatible syntax
+          changes between different versions of Yocto.
+
+          A must read is ./yocto-docs/documentation/bsp-guide/bsp.rst, focus on
+          good practices for bsp layers, and how to integrate linux kernel.
+
+          The lnxdsp-adi-meta documentation at ./docs/ maybe out-of-date.
+          Never says things you are unsure.
+
+          You shall install pip packages to help you review, test and debug;
+          a venv is already active.
+          The virtual environment includes $venv_packages.
+          You shall upgrade/downgrade these packages if needed.
+          All build dependencies (listed in the ./ci/Containerfile) are already
+          installed.
+
+          Do **not** review commits starting with "[TMP]", "[ADI]", "[CI]",
+          they are not part of the series but to change the CI/CD or temporally change behaviour.
+
+          To confirm information against ADI datasheets, a sitemap with all
+          pdfs, including the datasheets, is available at:
+            https://raw.githubusercontent.com/analogdevicesinc/doctools/refs/heads/docling/en-pdf-sitemap.xml
+
+          A version in markdown may be available at the git tree:
+            https://raw.githubusercontent.com/analogdevicesinc/doctools/refs/heads/docling
+
+          for example:
+            https://www.analog.com/media/en/technical-documentation/data-sheets/adsp-sc596-adsp-sc598.pdf
+          can be fetched with:
+            https://raw.githubusercontent.com/analogdevicesinc/doctools/refs/heads/docling/media/en/technical-documentation/data-sheets/adsp-sc596-adsp-sc598.md
+
+          To convert pdfs to markdown before reading, camelot-py is already installed.
+
+          EOF
+
+          if [[ "$STRATEGY" == "files" ]]; then
+            cat <<'EOF' >> "$prompt_file"
+          ## File Review Protocol
+
+          Context: Certain files have been modified intentionally to act as markers for review.
+          **Requirement:** When a file is modified in this set, you must review the full-file.
+          Logic:
+          1. Identify files containing the `# touch` comment or minor placeholder changes.
+          2. Disregard the placeholder change itself.
+          3. Analyze the entire content of that file.
+          EOF
+          fi
+
+          printf '%s\n' "$PROMPT_EXTRA" >> "$prompt_file"
+
+      - name: Prepare tools
+        shell: bash
+        run: |
+          py_venv="$(mktemp -d)"
+          echo "py_venv=$py_venv" >> "$GITHUB_ENV"
+
+          python3 -m venv $py_venv
+          source $py_venv/bin/activate
+          python3 -m ensurepip --upgrade
+          pip install adi-doctools camelot-py
+
+      - name: Get yocto docs
+        shell: bash
+        run: |
+          rm -rf yocto-docs
+          git clone https://git.yoctoproject.org/yocto-docs.git \
+            --branch wrynose --depth 1 -- yocto-docs
+
+      - uses: actions/create-github-app-token@v3
+        if: ${{ inputs.app-token-repositories != '' }}
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ inputs.app-token-repositories }}
+          permission-contents: read
+          permission-pull-requests: read
+
+      - uses: analogdevicesinc/doctools/llm@action
+        id: llm
+        with:
+          ref: ${{ inputs.ref }}
+          gh-token: ${{ steps.app-token.outputs.token || github.token }}
+          checkout-path: ${{ inputs.checkout-path || '.' }}
+          model: ${{ inputs.model }}
+          prompt-file: ${{ env.prompt_file }}
+          api-key: ${{ secrets.PORTKEY_API_KEY }}
+          py-venv: ${{ env.py_venv }}
+          sh-source: ${{ env.sh_source }}
+
+      - name: Clean-up
+        if: always()
+        run: |
+          rm -f "$prompt_file"
+          rm -rf "$py_venv"
+
+  pr-comment:
+    runs-on: ubuntu-slim
+    needs: llm
+    permissions:
+      pull-requests: write
+
+    steps:
+      - uses: analogdevicesinc/doctools/gh-pr-comment@action
+        with:
+          pr: ${{ needs.llm.outputs.pr }}
+          body: ${{ needs.llm.outputs.comment }}
