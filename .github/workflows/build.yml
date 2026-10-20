@@ -120,7 +120,7 @@ jobs:
 
       - name: Build
         id: build
-        uses: analogdevicesinc/meta-adi/build@ci
+        uses: analogdevicesinc/meta-adi/build@ci-next
         with:
           machine: ${{ inputs.machine }}
           image: ${{ inputs.image }}
