@@ -13,19 +13,10 @@ on:
       image:
         description: "Yocto image"
         default: "adsp-sc5xx-minimal"
-      distro:
-        description: "Yocto distro"
-        default: "adi-distro-glibc"
-      manifest:
-        description: "Manifest"
-        default: main
-      manifest-repo:
-        description: "Manifest repository"
-        default: ""
       build-config-file:
-        description: "kas config file, empty to use the repo manifest"
+        description: "kas config file, relative to the checkout"
         type: string
-        default: ""
+        required: true
       build-sdk:
         description: "Build the SDK installer for this image"
         type: boolean
@@ -34,13 +25,6 @@ on:
         description: "Store image artifacts and expose them to cloudsmith"
         type: boolean
         default: true
-      manifest-branch:
-        description: "Manifest repository branch/ref"
-        default: "main"
-      override-meta-adi:
-        description: "Override sources/meta-adi with the checked-out ref"
-        type: boolean
-        default: false
       app-token-repositories:
         description: "Comma-separated repositories to scope the GitHub App token to"
         type: string
@@ -56,30 +40,15 @@ on:
       image:
         type: string
         default: "adsp-sc5xx-minimal"
-      distro:
-        type: string
-        default: "adi-distro-glibc"
-      manifest:
-        type: string
-        default: main
-      manifest-repo:
-        type: string
-        default: ""
       build-config-file:
         type: string
-        default: ""
+        required: true
       build-sdk:
         type: boolean
         default: true
       upload-artifacts:
         type: boolean
         default: true
-      manifest-branch:
-        type: string
-        default: "main"
-      override-meta-adi:
-        type: boolean
-        default: false
       app-token-repositories:
         type: string
         default: ""
@@ -88,9 +57,9 @@ on:
         required: false
       APP_PRIVATE_KEY:
         required: false
-      CLOUDSMITH_USER:
-        required: false
       CLOUDSMITH_SERVICE_SLUG:
+        required: false
+      CLOUDSMITH_API_KEY:
         required: false
 
 jobs:
@@ -124,18 +93,13 @@ jobs:
         with:
           machine: ${{ inputs.machine }}
           image: ${{ inputs.image }}
-          distro: ${{ inputs.distro }}
-          manifest: ${{ inputs.manifest }}
-          manifest-repo: ${{ inputs.manifest-repo }}
           build-config-file: ${{ inputs.build-config-file }}
           build-sdk: ${{ inputs.build-sdk }}
           upload-artifacts: ${{ inputs.upload-artifacts }}
-          manifest-branch: ${{ inputs.manifest-branch }}
-          override-meta-adi: ${{ inputs.override-meta-adi }}
-          ref: ${{ inputs.ref }}
           gh-token: ${{ steps.app-token.outputs.token || github.token }}
-          cloudsmith-user: ${{ secrets.CLOUDSMITH_USER }}
+          cloudsmith-namespace: ${{ vars.CLOUDSMITH_NAMESPACE }}
           cloudsmith-service-slug: ${{ secrets.CLOUDSMITH_SERVICE_SLUG }}
+          cloudsmith-api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
 
   release:
     needs: build
