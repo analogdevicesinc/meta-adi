@@ -1,5 +1,5 @@
 name: Build ADI Yocto artifacts
-description: kas based build
+description: kas based build, fallback to repo manifest
 
 inputs:
   machine:
@@ -8,48 +8,56 @@ inputs:
   image:
     description: "Yocto image"
     default: adsp-sc5xx-minimal
+  distro:
+    description: "Yocto distro (repo only)"
+    default: adi-distro-glibc
   manifest:
-    description: "Manifest"
+    description: "Manifest (repo only)"
     default: main
   manifest-repo:
-    description: "Manifest repository"
+    description: "Manifest repository (repo only)"
+    default: ""
+  manifest-branch:
+    description: "Manifest repository branch/ref (repo only)"
+    default: ""
+  override-meta-adi:
+    description: "Override sources/meta-adi with ref, or the triggering commit (repo only)"
+    default: 'false'
+  ref:
+    description: "Revision for override-meta-adi, empty uses the triggering commit"
     default: ""
   build-config-file:
-    description: "Build configuration file used with tools like kas/bitbake-setup"
-    required: true
+    description: "kas config file, empty to use the repo manifest"
+    default: ""
   build-sdk:
     description: "Build the SDK installer for this image"
     default: 'true'
   upload-artifacts:
     description: "Store image artifacts and expose them to cloudsmith"
     default: 'true'
-  override-meta-adi:
-    description: "Override sources/meta-adi with the checked-out ref"
-    default: 'false'
-  distro:
-    description: "Unused, the distro is set by the kas config file"
-    default: ""
-  manifest-branch:
-    description: "Unused, layers are pinned by the kas config file"
-    default: ""
   gh-token:
     description: "GitHub token for cloning repositories"
     default: ${{ github.token }}
   cloudsmith-user:
-    description: "Cloudsmith user for fetching sources from dl.cloudsmith.io"
+    description: "Cloudsmith user (kas only)"
     default: ""
   cloudsmith-namespace:
-    description: "Cloudsmith namespace for OIDC authentication"
+    description: "Cloudsmith namespace (kas only)"
     default: "adi"
   cloudsmith-service-slug:
-    description: "Cloudsmith service slug for OIDC authentication"
+    description: "Cloudsmith service slug (kas only)"
     default: ""
+
+outputs:
+  artifact-name:
+    description: "Base name of the uploaded artifacts"
+    value: ${{ steps.workspace.outputs.artifact-name }}
 
 runs:
   using: 'composite'
   steps:
     - uses: analogdevicesinc/shared-actions/cloudsmith-auth@main
-      if: ${{ inputs.cloudsmith-user != '' }}
+      if: ${{ inputs.build-config-file != '' && inputs.cloudsmith-user != '' }}
       with:
         namespace: ${{ inputs.cloudsmith-namespace }}
         service-slug: ${{ inputs.cloudsmith-service-slug }}
@@ -69,13 +77,22 @@ runs:
         git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
 
     - name: Setup build workspace
+      id: workspace
       shell: bash
       env:
         MACHINE: ${{ inputs.machine }}
         IMAGE: ${{ inputs.image }}
+        MANIFEST: ${{ inputs.manifest }}
+        BUILD_CONFIG_FILE: ${{ inputs.build-config-file }}
       run: |
-        BUILD_NAME=$(printf '%s-%s' "${MACHINE}" "${IMAGE}" | tr -cd '[:alnum:]._-')
-        WORKSPACE="${GITHUB_WORKSPACE}/yocto-build-${GITHUB_RUN_ID}-${BUILD_NAME}"
+        ARTIFACT_NAME="${MACHINE}-${IMAGE}"
+        # Distinguish non-default manifests
+        [[ -n "${BUILD_CONFIG_FILE}" || "${MANIFEST}" == "main" ]] || ARTIFACT_NAME="${ARTIFACT_NAME}-${MANIFEST}"
+        ARTIFACT_NAME=$(printf '%s' "${ARTIFACT_NAME}" | tr -cd '[:alnum:]._-')
+        echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
+        echo "artifact-name=${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
+
+        WORKSPACE="${GITHUB_WORKSPACE}/yocto-build-${GITHUB_RUN_ID}-${ARTIFACT_NAME}"
         mkdir -p "${WORKSPACE}"
 
         [ -d "/cache" ] && YOCTO_CACHE_DIR="/cache/yocto" || YOCTO_CACHE_DIR="${GITHUB_WORKSPACE}/yocto-cache"
@@ -85,11 +102,14 @@ runs:
         echo "YOCTO_DL_DIR=${YOCTO_CACHE_DIR}/downloads" >> $GITHUB_ENV
         echo "YOCTO_SSTATE_DIR=${YOCTO_CACHE_DIR}/sstate" >> $GITHUB_ENV
         echo "YOCTO_HASHSERVE_DIR=${YOCTO_CACHE_DIR}/hashserv" >> $GITHUB_ENV
+        echo "YOCTO_BUILD_DIR=${WORKSPACE}/build" >> $GITHUB_ENV
 
         echo "KAS_WORK_DIR=${WORKSPACE}" >> $GITHUB_ENV
         echo "KAS_BUILD_DIR=${WORKSPACE}/build" >> $GITHUB_ENV
 
+    # kas backend
     - name: Install kas
+      if: ${{ inputs.build-config-file != '' }}
       shell: bash
       run: |
         python3 -m venv "${YOCTO_WORKSPACE}/venv"
@@ -97,6 +117,7 @@ runs:
         pip3 install kas
 
     - name: kas checkout
+      if: ${{ inputs.build-config-file != '' }}
       shell: bash
       env:
         KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
@@ -104,6 +125,69 @@ runs:
         source "${YOCTO_WORKSPACE}/venv/bin/activate"
         kas checkout "${KAS_FILE}"
 
+    # repo backend
+    - name: Setup repo tool
+      if: ${{ inputs.build-config-file == '' }}
+      shell: bash
+      run: |
+        cd "${YOCTO_WORKSPACE}"
+        mkdir -p bin
+        curl -fsSL https://storage.googleapis.com/git-repo-downloads/repo > ./bin/repo
+        chmod a+x ./bin/repo
+
+    - name: Initialize repo manifest
+      if: ${{ inputs.build-config-file == '' }}
+      shell: bash
+      env:
+        MANIFEST: ${{ inputs.manifest }}
+        MANIFEST_REPO: ${{ inputs.manifest-repo }}
+        MANIFEST_BRANCH: ${{ inputs.manifest-branch }}
+      run: |
+        manifest_repo="${MANIFEST_REPO}"
+        [[ -n "$manifest_repo" ]] || manifest_repo="https://github.com/${GITHUB_REPOSITORY_OWNER}/lnxdsp-repo-manifest.git"
+        cd "${YOCTO_WORKSPACE}"
+        repo_init_args=(
+          -u "$manifest_repo"
+          -m "${MANIFEST}.xml"
+        )
+        [[ -z "${MANIFEST_BRANCH}" ]] || repo_init_args+=(-b "${MANIFEST_BRANCH}")
+        ./bin/repo init "${repo_init_args[@]}"
+
+    - name: Override meta-adi revision via local manifest
+      if: ${{ inputs.build-config-file == '' && inputs.override-meta-adi == 'true' }}
+      shell: bash
+      env:
+        override_rev: ${{ inputs.ref || github.event.pull_request.head.sha || github.sha }}
+      run: |
+        cd "${YOCTO_WORKSPACE}"
+        project="${GITHUB_REPOSITORY#*/}"
+        mkdir -p .repo/local_manifests
+        cat > .repo/local_manifests/meta-adi-override.xml <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <manifest>
+          <remote fetch="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY_OWNER}" name="ci"/>
+          <extend-project name="${project}" path="sources/meta-adi" remote="ci" revision="${override_rev}"/>
+        </manifest>
+        EOF
+
+    - name: Sync all sources
+      if: ${{ inputs.build-config-file == '' }}
+      shell: bash
+      run: |
+        cd "${YOCTO_WORKSPACE}"
+        ./bin/repo sync
+
+    - name: Setup build environment
+      if: ${{ inputs.build-config-file == '' }}
+      shell: bash
+      env:
+        MACHINE: ${{ inputs.machine }}
+        DISTRO: ${{ inputs.distro }}
+      run: |
+        cd "${YOCTO_WORKSPACE}"
+        source setup-environment -m "${MACHINE}" -d "${DISTRO}"
+
+    # common
     - name: Configure persistent caches
       shell: bash
       env:
@@ -119,73 +203,87 @@ runs:
           echo "NETRC_FILE=${RUNNER_TEMP}/netrc" >> "$GITHUB_ENV"
         fi
 
-        cat > "${KAS_BUILD_DIR}/conf/auto.conf" <<EOF
+        mkdir -p "${YOCTO_BUILD_DIR}/conf"
+        cat > "${YOCTO_BUILD_DIR}/conf/auto.conf" <<EOF
         DL_DIR = "${YOCTO_DL_DIR}"
         SSTATE_DIR = "${YOCTO_SSTATE_DIR}"
         BB_HASHSERVE_DB_DIR = "${YOCTO_HASHSERVE_DIR}"
         EOF
 
         # Generate an SPDX SBOM
-        if find "${KAS_WORK_DIR}" -path "${KAS_BUILD_DIR}" -prune -o -type f -name 'create-spdx-3.0.bbclass' -print | grep -q .; then
-          cat >> "${KAS_BUILD_DIR}/conf/auto.conf" <<EOF
+        if find "${YOCTO_WORKSPACE}" \( -path "${YOCTO_BUILD_DIR}" -o -path "${YOCTO_WORKSPACE}/venv" \) -prune \
+             -o -type f -name 'create-spdx-3.0.bbclass' -print | grep -q .; then
+          cat >> "${YOCTO_BUILD_DIR}/conf/auto.conf" <<EOF
         INHERIT:remove = "create-spdx"
         INHERIT += "create-spdx-3.0"
         EOF
         else
-          echo 'INHERIT += "create-spdx"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
+          echo 'INHERIT += "create-spdx"' >> "${YOCTO_BUILD_DIR}/conf/auto.conf"
         fi
 
     - name: Build image
       shell: bash
       env:
         IMAGE: ${{ inputs.image }}
-        KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
+        BUILD_CONFIG_FILE: ${{ inputs.build-config-file }}
       run: |
-        source "${YOCTO_WORKSPACE}/venv/bin/activate"
         umask 022
-        kas shell "${KAS_FILE}" -c "bitbake ${IMAGE}" --update
+        if [[ -n "${BUILD_CONFIG_FILE}" ]]; then
+          source "${YOCTO_WORKSPACE}/venv/bin/activate"
+          kas shell "${GITHUB_WORKSPACE}/${BUILD_CONFIG_FILE}" -c "bitbake ${IMAGE}" --update
+        else
+          cd "${YOCTO_WORKSPACE}"
+          source setup-environment -b build
+          bitbake "${IMAGE}"
+        fi
 
     - name: Build SDK
       if: ${{ inputs.build-sdk == 'true' }}
       shell: bash
       env:
         IMAGE: ${{ inputs.image }}
-        KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
+        BUILD_CONFIG_FILE: ${{ inputs.build-config-file }}
       run: |
-        source "${YOCTO_WORKSPACE}/venv/bin/activate"
         umask 022
-        kas shell "${KAS_FILE}" -c "bitbake ${IMAGE} -c populate_sdk"
+        if [[ -n "${BUILD_CONFIG_FILE}" ]]; then
+          source "${YOCTO_WORKSPACE}/venv/bin/activate"
+          kas shell "${GITHUB_WORKSPACE}/${BUILD_CONFIG_FILE}" -c "bitbake ${IMAGE} -c populate_sdk"
+        else
+          cd "${YOCTO_WORKSPACE}"
+          source setup-environment -b build
+          bitbake "${IMAGE}" -c populate_sdk
+        fi
 
     - name: Upload Yocto images
       uses: actions/upload-artifact@v7
       if: ${{ inputs.upload-artifacts == 'true' }}
       with:
-        name: ${{ inputs.machine }}-${{ inputs.image }}
-        path: ${{ env.KAS_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}
+        name: ${{ env.ARTIFACT_NAME }}
+        path: ${{ env.YOCTO_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}
 
     - name: Upload SBOM
       uses: actions/upload-artifact@v7
       if: ${{ inputs.upload-artifacts == 'true' }}
       with:
-        name: ${{ inputs.machine }}-${{ inputs.image }}.sbom
+        name: ${{ env.ARTIFACT_NAME }}.sbom
         path: |
-          ${{ env.KAS_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}/${{ inputs.image }}-${{ inputs.machine }}.rootfs.spdx*
-          ${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/
-          !${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/**/by-namespace/**
-          !${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/**/by-hash/**
+          ${{ env.YOCTO_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}/${{ inputs.image }}-${{ inputs.machine }}.rootfs.spdx*
+          ${{ env.YOCTO_BUILD_DIR }}/tmp/deploy/spdx/
+          !${{ env.YOCTO_BUILD_DIR }}/tmp/deploy/spdx/**/by-namespace/**
+          !${{ env.YOCTO_BUILD_DIR }}/tmp/deploy/spdx/**/by-hash/**
 
     - name: Locate SDK installer
       if: ${{ inputs.build-sdk == 'true' }}
       shell: bash
       run: |
-        SDK_INSTALLER=$(ls "${KAS_BUILD_DIR}/tmp/deploy/sdk/"*.sh | head -n1)
+        SDK_INSTALLER=$(ls "${YOCTO_BUILD_DIR}/tmp/deploy/sdk/"*.sh | head -n1)
         echo "SDK_INSTALLER=${SDK_INSTALLER}" >> $GITHUB_ENV
 
     - name: Upload SDK installer as artifact
       uses: actions/upload-artifact@v7
       if: ${{ inputs.build-sdk == 'true' && inputs.upload-artifacts == 'true' }}
       with:
-        name: ${{ inputs.machine }}-${{ inputs.image }}.sdk
+        name: ${{ env.ARTIFACT_NAME }}.sdk
         path: ${{ env.SDK_INSTALLER }}
 
     - name: Archive output images directory
@@ -193,19 +291,18 @@ runs:
       shell: bash
       env:
         MACHINE: ${{ inputs.machine }}
-        IMAGE: ${{ inputs.image }}
         RELEASE_TAG: ${{ github.event.release.tag_name }}
       run: |
-        tar -cJvf "${YOCTO_WORKSPACE}/images-${MACHINE}-${IMAGE}-${RELEASE_TAG}.tar.xz" \
-          -C "${KAS_BUILD_DIR}/tmp/deploy/images" \
+        tar -cJvf "${YOCTO_WORKSPACE}/images-${ARTIFACT_NAME}-${RELEASE_TAG}.tar.xz" \
+          -C "${YOCTO_BUILD_DIR}/tmp/deploy/images" \
           "${MACHINE}"
 
     - name: Upload release archive as artifact
       uses: actions/upload-artifact@v7
       if: ${{ github.event_name == 'release' && inputs.upload-artifacts == 'true' }}
       with:
-        name: images-${{ inputs.machine }}-${{ inputs.image }}-${{ github.event.release.tag_name }}.tar.xz
-        path: ${{ env.YOCTO_WORKSPACE }}/images-${{ inputs.machine }}-${{ inputs.image }}-${{ github.event.release.tag_name }}.tar.xz
+        name: images-${{ env.ARTIFACT_NAME }}-${{ github.event.release.tag_name }}.tar.xz
+        path: ${{ env.YOCTO_WORKSPACE }}/images-${{ env.ARTIFACT_NAME }}-${{ github.event.release.tag_name }}.tar.xz
 
     - name: Clean up build
       if: always()

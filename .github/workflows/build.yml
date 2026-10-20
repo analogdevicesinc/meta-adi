@@ -23,9 +23,9 @@ on:
         description: "Manifest repository"
         default: ""
       build-config-file:
-        description: "Build configuration file used with tools like kas/bitbake-setup"
+        description: "kas config file, empty to use the repo manifest"
         type: string
-        required: true
+        default: ""
       build-sdk:
         description: "Build the SDK installer for this image"
         type: boolean
@@ -67,7 +67,7 @@ on:
         default: ""
       build-config-file:
         type: string
-        required: true
+        default: ""
       build-sdk:
         type: boolean
         default: true
@@ -99,6 +99,8 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    outputs:
+      artifact-name: ${{ steps.build.outputs.artifact-name }}
     steps:
       - uses: actions/create-github-app-token@v3
         if: ${{ github.repository_owner == 'adi-innersource' }}
@@ -117,6 +119,7 @@ jobs:
           persist-credentials: false
 
       - name: Build
+        id: build
         uses: analogdevicesinc/meta-adi/build@ci
         with:
           machine: ${{ inputs.machine }}
@@ -129,6 +132,7 @@ jobs:
           upload-artifacts: ${{ inputs.upload-artifacts }}
           manifest-branch: ${{ inputs.manifest-branch }}
           override-meta-adi: ${{ inputs.override-meta-adi }}
+          ref: ${{ inputs.ref }}
           gh-token: ${{ steps.app-token.outputs.token || github.token }}
           cloudsmith-user: ${{ secrets.CLOUDSMITH_USER }}
           cloudsmith-service-slug: ${{ secrets.CLOUDSMITH_SERVICE_SLUG }}
@@ -143,7 +147,7 @@ jobs:
       - name: Download release artifacts
         uses: actions/download-artifact@v8
         with:
-          pattern: "{images-${{ inputs.machine }}-${{ inputs.image }}-${{ github.event.release.tag_name }}.tar.xz,${{ inputs.machine }}-${{ inputs.image }}.sdk}"
+          pattern: "{images-${{ needs.build.outputs.artifact-name }}-${{ github.event.release.tag_name }}.tar.xz,${{ needs.build.outputs.artifact-name }}.sdk}"
           path: release
           merge-multiple: true
 
