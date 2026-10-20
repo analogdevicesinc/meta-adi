@@ -10,9 +10,11 @@ on:
       machine:
         description: "Yocto machine"
         default: "adsp-sc598-som-ezkit"
+        required: true
       image:
         description: "Yocto image"
         default: "adsp-sc5xx-minimal"
+        required: true
       build-config-file:
         description: "kas config file, relative to the checkout"
         type: string
@@ -26,7 +28,7 @@ on:
         type: boolean
         default: true
       app-token-repositories:
-        description: "Comma-separated repositories to scope the GitHub App token to"
+        description: "Repositories to scope a GitHub App Token to"
         type: string
         default: ""
   workflow_call:
@@ -36,10 +38,10 @@ on:
         required: false
       machine:
         type: string
-        default: "adsp-sc598-som-ezkit"
+        required: true
       image:
         type: string
-        default: "adsp-sc5xx-minimal"
+        required: true
       build-config-file:
         type: string
         required: true

@@ -4,13 +4,10 @@ description: kas based build
 inputs:
   machine:
     description: "Yocto machine"
-    default: adsp-sc598-som-ezkit
   image:
     description: "Yocto image"
-    default: adsp-sc5xx-minimal
   build-config-file:
     description: "kas config file, relative to the checkout"
-    required: true
   build-sdk:
     description: "Build the SDK installer for this image"
     default: 'true'
