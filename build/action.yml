@@ -1,0 +1,218 @@
+name: Build ADI Yocto artifacts
+description: kas based build
+
+inputs:
+  machine:
+    description: "Yocto machine"
+    default: adsp-sc598-som-ezkit
+  image:
+    description: "Yocto image"
+    default: adsp-sc5xx-minimal
+  manifest:
+    description: "Manifest"
+    default: main
+  manifest-repo:
+    description: "Manifest repository"
+    default: ""
+  build-config-file:
+    description: "Build configuration file used with tools like kas/bitbake-setup"
+    required: true
+  build-sdk:
+    description: "Build the SDK installer for this image"
+    default: 'true'
+  upload-artifacts:
+    description: "Store image artifacts and expose them to cloudsmith"
+    default: 'true'
+  override-meta-adi:
+    description: "Override sources/meta-adi with the checked-out ref"
+    default: 'false'
+  distro:
+    description: "Unused, the distro is set by the kas config file"
+    default: ""
+  manifest-branch:
+    description: "Unused, layers are pinned by the kas config file"
+    default: ""
+  gh-token:
+    description: "GitHub token for cloning repositories"
+    default: ${{ github.token }}
+  cloudsmith-user:
+    description: "Cloudsmith user for fetching sources from dl.cloudsmith.io"
+    default: ""
+  cloudsmith-namespace:
+    description: "Cloudsmith namespace for OIDC authentication"
+    default: "adi"
+  cloudsmith-service-slug:
+    description: "Cloudsmith service slug for OIDC authentication"
+    default: ""
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: analogdevicesinc/shared-actions/cloudsmith-auth@main
+      if: ${{ inputs.cloudsmith-user != '' }}
+      with:
+        namespace: ${{ inputs.cloudsmith-namespace }}
+        service-slug: ${{ inputs.cloudsmith-service-slug }}
+
+    - name: Set github token
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.gh-token }}
+      run: |
+        git config --global credential.helper 'store'
+        echo "https://x-access-token:${GH_TOKEN}@github.com" > ~/.git-credentials
+        { git config --global --get-regexp '^url\..*\.insteadOf$' || :; } |
+          awk '$2 == "https://github.com/" { print $1 }' |
+          xargs -r -n1 git config --global --unset-all
+        git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+        git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "git@github.com:"
+        git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
+
+    - name: Setup build workspace
+      shell: bash
+      env:
+        MACHINE: ${{ inputs.machine }}
+        IMAGE: ${{ inputs.image }}
+      run: |
+        BUILD_NAME=$(printf '%s-%s' "${MACHINE}" "${IMAGE}" | tr -cd '[:alnum:]._-')
+        WORKSPACE="${GITHUB_WORKSPACE}/yocto-build-${GITHUB_RUN_ID}-${BUILD_NAME}"
+        mkdir -p "${WORKSPACE}"
+
+        [ -d "/cache" ] && YOCTO_CACHE_DIR="/cache/yocto" || YOCTO_CACHE_DIR="${GITHUB_WORKSPACE}/yocto-cache"
+        mkdir -p "${YOCTO_CACHE_DIR}/downloads" "${YOCTO_CACHE_DIR}/sstate" "${YOCTO_CACHE_DIR}/hashserv"
+
+        echo "YOCTO_WORKSPACE=${WORKSPACE}" >> $GITHUB_ENV
+        echo "YOCTO_DL_DIR=${YOCTO_CACHE_DIR}/downloads" >> $GITHUB_ENV
+        echo "YOCTO_SSTATE_DIR=${YOCTO_CACHE_DIR}/sstate" >> $GITHUB_ENV
+        echo "YOCTO_HASHSERVE_DIR=${YOCTO_CACHE_DIR}/hashserv" >> $GITHUB_ENV
+
+        echo "KAS_WORK_DIR=${WORKSPACE}" >> $GITHUB_ENV
+        echo "KAS_BUILD_DIR=${WORKSPACE}/build" >> $GITHUB_ENV
+
+    - name: Install kas
+      shell: bash
+      run: |
+        python3 -m venv "${YOCTO_WORKSPACE}/venv"
+        source "${YOCTO_WORKSPACE}/venv/bin/activate"
+        pip3 install kas
+
+    - name: kas checkout
+      shell: bash
+      env:
+        KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
+      run: |
+        source "${YOCTO_WORKSPACE}/venv/bin/activate"
+        kas checkout "${KAS_FILE}"
+
+    - name: Configure persistent caches
+      shell: bash
+      env:
+        CLOUDSMITH_USER: ${{ inputs.cloudsmith-user }}
+      run: |
+        if [[ -n "${CLOUDSMITH_USER}" ]]; then
+          cat > "${RUNNER_TEMP}/netrc" <<EOF
+        machine dl.cloudsmith.io
+        login ${CLOUDSMITH_USER}
+        password ${CLOUDSMITH_API_KEY}
+        EOF
+          chmod 600 "${RUNNER_TEMP}/netrc"
+          echo "NETRC_FILE=${RUNNER_TEMP}/netrc" >> "$GITHUB_ENV"
+        fi
+
+        cat > "${KAS_BUILD_DIR}/conf/auto.conf" <<EOF
+        DL_DIR = "${YOCTO_DL_DIR}"
+        SSTATE_DIR = "${YOCTO_SSTATE_DIR}"
+        BB_HASHSERVE_DB_DIR = "${YOCTO_HASHSERVE_DIR}"
+        EOF
+
+        # Generate an SPDX SBOM
+        if find "${KAS_WORK_DIR}" -path "${KAS_BUILD_DIR}" -prune -o -type f -name 'create-spdx-3.0.bbclass' -print | grep -q .; then
+          cat >> "${KAS_BUILD_DIR}/conf/auto.conf" <<EOF
+        INHERIT:remove = "create-spdx"
+        INHERIT += "create-spdx-3.0"
+        EOF
+        else
+          echo 'INHERIT += "create-spdx"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
+        fi
+
+    - name: Build image
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
+      run: |
+        source "${YOCTO_WORKSPACE}/venv/bin/activate"
+        umask 022
+        kas shell "${KAS_FILE}" -c "bitbake ${IMAGE}" --update
+
+    - name: Build SDK
+      if: ${{ inputs.build-sdk == 'true' }}
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
+      run: |
+        source "${YOCTO_WORKSPACE}/venv/bin/activate"
+        umask 022
+        kas shell "${KAS_FILE}" -c "bitbake ${IMAGE} -c populate_sdk"
+
+    - name: Upload Yocto images
+      uses: actions/upload-artifact@v7
+      if: ${{ inputs.upload-artifacts == 'true' }}
+      with:
+        name: ${{ inputs.machine }}-${{ inputs.image }}
+        path: ${{ env.KAS_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}
+
+    - name: Upload SBOM
+      uses: actions/upload-artifact@v7
+      if: ${{ inputs.upload-artifacts == 'true' }}
+      with:
+        name: ${{ inputs.machine }}-${{ inputs.image }}.sbom
+        path: |
+          ${{ env.KAS_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}/${{ inputs.image }}-${{ inputs.machine }}.rootfs.spdx*
+          ${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/
+          !${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/**/by-namespace/**
+          !${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/**/by-hash/**
+
+    - name: Locate SDK installer
+      if: ${{ inputs.build-sdk == 'true' }}
+      shell: bash
+      run: |
+        SDK_INSTALLER=$(ls "${KAS_BUILD_DIR}/tmp/deploy/sdk/"*.sh | head -n1)
+        echo "SDK_INSTALLER=${SDK_INSTALLER}" >> $GITHUB_ENV
+
+    - name: Upload SDK installer as artifact
+      uses: actions/upload-artifact@v7
+      if: ${{ inputs.build-sdk == 'true' && inputs.upload-artifacts == 'true' }}
+      with:
+        name: ${{ inputs.machine }}-${{ inputs.image }}.sdk
+        path: ${{ env.SDK_INSTALLER }}
+
+    - name: Archive output images directory
+      if: ${{ github.event_name == 'release' }}
+      shell: bash
+      env:
+        MACHINE: ${{ inputs.machine }}
+        IMAGE: ${{ inputs.image }}
+        RELEASE_TAG: ${{ github.event.release.tag_name }}
+      run: |
+        tar -cJvf "${YOCTO_WORKSPACE}/images-${MACHINE}-${IMAGE}-${RELEASE_TAG}.tar.xz" \
+          -C "${KAS_BUILD_DIR}/tmp/deploy/images" \
+          "${MACHINE}"
+
+    - name: Upload release archive as artifact
+      uses: actions/upload-artifact@v7
+      if: ${{ github.event_name == 'release' && inputs.upload-artifacts == 'true' }}
+      with:
+        name: images-${{ inputs.machine }}-${{ inputs.image }}-${{ github.event.release.tag_name }}.tar.xz
+        path: ${{ env.YOCTO_WORKSPACE }}/images-${{ inputs.machine }}-${{ inputs.image }}-${{ github.event.release.tag_name }}.tar.xz
+
+    - name: Clean up build
+      if: always()
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.gh-token }}
+      run: |
+        rm -f ~/.git-credentials
+        git config --global --remove-section "url.https://x-access-token:${GH_TOKEN}@github.com/" 2>/dev/null || :
+        [[ -n "${YOCTO_WORKSPACE}" ]] && rm -rf "${YOCTO_WORKSPACE}"
