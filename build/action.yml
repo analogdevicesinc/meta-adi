@@ -157,7 +157,7 @@ runs:
       if: ${{ inputs.build-config-file == '' && inputs.override-meta-adi == 'true' }}
       shell: bash
       env:
-        override_rev: ${{ inputs.ref || github.sha }}
+        override_rev: ${{ inputs.ref || github.event.pull_request.head.sha || github.sha }}
       run: |
         cd "${YOCTO_WORKSPACE}"
         project="${GITHUB_REPOSITORY#*/}"
