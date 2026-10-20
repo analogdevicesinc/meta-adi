@@ -3,6 +3,10 @@ name: Build ADI Yocto artifacts
 on:
   workflow_dispatch:
     inputs:
+      ref:
+        description: "Reference to checkout"
+        type: string
+        required: false
       machine:
         description: "Yocto machine"
         default: "adsp-sc598-som-ezkit"
@@ -21,7 +25,7 @@ on:
       build-config-file:
         description: "Build configuration file used with tools like kas/bitbake-setup"
         type: string
-        default: ""
+        required: true
       build-sdk:
         description: "Build the SDK installer for this image"
         type: boolean
@@ -43,6 +47,9 @@ on:
         default: ""
   workflow_call:
     inputs:
+      ref:
+        type: string
+        required: false
       machine:
         type: string
         default: "adsp-sc598-som-ezkit"
@@ -59,9 +66,8 @@ on:
         type: string
         default: ""
       build-config-file:
-        description: "Build configuration file used with tools like kas/bitbake-setup"
         type: string
-        default: ""
+        required: true
       build-sdk:
         type: boolean
         default: true
@@ -75,7 +81,6 @@ on:
         type: boolean
         default: false
       app-token-repositories:
-        description: "Comma-separated repositories to scope the GitHub App token to"
         type: string
         default: ""
     secrets:
@@ -84,6 +89,8 @@ on:
       APP_PRIVATE_KEY:
         required: false
       CLOUDSMITH_USER:
+        required: false
+      CLOUDSMITH_SERVICE_SLUG:
         required: false
 
 jobs:
@@ -100,16 +107,17 @@ jobs:
           app-id: ${{ secrets.APP_CLIENT_ID  }}
           private-key: ${{ secrets.APP_PRIVATE_KEY  }}
           owner: ${{ github.repository_owner }}
-          repositories: ${{ inputs.app-token-repositories || 'linux,u-boot,lnxdsp-adi-meta,lnxdsp-adi-security-meta,lnxdsp-repo-manifest,lnxdsp-scripts,openocd' }}
+          repositories: ${{ inputs.app-token-repositories }}
 
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          ref: ${{ inputs.ref }}
           token: ${{ steps.app-token.outputs.token || github.token }}
           persist-credentials: false
 
       - name: Build
-        uses: ./actions/build
+        uses: analogdevicesinc/meta-adi/build@ci
         with:
           machine: ${{ inputs.machine }}
           image: ${{ inputs.image }}
@@ -123,6 +131,7 @@ jobs:
           override-meta-adi: ${{ inputs.override-meta-adi }}
           gh-token: ${{ steps.app-token.outputs.token || github.token }}
           cloudsmith-user: ${{ secrets.CLOUDSMITH_USER }}
+          cloudsmith-service-slug: ${{ secrets.CLOUDSMITH_SERVICE_SLUG }}
 
   release:
     needs: build
