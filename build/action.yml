@@ -130,14 +130,6 @@ runs:
           echo 'INHERIT += "create-spdx"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
         fi
 
-        # Patched/ignored CVE statements
-        if find "${KAS_WORK_DIR}" \( -path "${KAS_BUILD_DIR}" -o -path "${YOCTO_WORKSPACE}/venv" \) -prune \
-             -o -type f -name 'vex.bbclass' -print | grep -q .; then
-          echo 'INHERIT += "vex"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
-        else
-          echo 'INHERIT += "cve-check"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
-        fi
-
     - name: Build image
       shell: bash
       env:
@@ -167,8 +159,8 @@ runs:
         MACHINE: ${{ inputs.machine }}
         KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
       run: |
-        # License manifests, CVE patch statements and the recipe/layer list of
-        # this image, under stable names, one image per artifact.
+        # License manifests and the recipe/layer list of this image, under
+        # stable names, one image per artifact.
         out="${KAS_BUILD_DIR}/tmp/deploy/manifests"
         deploy="${KAS_BUILD_DIR}/tmp/deploy"
         rm -rf "$out" && mkdir -p "$out"
@@ -185,14 +177,8 @@ runs:
           echo "::warning::image_license.manifest not found in ${lic_dir}"
         fi
 
-        cve_json="${deploy}/images/${MACHINE}/${IMAGE}-${MACHINE}.rootfs.json"
-        if [[ -f "$cve_json" ]]; then
-          cp -L "$cve_json" "$out/cve_check.json"
-        else
-          echo "::warning::CVE summary ${cve_json} not found"
-        fi
-
         source "${YOCTO_WORKSPACE}/venv/bin/activate"
+        umask 022
         kas shell "${KAS_FILE}" -c "bitbake-layers show-recipes" > "$out/bitbake-layers.txt"
 
         printf 'image=%s\nmachine=%s\n' "$IMAGE" "$MACHINE" > "$out/metadata.txt"
