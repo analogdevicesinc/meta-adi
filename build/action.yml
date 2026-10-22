@@ -130,6 +130,14 @@ runs:
           echo 'INHERIT += "create-spdx"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
         fi
 
+        # Patched/ignored CVE statements
+        if find "${KAS_WORK_DIR}" \( -path "${KAS_BUILD_DIR}" -o -path "${YOCTO_WORKSPACE}/venv" \) -prune \
+             -o -type f -name 'vex.bbclass' -print | grep -q .; then
+          echo 'INHERIT += "vex"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
+        else
+          echo 'INHERIT += "cve-check"' >> "${KAS_BUILD_DIR}/conf/auto.conf"
+        fi
+
     - name: Build image
       shell: bash
       env:
@@ -151,6 +159,45 @@ runs:
         umask 022
         kas shell "${KAS_FILE}" -c "bitbake ${IMAGE} -c populate_sdk"
 
+    - name: Collect build manifests
+      if: ${{ inputs.upload-artifacts == 'true' }}
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        MACHINE: ${{ inputs.machine }}
+        KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
+      run: |
+        # License manifests, CVE patch statements and the recipe/layer list of
+        # this image, under stable names, one image per artifact.
+        out="${KAS_BUILD_DIR}/tmp/deploy/manifests"
+        deploy="${KAS_BUILD_DIR}/tmp/deploy"
+        rm -rf "$out" && mkdir -p "$out"
+
+        # Layout of deploy/licenses changed across Yocto releases; pick the
+        # newest directory for this image/machine.
+        lic_dir=$(find "${deploy}/licenses" -type f -name license.manifest \
+            -path "*${IMAGE}-${MACHINE}*" -printf '%T@ %h\n' | sort -rn | head -n1 | cut -d' ' -f2-)
+        [[ -n "$lic_dir" ]] || { echo "::error::license.manifest not found for ${IMAGE}-${MACHINE}"; exit 1; }
+        cp "${lic_dir}/license.manifest" "$out/license.manifest"
+        if [[ -f "${lic_dir}/image_license.manifest" ]]; then
+          cp "${lic_dir}/image_license.manifest" "$out/image_license.manifest"
+        else
+          echo "::warning::image_license.manifest not found in ${lic_dir}"
+        fi
+
+        cve_json="${deploy}/images/${MACHINE}/${IMAGE}-${MACHINE}.rootfs.json"
+        if [[ -f "$cve_json" ]]; then
+          cp -L "$cve_json" "$out/cve_check.json"
+        else
+          echo "::warning::CVE summary ${cve_json} not found"
+        fi
+
+        source "${YOCTO_WORKSPACE}/venv/bin/activate"
+        kas shell "${KAS_FILE}" -c "bitbake-layers show-recipes" > "$out/bitbake-layers.txt"
+
+        printf 'image=%s\nmachine=%s\n' "$IMAGE" "$MACHINE" > "$out/metadata.txt"
+        ls -l "$out"
+
     - name: Upload Yocto images
       uses: actions/upload-artifact@v7
       if: ${{ inputs.upload-artifacts == 'true' }}
@@ -166,6 +213,7 @@ runs:
         path: |
           ${{ env.KAS_BUILD_DIR }}/tmp/deploy/images/${{ inputs.machine }}/${{ inputs.image }}-${{ inputs.machine }}.rootfs.spdx*
           ${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/
+          ${{ env.KAS_BUILD_DIR }}/tmp/deploy/manifests/
           !${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/**/by-namespace/**
           !${{ env.KAS_BUILD_DIR }}/tmp/deploy/spdx/**/by-hash/**
 
