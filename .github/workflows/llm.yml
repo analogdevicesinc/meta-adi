@@ -187,6 +187,20 @@ jobs:
           permission-contents: read
           permission-pull-requests: read
 
+      - name: Persist token
+        if: ${{ inputs.app-token-repositories != '' }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config --global credential.helper 'store'
+          echo "https://x-access-token:${GH_TOKEN}@github.com" > ~/.git-credentials
+          { git config --global --get-regexp '^url\..*\.insteadOf$' || :; } |
+            awk '$2 == "https://github.com/" { print $1 }' |
+            xargs -r -n1 git config --global --unset-all
+          git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+          git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "git@github.com:"
+          git config --global --add url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "ssh://git@github.com/"
+
       - uses: analogdevicesinc/doctools/llm@action
         id: llm
         with:
