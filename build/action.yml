@@ -117,6 +117,7 @@ runs:
         DL_DIR = "${YOCTO_DL_DIR}"
         SSTATE_DIR = "${YOCTO_SSTATE_DIR}"
         BB_HASHSERVE_DB_DIR = "${YOCTO_HASHSERVE_DIR}"
+        BB_SRCREV_POLICY = "cache"
         EOF
 
         # Generate an SPDX SBOM
@@ -134,11 +135,14 @@ runs:
       shell: bash
       env:
         IMAGE: ${{ inputs.image }}
+        BUILD_SDK: ${{ inputs.build-sdk }}
         KAS_FILE: ${{ github.workspace }}/${{ inputs.build-config-file }}
       run: |
         source "${YOCTO_WORKSPACE}/venv/bin/activate"
         umask 022
-        kas shell "${KAS_FILE}" -c "bitbake ${IMAGE}" --update
+        fetch_targets="${IMAGE}"
+        [[ "${BUILD_SDK}" == "true" ]] && fetch_targets+=" ${IMAGE}:do_populate_sdk"
+        kas shell "${KAS_FILE}" -c "bitbake --runall=fetch ${fetch_targets} && bitbake ${IMAGE}" --update
 
     - name: Build SDK
       if: ${{ inputs.build-sdk == 'true' }}
