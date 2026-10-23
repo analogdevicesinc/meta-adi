@@ -71,6 +71,7 @@ runs:
         mkdir -p "${WORKSPACE}"
 
         [ -d "/cache" ] && YOCTO_CACHE_DIR="/cache/yocto" || YOCTO_CACHE_DIR="${GITHUB_WORKSPACE}/yocto-cache"
+        rm -rf "${YOCTO_CACHE_DIR}"
         mkdir -p "${YOCTO_CACHE_DIR}/downloads" "${YOCTO_CACHE_DIR}/sstate" "${YOCTO_CACHE_DIR}/hashserv"
 
         echo "YOCTO_WORKSPACE=${WORKSPACE}" >> $GITHUB_ENV

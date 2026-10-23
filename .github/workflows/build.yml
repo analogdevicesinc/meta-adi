@@ -92,7 +92,7 @@ jobs:
 
       - name: Build
         id: build
-        uses: analogdevicesinc/meta-adi/build@ci
+        uses: analogdevicesinc/meta-adi/build@test-prefetch
         with:
           machine: ${{ inputs.machine }}
           image: ${{ inputs.image }}
