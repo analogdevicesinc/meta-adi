@@ -58,7 +58,7 @@ on:
         type: string
         default: "."
       app-token-repositories:
-        description: "Comma-separated repositories to scope a GitHub App token to, empty to use github.token"
+        description: "Repositories to scope a GitHub App Token to"
         type: string
         default: ""
     secrets:

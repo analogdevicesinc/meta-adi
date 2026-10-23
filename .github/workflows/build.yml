@@ -81,6 +81,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY  }}
           owner: ${{ github.repository_owner }}
           repositories: ${{ inputs.app-token-repositories }}
+          permission-contents: read
 
       - name: Checkout
         uses: actions/checkout@v7
