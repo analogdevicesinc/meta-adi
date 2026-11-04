@@ -1,12 +1,12 @@
 SUMMARY = "Tools to display/manipulate FMC FRU info"
 HOMEPAGE = "https://wiki.analog.com/resources/tools-software/linux-software/fru_dump?s[]=fru&s[]=tools"
 SECTION = "console/utils"
-LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://license.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LICENSE = "GPL-3.0-or-later & ADI-BSD"
+LIC_FILES_CHKSUM = "file://license.txt;md5=600884d058742af4da113702ba4f0114"
 
 BRANCH = "main"
 # If we are in an offline build we cannot use AUTOREV since it would require internet!
-SRCREV = "${@ "e98eae11db567c8c8b8076998a68ac8467e52646" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
+SRCREV = "${@ "3b23074a1dc620a0335a27d0ece2849c4bc91ca9" if bb.utils.to_boolean(d.getVar('BB_NO_NETWORK')) else d.getVar('AUTOREV')}"
 SRC_URI = "git://github.com/analogdevicesinc/fru_tools.git;protocol=https;branch=${BRANCH}"
 PV:append = "+git${SRCPV}"
 
