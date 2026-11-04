@@ -122,13 +122,13 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           pattern: "{images-${{ needs.build.outputs.artifact-name }}-${{ github.event.release.tag_name }}.tar.xz,${{ needs.build.outputs.artifact-name }}.sdk}"
-          path: release
+          path: ${{ runner.temp }}/release
           merge-multiple: true
 
       - name: Upload artifacts to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
-          file: release/*
+          file: ${{ runner.temp }}/release/*
           file_glob: true
           tag: ${{ github.ref }}
