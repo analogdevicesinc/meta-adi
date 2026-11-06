@@ -12,25 +12,53 @@ _docker() {
 			--workdir $PWD petalinux bash -c "$@"
 }
 
+# Curl wrapper that passes the Cloudsmith key as a header on an fd, so it never shows up in
+# the process arguments (ps). CLOUDSMITH_API_KEY must be set in the environment.
+cs_curl() {
+	curl -H @<(printf 'X-Api-Key: %s\n' "${CLOUDSMITH_API_KEY}") "$@"
+}
+
 get_hdl_artifact() {
-	local base_path="https://artifactory.analog.com/artifactory/sdg-generic-development/hdl"
+	local api="https://api.cloudsmith.io/v1/packages/${CLOUDSMITH_NAMESPACE:-adi}/${CLOUDSMITH_REPOSITORY:-sdg-hdl}/"
 	local export_branch="releases/hdl_2023_r2"
-	local hdl=""
-	local l
-	local folders=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | grep -E '<a href=\"[0-9]+.*' | wc -l)
+	# Virtual folder (Cloudsmith "version") where to look for the project
+	local prefix="hdl/${export_branch}/hdl_output/"
+	local json="[]" chunk hdr page=1 pages=1 url
 
-	# try to find the latest successful artifact
-	for ((l=0; l<${folders}; l++)); do
-		hdl=$(wget -q -O - "${base_path}/${export_branch}/hdl_output/" 2>/dev/null | grep -E '<a href=\"[0-9]+.*' | tail -$((l+1)) | head -1)
-		hdl=${hdl##*'/">'}
-		hdl=${hdl%%'/</a'*}
-		# check if file exists
-		[[ $(wget -S --spider "${base_path}/${export_branch}/hdl_output/${hdl}/${project}/system_top.xsa" 2>&1 | grep 'HTTP/1.1 200 OK') ]] && break
+	# do not leak the key in the log
+	set +x
+
+	[[ -n ${CLOUDSMITH_API_KEY} ]] || { echo "CLOUDSMITH_API_KEY is not set"; exit 1; }
+
+	# Server side we only narrow things down (prefix + project), exact filtering is done by jq.
+	# Go through all the pages so we can never miss a newer build.
+	hdr=$(mktemp)
+	while [[ ${page} -le ${pages} ]]; do
+		chunk=$(cs_curl -sSf -G "${api}" -D "${hdr}" \
+			--data-urlencode "query=name:system_top.xsa AND version:^${prefix} AND version:${project}" \
+			--data-urlencode "page_size=500" \
+			--data-urlencode "page=${page}")
+		# total number of pages is in the response header (same for every page)
+		if [[ ${page} -eq 1 ]]; then
+			pages=$(awk 'tolower($1) == "x-pagination-pagetotal:" { print $2 + 0 }' "${hdr}")
+			pages=${pages:-1}
+		fi
+		# append this page to the list: "[]" + "[...]" -> slurp into [[],[...]] -> add -> [...]
+		json=$(jq -s 'add' <<< "${json}${chunk}")
+		page=$((page + 1))
 	done
+	rm -f "${hdr}"
 
-	if [[ ${l} == ${folders} ]]; then
+	# The version has a zero padded timestamp (YYYY_MM_DD-HH_MM_SS) so sorting it as a string
+	# gives us the latest build.
+	url=$(jq -r --arg p "${prefix}" --arg s "/${project}/" '
+		[ .[] | select(.status_str == "Completed")
+		      | select(.version | startswith($p) and endswith($s)) ]
+		| sort_by(.version) | last // empty | .cdn_url' <<< "${json}")
+
+	if [[ -z ${url} ]]; then
 		[[ ${obsolete} == "no" ]] && {
-			echo "Could not find HDL artifact for: \"${project}\""
+			echo "Could not find HDL artifact for: \"${project}\" in \"${prefix}\""
 			exit 1
 		} || {
 			echo "Project is obsolete, not reporting failure..."
@@ -38,8 +66,9 @@ get_hdl_artifact() {
 		}
 	fi
 
-	echo "Get hdl artifacts from: ${base_path}/${export_branch}/hdl_output/${hdl}/${project}"
-	wget --tries=10 ${base_path}/${export_branch}/hdl_output/${hdl}/${project}/system_top.xsa -O ${WORKSPACE}/system_top.xsa
+	echo "Get hdl artifacts from: ${url}"
+	cs_curl -sSfL --retry 10 -o "${WORKSPACE}/system_top.xsa" "${url}"
+	set -x
 }
 
 project=$1
