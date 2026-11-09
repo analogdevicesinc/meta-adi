@@ -11,10 +11,11 @@ IMAGE_INSTALL:append = " libiio  \
 
 IMAGE_INSTALL:remove:microblaze = "avahi-daemon pyadi-iio"
 
-# fsboot fails to build in vc707 and kc705 based projects. This is a petalinux bug or
-# something missing in our hdl projects that petalinux is expecting to exist. Anyways,
-# we never really used fsboot as part of our workflow and, AFAIK, no one is really
-# using it. Hence just don't build it. If someone raises his hand, we can then dig further.
+# TODO: revisit. fsboot used to fail to build for the vc707 and kc705 based projects
+# (either a petalinux bug or something missing in those hdl projects that petalinux
+# expects). All projects for those platforms are now gone, so check whether fsboot
+# builds for the remaining microblaze projects (kcu105, vcu118) and, if so, drop this
+# removal. Note that fsboot was never part of our workflow and, AFAIK, no one uses it.
 EXTRA_IMAGEDEPENDS:remove:microblaze = "virtual/fsboot"
 
 # Mimic what petalinux is doing in petalinux.conf. The big difference is that the user is

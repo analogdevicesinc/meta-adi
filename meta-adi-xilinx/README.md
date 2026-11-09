@@ -53,13 +53,9 @@ main
 |[jupiter_sdr](https://github.com/analogdevicesinc/hdl/tree/main/projects/jupiter_sdr)|[zynqmp-jupiter-sdr](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-jupiter-sdr.dts)|
 |[jupiter_sdr](https://github.com/analogdevicesinc/hdl/tree/main/projects/jupiter_sdr)|[zynqmp-jupiter-sdr-rx2tx2](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-jupiter-sdr-rx2tx2.dts)|
 |[adrv9026_zcu102](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9026/zcu102)|[zynqmp-zcu102-rev10-adrv9025](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-adrv9025.dts)|
-|[fmcomms2_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/kc705)|[kc705_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_fmcomms2-3.dts)|
 |[fmcomms2_kcu105](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/kcu105)|[kcu105_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kcu105_fmcomms2-3.dts)|
-|[fmcomms2_vc707](https://github.com/analogdevicesinc/hdl/tree/main/projects/fmcomms2/vc707)|[vc707_fmcomms2-3](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vc707_fmcomms2-3.dts)|
-|[daq2_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq2/kc705)|[kc705_fmcdaq2](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_fmcdaq2.dts)|
 |[daq2_kcu105](https://github.com/analogdevicesinc/hdl/tree/main/projects/daq2/kcu105)|[kcu105_fmcdaq2](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kcu105_fmcdaq2.dts)|
 |[adrv9371x_kcu105](https://github.com/analogdevicesinc/hdl/tree/main/projects/adrv9371x/kcu105)|[kcu105_adrv9371x](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kcu105_adrv9371x.dts)|
-|[ad9467_fmc_kc705](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9467_fmc/kc705)|[kc705_ad9467_fmc](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/kc705_ad9467_fmc.dts)|
 |[ad9081_fmca_ebz_vcu118](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vcu118)|[vcu118_ad9081_m8_l4](https://github.com/analogdevicesinc/linux/blob/main/arch/microblaze/boot/dts/vcu118_ad9081_m8_l4.dts)|
 |[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081.dts)|
 |[ad9081_fmca_ebz_vck190](https://github.com/analogdevicesinc/hdl/tree/main/projects/ad9081_fmca_ebz/vck190)|[versal-vck190-reva-ad9081-204c-txmode22-rxmode23](https://github.com/analogdevicesinc/linux/blob/main/arch/arm64/boot/dts/xilinx/versal-vck190-reva-ad9081-204c-txmode22-rxmode23.dts)|
@@ -176,7 +172,7 @@ If you don't provide this, the following defaults are taken:
 ``` bash
 DTS_BASE_zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
 DTS_BASE_zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
-DTS_BASE_microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
+DTS_BASE_microblaze ?= "${DTS_INCLUDE_PATH}/kcu105"
 ```
 
 > Naturally, if you are building for a zedboard, you probably don't want to use `zynq-zc706.dts`
