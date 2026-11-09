@@ -1,5 +1,0 @@
-/include/ "pl-delete-nodes-fmcdaq2.dtsi"
-
-/delete-node/ &axi_gpio_lcd;
-/delete-node/ &axi_linear_flash;
-

@@ -53,14 +53,9 @@ SRC_URI:append:zynqmp = " \
 		file://pl-delete-nodes-zynqmp-jupiter-sdr-rx2tx2.dtsi"
 
 SRC_URI:append:microblaze = " \
-		file://pl-delete-nodes-fmcdaq2.dtsi \
-		file://pl-delete-nodes-kc705_fmcdaq2.dtsi \
-		file://pl-delete-nodes-kc705_ad9467_fmc.dtsi \
-		file://pl-delete-nodes-kc705_fmcomms2-3.dtsi \
 		file://pl-delete-nodes-kcu105_fmcdaq2.dtsi \
 		file://pl-delete-nodes-kcu105_adrv9371x.dtsi \
 		file://pl-delete-nodes-kcu105_fmcomms2-3.dtsi \
-		file://pl-delete-nodes-vc707_fmcomms2-3.dtsi \
 		file://pl-delete-nodes-vcu118_ad9081_m8_l4.dtsi"
 
 SRC_URI:append:versal = " \
@@ -93,10 +88,10 @@ DTB_TAG_FILE:zynqmp ?= "${WORKDIR}/zynqmp-zcu102-revA.dts"
 DTB_TAG_FILE:versal ?= "${WORKDIR}/versal.dtsi"
 
 # Only used when FPGA_MANAGER is enabled. These are only some defaults. Note that, for example, for Microblaze
-# vc707.dts won't be a good choice if your platform is based on kc705 for instance...
+# kcu105.dts won't be a good choice if your platform is based on vcu118 for instance...
 DTS_BASE:zynq ?= "${DTS_INCLUDE_PATH}/zynq-zc706"
 DTS_BASE:zynqmp ?= "${DTS_INCLUDE_PATH}/zynqmp-zcu102-rev1.0"
-DTS_BASE:microblaze ?= "${DTS_INCLUDE_PATH}/vc707"
+DTS_BASE:microblaze ?= "${DTS_INCLUDE_PATH}/kcu105"
 DTS_BASE:versal ?= "${DTS_INCLUDE_PATH}/versal-vck190-revA"
 DTS_OVERLAY ?= "pl-${KERNEL_DTB}-overlay.dtsi"
 DTS_OVERLAY_PATH ?= "${WORKDIR}"
