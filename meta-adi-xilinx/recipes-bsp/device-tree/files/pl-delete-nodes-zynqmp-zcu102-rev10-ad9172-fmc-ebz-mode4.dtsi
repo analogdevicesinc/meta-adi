@@ -1,3 +1,4 @@
+/delete-node/ &dac_data_offload_i_data_offload;
 /delete-node/ &axi_sysid_0;
 /delete-node/ &dac_dma;
 /delete-node/ &dac_jesd204_link_tx_axi;

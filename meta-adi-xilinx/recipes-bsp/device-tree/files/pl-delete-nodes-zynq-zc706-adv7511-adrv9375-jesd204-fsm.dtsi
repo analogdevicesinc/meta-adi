@@ -1,3 +1,4 @@
+/delete-node/ &ad9371_data_offload_i_data_offload;
 /delete-node/ &axi_ad9371_rx_clkgen;
 /delete-node/ &misc_clk_0;
 /delete-node/ &axi_ad9371_rx_dma;
